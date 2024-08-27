@@ -5,5 +5,6 @@ export const execute = (command, ...args) => {
   if (!fn) {
     throw new Error(`Command not found ${command}`)
   }
+
   return fn(...args)
 }
