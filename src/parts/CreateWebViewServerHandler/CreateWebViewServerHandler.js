@@ -1,16 +1,12 @@
 import { createReadStream } from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import { extname } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
-import * as SetHeaders from '../SetHeaders/SetHeaders.js'
+import * as GetPathName from '../GetPathName/GetPathName.js'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.js'
-import { readFile } from 'node:fs/promises'
-
-const getPathName = (request) => {
-  const { pathname } = new URL(request.url || '', `https://${request.headers.host}`)
-  return pathname
-}
+import * as SetHeaders from '../SetHeaders/SetHeaders.js'
 
 const textMimeType = {
   '.html': 'text/html',
@@ -38,13 +34,21 @@ const getContentType = (filePath) => {
 const injectPreviewScript = (html) => {
   const injectedCode = `<script type="module" src="/preview-injected.js"></script>\n`
   const titleEndIndex = html.indexOf('</title>')
-  const newHtml = html.slice(0, titleEndIndex + '</title>'.length) + '\n' + injectedCode + html.slice(titleEndIndex)
+  const newHtml =
+    html.slice(0, titleEndIndex + '</title>'.length) +
+    '\n' +
+    injectedCode +
+    html.slice(titleEndIndex)
   return newHtml
 }
 
 const handleIndexHtml = async (response, filePath, frameAncestors) => {
   try {
-    const csp = GetContentSecurityPolicy.getContentSecurityPolicy([`default-src 'none'`, `script-src 'self'`, `frame-ancestors ${frameAncestors}`])
+    const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
+      `default-src 'none'`,
+      `script-src 'self'`,
+      `frame-ancestors ${frameAncestors}`,
+    ])
     const contentType = getContentType(filePath)
     const content = await readFile(filePath, 'utf8')
     SetHeaders.setHeaders(response, {
@@ -92,7 +96,7 @@ const handlePreviewInjected = (response) => {
 
 export const createHandler = (frameAncestors, webViewRoot) => {
   const handleRequest = async (request, response) => {
-    let pathName = getPathName(request)
+    let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
       pathName += 'index.html'
     }
