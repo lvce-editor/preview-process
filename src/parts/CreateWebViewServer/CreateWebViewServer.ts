@@ -14,8 +14,7 @@ export const createWebViewServer = async (port) => {
         if (this.handler) {
           return
         }
-
-        this.handler = this.handler
+        this.handler = handleRequest
         server.on('request', handleRequest)
       },
     }
