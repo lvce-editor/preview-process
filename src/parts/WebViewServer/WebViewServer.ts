@@ -1,10 +1,11 @@
 import * as CreateWebViewServer from '../CreateWebViewServer/CreateWebViewServer.ts'
 import * as CreateWebViewServerHandler from '../CreateWebViewServerHandler/CreateWebViewServerHandler.ts'
 
-const state = {
-  /**
-   * @type {any }
-   */
+interface State {
+  promise: any
+}
+
+const state: State = {
   promise: undefined,
 }
 

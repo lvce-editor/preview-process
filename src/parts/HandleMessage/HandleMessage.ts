@@ -10,7 +10,7 @@ const requiresSocket = (method) => {
   return method === 'ElectronWebContentsView.createWebContentsView'
 }
 
-const logError = (error, prettyError) => {
+const logError = (error) => {
   console.error(error)
 }
 
