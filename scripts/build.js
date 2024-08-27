@@ -79,5 +79,13 @@ packageJson.main = 'dist/index.js'
 
 await writeJson(join(dist, 'package.json'), packageJson)
 
+await writeFile(
+  join(dist, 'bin', 'previewProcess.js'),
+  `#!/usr/bin/env node
+
+import '../dist/index.js'
+`,
+)
+
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
