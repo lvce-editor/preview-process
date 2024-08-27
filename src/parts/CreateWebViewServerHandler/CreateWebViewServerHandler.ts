@@ -15,7 +15,7 @@ export const createHandler = (frameAncestors, webViewRoot) => {
     )
 
     if (!result?.body) {
-      return
+      return response.end('not found')
     }
     result.headers.forEach((value, key) => {
       response.setHeader(key, value)
