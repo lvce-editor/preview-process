@@ -4,9 +4,9 @@ import { extname } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath } from 'node:url'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.js'
-import * as GetPathName from '../GetPathName/GetPathName.js'
-import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.js'
-import * as SetHeaders from '../SetHeaders/SetHeaders.js'
+import * as GetPathName from '../GetPathName/GetPathName.ts'
+import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
+import * as SetHeaders from '../SetHeaders/SetHeaders.ts'
 
 const textMimeType = {
   '.html': 'text/html',

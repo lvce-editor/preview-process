@@ -1,4 +1,4 @@
-import * as Character from '../Character/Character.js'
+import * as Character from '../Character/Character.ts'
 import * as AddSemiColon from '../AddSemiColon/AddSemiColon.js'
 
 export const getContentSecurityPolicy = (items) => {

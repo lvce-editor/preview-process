@@ -1,6 +1,6 @@
 import { VError } from '@lvce-editor/verror'
 import { createServer } from 'node:http'
-import * as Promises from '../Promises/Promises.js'
+import * as Promises from '../Promises/Promises.ts'
 
 export const createWebViewServer = async (port) => {
   try {
