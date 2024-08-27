@@ -8,6 +8,7 @@ import pluginTypeScript from '@babel/preset-typescript'
 const options = {
   input: 'src/previewProcessMain.ts',
   preserveEntrySignatures: 'strict',
+  external: ['ws'],
   treeshake: {
     propertyReadSideEffects: false,
   },
