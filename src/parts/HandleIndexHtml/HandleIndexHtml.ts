@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 
-const injectPreviewScript = (html) => {
+const injectPreviewScript = (html: string) => {
   const injectedCode =
     '<script type="module" src="/preview-injected.js"></script>\n'
   const titleEndIndex = html.indexOf('</title>')

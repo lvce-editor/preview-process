@@ -1,16 +1,20 @@
-import { createServer } from 'node:http'
+import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import { VError } from '@lvce-editor/verror'
 import * as Promises from '../Promises/Promises.ts'
 
-export const createWebViewServer = async (port) => {
+interface Handler {
+  (req: IncomingMessage, res: ServerResponse): Promise<void>
+}
+
+export const createWebViewServer = async (port: number) => {
   try {
     const server = createServer()
     const { resolve, promise } = Promises.withResolvers()
     server.listen(port, resolve)
     await promise
     return {
-      handler: undefined,
-      setHandler(handleRequest) {
+      handler: undefined as any,
+      setHandler(handleRequest: Handler) {
         if (this.handler) {
           return
         }

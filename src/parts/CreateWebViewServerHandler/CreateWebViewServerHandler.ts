@@ -1,9 +1,13 @@
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import { pipeline } from 'node:stream/promises'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 
-export const createHandler = (frameAncestors, webViewRoot) => {
-  const handleRequest = async (request, response) => {
+export const createHandler = (frameAncestors: string, webViewRoot: string) => {
+  const handleRequest = async (
+    request: IncomingMessage,
+    response: ServerResponse,
+  ) => {
     let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
       pathName += 'index.html'

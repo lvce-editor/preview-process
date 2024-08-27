@@ -1,6 +1,6 @@
 import { extname } from 'node:path'
 
-const textMimeType = {
+const textMimeType: Record<string, string> = {
   '.html': 'text/html',
   '.js': 'text/javascript',
   '.ts': 'text/javascript',
@@ -19,6 +19,6 @@ const textMimeType = {
   '.webp': 'image/webp',
 }
 
-export const getContentType = (filePath) => {
+export const getContentType = (filePath: string) => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }

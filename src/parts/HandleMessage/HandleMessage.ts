@@ -2,19 +2,19 @@ import * as Callback from '../Callback/Callback.ts'
 import * as Command from '../Command/Command.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'
 
-const prepare = (error) => {
+const prepare = (error: any) => {
   return error
 }
 
-const requiresSocket = (method) => {
-  return method === 'ElectronWebContentsView.createWebContentsView'
+const requiresSocket = (method: string) => {
+  return false
 }
 
-const logError = (error) => {
+const logError = (error: any) => {
   console.error(error)
 }
 
-export const handleMessage = async (event) => {
+export const handleMessage = async (event: any) => {
   return JsonRpc.handleJsonRpcMessage(
     event.target,
     event.data,
