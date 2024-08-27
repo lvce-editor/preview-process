@@ -1,4 +1,4 @@
-import * as WebViewServer from '../WebViewServer/WebViewServer.js'
+import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
 
 export const commandMap = {
   'WebViewServer.start': WebViewServer.start,
