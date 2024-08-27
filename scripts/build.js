@@ -79,6 +79,7 @@ packageJson.main = 'dist/index.js'
 
 await writeJson(join(dist, 'package.json'), packageJson)
 
+await mkdir(join(dist, 'bin'))
 await writeFile(
   join(dist, 'bin', 'previewProcess.js'),
   `#!/usr/bin/env node
