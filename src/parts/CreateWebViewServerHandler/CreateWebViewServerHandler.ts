@@ -17,6 +17,9 @@ export const createHandler = (frameAncestors, webViewRoot) => {
     if (!result?.body) {
       return
     }
+    result.headers.forEach((value, key) => {
+      response.setHeader(key, value)
+    })
     await pipeline(result.body, response)
   }
 
