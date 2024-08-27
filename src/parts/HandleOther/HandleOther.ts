@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 
-export const handleOther = async (filePath) => {
+export const handleOther = async (filePath: string) => {
   try {
     const contentType = GetContentType.getContentType(filePath)
     // TODO figure out which of these headers are actually needed

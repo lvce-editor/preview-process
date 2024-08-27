@@ -1,4 +1,4 @@
-export const getPathName = (request) => {
+export const getPathName = (request: any) => {
   const { pathname } = new URL(
     request.url || '',
     `https://${request.headers.host}`,

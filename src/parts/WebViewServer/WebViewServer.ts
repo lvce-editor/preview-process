@@ -12,12 +12,15 @@ const state: State = {
 // TODO move webview preview
 // server into separate process
 
-export const start = async (port) => {
+export const start = async (port: number) => {
   state.promise ||= CreateWebViewServer.createWebViewServer(port)
   return state.promise
 }
 
-export const setHandler = async (frameAncestors, webViewRoot) => {
+export const setHandler = async (
+  frameAncestors: string,
+  webViewRoot: string,
+) => {
   const server = await state.promise
   const handler = CreateWebViewServerHandler.createHandler(
     frameAncestors,
