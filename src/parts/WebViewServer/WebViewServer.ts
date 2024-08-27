@@ -1,10 +1,11 @@
-import * as CreateWebViewServer from '../CreateWebViewServer/CreateWebViewServer.js'
-import * as CreateWebViewServerHandler from '../CreateWebViewServerHandler/CreateWebViewServerHandler.js'
+import * as CreateWebViewServer from '../CreateWebViewServer/CreateWebViewServer.ts'
+import * as CreateWebViewServerHandler from '../CreateWebViewServerHandler/CreateWebViewServerHandler.ts'
 
-const state = {
-  /**
-   * @type {any }
-   */
+interface State {
+  promise: any
+}
+
+const state: State = {
   promise: undefined,
 }
 
@@ -20,6 +21,9 @@ export const start = async (port) => {
 
 export const setHandler = async (frameAncestors, webViewRoot) => {
   const server = await state.promise
-  const handler = CreateWebViewServerHandler.createHandler(frameAncestors, webViewRoot)
+  const handler = CreateWebViewServerHandler.createHandler(
+    frameAncestors,
+    webViewRoot,
+  )
   server.setHandler(handler)
 }
