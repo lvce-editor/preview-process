@@ -14,7 +14,6 @@ const state: State = {
 
 export const start = async (port) => {
   state.promise ||= CreateWebViewServer.createWebViewServer(port)
-
   return state.promise
 }
 

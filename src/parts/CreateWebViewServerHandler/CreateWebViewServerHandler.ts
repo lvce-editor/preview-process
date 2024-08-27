@@ -1,8 +1,6 @@
-import { fileURLToPath } from 'node:url'
+import { pipeline } from 'node:stream/promises'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
-import * as HandleIndexHtml from '../HandleIndexHtml/HandleIndexHtml.ts'
-import * as HandleOther from '../HandleOther/HandleOther.ts'
-import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
 
 export const createHandler = (frameAncestors, webViewRoot) => {
   const handleRequest = async (request, response) => {
@@ -10,19 +8,19 @@ export const createHandler = (frameAncestors, webViewRoot) => {
     if (pathName === '/') {
       pathName += 'index.html'
     }
+    const result = await GetResponse.getResponse(
+      pathName,
+      frameAncestors,
+      webViewRoot,
+    )
 
-    const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
-    const isHtml = filePath.endsWith('index.html')
-    if (isHtml) {
-      return HandleIndexHtml.handleIndexHtml(response, filePath, frameAncestors)
+    if (!result?.body) {
+      return response.end('not found')
     }
-
-    if (filePath.endsWith('preview-injected.js')) {
-      HandlePreviewInjected.handlePreviewInjected(response)
-      return
-    }
-
-    return HandleOther.handleOther(response, filePath)
+    result.headers.forEach((value, key) => {
+      response.setHeader(key, value)
+    })
+    await pipeline(result.body, response)
   }
 
   return handleRequest
