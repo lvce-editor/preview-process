@@ -13,8 +13,11 @@ export const createHandler = (frameAncestors, webViewRoot) => {
       frameAncestors,
       webViewRoot,
     )
-    // @ts-ignore
-    await pipeline(result, response)
+
+    if (!result?.body) {
+      return
+    }
+    await pipeline(result.body, response)
   }
 
   return handleRequest

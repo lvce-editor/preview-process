@@ -14,7 +14,10 @@ const injectPreviewScript = (html) => {
   return newHtml
 }
 
-export const handleIndexHtml = async (filePath, frameAncestors) => {
+export const handleIndexHtml = async (
+  filePath: string,
+  frameAncestors: string,
+): Promise<Response> => {
   try {
     const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
       "default-src 'none'",
@@ -34,5 +37,6 @@ export const handleIndexHtml = async (filePath, frameAncestors) => {
     })
   } catch (error) {
     console.error(`[preview-server] ${error}`)
+    return new Response('not found')
   }
 }
