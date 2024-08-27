@@ -2,7 +2,7 @@
   "name": "@lvce-editor/preview-process",
   "version": "0.0.0-dev",
   "description": "Preview Process",
-  "main": "src/previewProcessMain.js",
+  "main": "src/previewProcessMain.ts",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -29,6 +29,9 @@
     "@lvce-editor/verror": "^1.4.0"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.24.7",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/node": "^20.12.11",
     "execa": "^9.3.1",
     "jest": "^29.7.0",
