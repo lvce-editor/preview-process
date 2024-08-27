@@ -9,11 +9,14 @@ export const Auto = () => {
   if (argv.includes('--ipc-type=node-worker')) {
     return NodeWorker
   }
+
   if (argv.includes('--ipc-type=node-forked-process')) {
     return NodeForkedProcess
   }
+
   if (argv.includes('--ipc-type=electron-utility-process')) {
     return ElectronUtilityProcess
   }
-  throw new Error(`[shared-process] unknown ipc type`)
+
+  throw new Error('[preview-process] unknown ipc type')
 }

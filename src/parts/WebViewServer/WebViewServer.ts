@@ -1,7 +1,7 @@
 import * as CreateWebViewServer from '../CreateWebViewServer/CreateWebViewServer.ts'
 import * as CreateWebViewServerHandler from '../CreateWebViewServerHandler/CreateWebViewServerHandler.ts'
 
-interface State {
+type State = {
   promise: any
 }
 
@@ -13,9 +13,8 @@ const state: State = {
 // server into separate process
 
 export const start = async (port) => {
-  if (!state.promise) {
-    state.promise = CreateWebViewServer.createWebViewServer(port)
-  }
+  state.promise ||= CreateWebViewServer.createWebViewServer(port)
+
   return state.promise
 }
 

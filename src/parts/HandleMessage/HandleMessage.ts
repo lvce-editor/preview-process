@@ -14,7 +14,7 @@ const logError = (error) => {
   console.error(error)
 }
 
-export const handleMessage = (event) => {
+export const handleMessage = async (event) => {
   return JsonRpc.handleJsonRpcMessage(
     event.target,
     event.data,

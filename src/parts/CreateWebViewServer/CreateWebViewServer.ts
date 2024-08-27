@@ -1,5 +1,5 @@
-import { VError } from '@lvce-editor/verror'
 import { createServer } from 'node:http'
+import { VError } from '@lvce-editor/verror'
 import * as Promises from '../Promises/Promises.ts'
 
 export const createWebViewServer = async (port) => {
@@ -14,11 +14,12 @@ export const createWebViewServer = async (port) => {
         if (this.handler) {
           return
         }
+
         this.handler = this.handler
         server.on('request', handleRequest)
       },
     }
   } catch (error) {
-    throw new VError(error, `Failed to start webview server`)
+    throw new VError(error, 'Failed to start webview server')
   }
 }

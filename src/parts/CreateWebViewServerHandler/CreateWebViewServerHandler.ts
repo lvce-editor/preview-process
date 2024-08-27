@@ -32,7 +32,8 @@ const getContentType = (filePath) => {
 }
 
 const injectPreviewScript = (html) => {
-  const injectedCode = `<script type="module" src="/preview-injected.js"></script>\n`
+  const injectedCode =
+    '<script type="module" src="/preview-injected.js"></script>\n'
   const titleEndIndex = html.indexOf('</title>')
   const newHtml =
     html.slice(0, titleEndIndex + '</title>'.length) +
@@ -45,8 +46,8 @@ const injectPreviewScript = (html) => {
 const handleIndexHtml = async (response, filePath, frameAncestors) => {
   try {
     const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
-      `default-src 'none'`,
-      `script-src 'self'`,
+      "default-src 'none'",
+      "script-src 'self'",
       `frame-ancestors ${frameAncestors}`,
     ])
     const contentType = getContentType(filePath)
@@ -83,7 +84,7 @@ const handleOther = async (response, filePath) => {
 
 const handlePreviewInjected = (response) => {
   try {
-    const injectedCode = PreviewInjectedCode.injectedCode
+    const { injectedCode } = PreviewInjectedCode
     const contentType = getContentType('/test/file.js')
     SetHeaders.setHeaders(response, {
       'Content-Type': contentType,
@@ -100,15 +101,20 @@ export const createHandler = (frameAncestors, webViewRoot) => {
     if (pathName === '/') {
       pathName += 'index.html'
     }
+
     const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
     const isHtml = filePath.endsWith('index.html')
     if (isHtml) {
       return handleIndexHtml(response, filePath, frameAncestors)
     }
+
     if (filePath.endsWith('preview-injected.js')) {
-      return handlePreviewInjected(response)
+      handlePreviewInjected(response)
+      return
     }
+
     return handleOther(response, filePath)
   }
+
   return handleRequest
 }
