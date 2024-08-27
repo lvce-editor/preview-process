@@ -1,7 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
-import * as SetHeaders from '../SetHeaders/SetHeaders.ts'
 
 const injectPreviewScript = (html) => {
   const injectedCode =
@@ -15,7 +14,7 @@ const injectPreviewScript = (html) => {
   return newHtml
 }
 
-export const handleIndexHtml = async (response, filePath, frameAncestors) => {
+export const handleIndexHtml = async (filePath, frameAncestors) => {
   try {
     const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
       "default-src 'none'",
@@ -24,14 +23,15 @@ export const handleIndexHtml = async (response, filePath, frameAncestors) => {
     ])
     const contentType = GetContentType.getContentType(filePath)
     const content = await readFile(filePath, 'utf8')
-    SetHeaders.setHeaders(response, {
-      'Cross-Origin-Resource-Policy': 'cross-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-      'Content-Security-Policy': csp,
-      'Content-Type': contentType,
-    })
     const newContent = injectPreviewScript(content)
-    response.end(newContent)
+    return new Response(newContent, {
+      headers: {
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Content-Security-Policy': csp,
+        'Content-Type': contentType,
+      },
+    })
   } catch (error) {
     console.error(`[preview-server] ${error}`)
   }

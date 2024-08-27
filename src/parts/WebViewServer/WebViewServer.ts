@@ -13,8 +13,12 @@ const state: State = {
 // server into separate process
 
 export const start = async (port) => {
+<<<<<<< Updated upstream:src/parts/WebViewServer/WebViewServer.ts
   state.promise ||= CreateWebViewServer.createWebViewServer(port)
 
+=======
+  state.promise ||= CreateWebViewServer.createWebViewServer(port);
+>>>>>>> Stashed changes:src/parts/WebViewServer/WebViewServer.js
   return state.promise
 }
 
