@@ -5,7 +5,7 @@ export const listen = async ({
   ...params
 }: {
   method: number
-  params: any
+  [key: string]: any
 }) => {
   const module = await IpcChildModule.getModule(method)
   // @ts-ignore
