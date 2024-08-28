@@ -9,3 +9,7 @@ export const set = (id: number, server: WebViewServer) => {
 export const get = (id: number): WebViewServer => {
   return servers[id]
 }
+
+export const has = (id: number): boolean => {
+  return id in servers
+}

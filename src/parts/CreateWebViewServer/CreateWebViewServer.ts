@@ -5,6 +5,9 @@ import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
 
 export const createWebViewServer = (id: number): void => {
   try {
+    if (WebViewServerState.has(id)) {
+      return
+    }
     const server = createServer()
     const webViewServer: WebViewServer = {
       server,
