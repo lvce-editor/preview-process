@@ -6,6 +6,6 @@ export const set = (id: number, server: WebViewServer) => {
   servers[id] = server
 }
 
-export const get = (id: number) => {
+export const get = (id: number): WebViewServer => {
   return servers[id]
 }

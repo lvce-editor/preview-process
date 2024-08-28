@@ -16,6 +16,9 @@ export const createWebViewServer = (id: number): void => {
         this.handler = handleRequest
         this.server.on('request', handleRequest)
       },
+      listen(port, callback) {
+        this.server.listen(port, callback)
+      },
     }
     WebViewServerState.set(id, webViewServer)
   } catch (error) {
