@@ -7,7 +7,7 @@ export const createHandler = (frameAncestors: string, webViewRoot: string) => {
   const handleRequest = async (
     request: IncomingMessage,
     response: ServerResponse,
-  ) => {
+  ): Promise<void> => {
     let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
       pathName += 'index.html'
@@ -19,7 +19,8 @@ export const createHandler = (frameAncestors: string, webViewRoot: string) => {
     )
 
     if (!result?.body) {
-      return response.end('not found')
+      response.end('not found')
+      return
     }
     result.headers.forEach((value, key) => {
       response.setHeader(key, value)
