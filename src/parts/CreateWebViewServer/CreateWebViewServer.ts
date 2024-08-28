@@ -1,20 +1,14 @@
-import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import { VError } from '@lvce-editor/verror'
-import * as Promises from '../Promises/Promises.ts'
+import { createServer } from 'node:http'
+import * as WebViewServerState from '../WebViewServerState/WebViewServerState.ts'
+import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
 
-interface Handler {
-  (req: IncomingMessage, res: ServerResponse): Promise<void>
-}
-
-export const createWebViewServer = async (port: number) => {
+export const createWebViewServer = (id: number): void => {
   try {
     const server = createServer()
-    const { resolve, promise } = Promises.withResolvers()
-    server.listen(port, resolve)
-    await promise
-    return {
-      handler: undefined as any,
-      setHandler(handleRequest: Handler) {
+    const webViewServer: WebViewServer = {
+      handler: undefined,
+      setHandler(handleRequest) {
         if (this.handler) {
           return
         }
@@ -22,7 +16,8 @@ export const createWebViewServer = async (port: number) => {
         server.on('request', handleRequest)
       },
     }
+    WebViewServerState.set(id, webViewServer)
   } catch (error) {
-    throw new VError(error, 'Failed to start webview server')
+    throw new VError(error, 'Failed to create webview server')
   }
 }
