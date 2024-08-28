@@ -7,13 +7,14 @@ export const createWebViewServer = (id: number): void => {
   try {
     const server = createServer()
     const webViewServer: WebViewServer = {
+      server,
       handler: undefined,
       setHandler(handleRequest) {
         if (this.handler) {
           return
         }
         this.handler = handleRequest
-        server.on('request', handleRequest)
+        this.server.on('request', handleRequest)
       },
     }
     WebViewServerState.set(id, webViewServer)
