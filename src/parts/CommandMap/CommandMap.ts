@@ -1,6 +1,9 @@
-import * as WebViewServer from '../WebViewServer/WebViewServer.ts'
+import * as CreateWebViewServer from '../CreateWebViewServer/CreateWebViewServer.ts'
+import * as SetWebViewServerHandler from '../SetWebViewServerHandler/SetWebViewServerHandler.ts'
+import * as StartWebViewServer from '../StartWebViewServer/StartWebViewServer.ts'
 
 export const commandMap = {
-  'WebViewServer.start': WebViewServer.start,
-  'WebViewServer.setHandler': WebViewServer.setHandler,
+  'WebViewServer.create': CreateWebViewServer.createWebViewServer,
+  'WebViewServer.setHandler': SetWebViewServerHandler.setWebViewServerHandler,
+  'WebViewServer.start': StartWebViewServer.startWebViewServer,
 }
