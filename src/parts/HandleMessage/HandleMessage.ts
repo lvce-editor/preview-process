@@ -11,7 +11,7 @@ const requiresSocket = (method: string) => {
 }
 
 const logError = (error: any) => {
-  console.error(error)
+  // error is already logged in parent process
 }
 
 export const handleMessage = async (event: any) => {
