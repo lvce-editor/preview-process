@@ -30,16 +30,16 @@ test('method not allowed - post', async () => {
   })
 })
 
-test('get', async () => {
+test('get - css file', async () => {
   const method = HttpMethod.Get
-  const url = 'lvce-webview://-/test/media/'
+  const url = 'lvce-webview://-/test/media/index.css'
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('a'))
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: Buffer.from('a'),
     init: {
       status: HttpStatusCode.Ok,
       headers: {
-        'Content-Type': 'text/html',
+        'Content-Type': 'text/css',
         'Cross-Origin-Resource-Policy': 'cross-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
       },
