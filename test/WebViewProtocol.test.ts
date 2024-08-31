@@ -1,7 +1,19 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as HttpMethod from '../src/parts/HttpMethod/HttpMethod.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
-import * as WebViewProtocol from '../src/parts/WebViewProtocol/WebViewProtocol.ts'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.ts', () => {
+  return {
+    readFile: jest.fn(),
+  }
+})
+
+const WebViewProtocol = await import('../src/parts/WebViewProtocol/WebViewProtocol.ts')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.ts')
 
 test('method not allowed - post', async () => {
   const method = HttpMethod.Post
@@ -20,12 +32,14 @@ test('method not allowed - post', async () => {
 
 test('get', async () => {
   const method = HttpMethod.Get
-  const url = '/test/media'
+  const url = 'lvce-webview://-/test/media/'
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('a'))
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: 'test 123',
+    body: Buffer.from('a'),
     init: {
       status: HttpStatusCode.Ok,
       headers: {
+        'Content-Type': 'text/html',
         'Cross-Origin-Resource-Policy': 'cross-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
       },
