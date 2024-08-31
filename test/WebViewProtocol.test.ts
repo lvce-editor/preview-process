@@ -30,7 +30,7 @@ test('method not allowed - post', async () => {
   })
 })
 
-test('get', async () => {
+test('get - css file', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://-/test/media/index.css'
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('a'))
