@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises'
+import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
 import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
@@ -30,7 +30,7 @@ export const getResponse = async (method: string, url: string) => {
       },
     }
   }
-  const content = await readFile(absolutePath)
+  const content = await FileSystem.readFile(absolutePath)
   const headers = GetHeaders.getHeaders(absolutePath)
   return {
     body: content,
