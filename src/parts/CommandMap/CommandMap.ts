@@ -8,7 +8,6 @@ export const commandMap = {
   'WebViewServer.create': CreateWebViewServer.createWebViewServer,
   'WebViewServer.setHandler': SetWebViewServerHandler.setWebViewServerHandler,
   'WebViewServer.start': StartWebViewServer.startWebViewServer,
-  'HandleElectronMessagePort.handleElectronMessagePort':
-    HandleElectronMessagePort.handleElectronMessagePort,
+  'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
   'WebViewProtocol.getResponse': WebViewProtocol.getResponse,
 }
