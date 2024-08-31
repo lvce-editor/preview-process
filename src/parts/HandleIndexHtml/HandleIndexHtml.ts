@@ -1,23 +1,9 @@
 import { readFile } from 'node:fs/promises'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
+import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 
-const injectPreviewScript = (html: string) => {
-  const injectedCode =
-    '<script type="module" src="/preview-injected.js"></script>\n'
-  const titleEndIndex = html.indexOf('</title>')
-  const newHtml =
-    html.slice(0, titleEndIndex + '</title>'.length) +
-    '\n' +
-    injectedCode +
-    html.slice(titleEndIndex)
-  return newHtml
-}
-
-export const handleIndexHtml = async (
-  filePath: string,
-  frameAncestors: string,
-): Promise<Response> => {
+export const handleIndexHtml = async (filePath: string, frameAncestors: string): Promise<Response> => {
   try {
     const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
       "default-src 'none'",
@@ -26,7 +12,7 @@ export const handleIndexHtml = async (
     ])
     const contentType = GetContentType.getContentType(filePath)
     const content = await readFile(filePath, 'utf8')
-    const newContent = injectPreviewScript(content)
+    const newContent = InjectPreviewScript.injectPreviewScript(content)
     return new Response(newContent, {
       headers: {
         'Cross-Origin-Resource-Policy': 'cross-origin',
