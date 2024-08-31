@@ -1,28 +1,42 @@
+import { readFile } from 'node:fs/promises'
+import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
+import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 
-export const getResponse = (method: string, url: string) => {
+const defaultHeaders = {
+  'Cross-Origin-Resource-Policy': 'cross-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+}
+
+export const getResponse = async (method: string, url: string) => {
   // TODO allow head requests
   if (method !== HttpMethod.Get) {
     return {
       body: 'Method not allowed',
       init: {
         status: HttpStatusCode.MethodNotAllowed,
-        headers: {
-          'Cross-Origin-Resource-Policy': 'cross-origin',
-          'Cross-Origin-Embedder-Policy': 'require-corp',
-        },
+        headers: defaultHeaders,
       },
     }
   }
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
+  if (!absolutePath) {
+    return {
+      body: 'not found',
+      init: {
+        status: HttpStatusCode.NotFound,
+        headers: defaultHeaders,
+      },
+    }
+  }
+  const content = await readFile(absolutePath)
+  const headers = GetHeaders.getHeaders(absolutePath)
   return {
-    body: 'test 123',
+    body: content,
     init: {
       status: HttpStatusCode.Ok,
-      headers: {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-      },
+      headers,
     },
   }
 }
