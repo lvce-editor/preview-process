@@ -4,6 +4,7 @@ import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponse
 import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
 
@@ -16,7 +17,7 @@ export const getResponse = async (method: string, url: string) => {
   // TODO allow head requests
   if (method !== HttpMethod.Get) {
     return {
-      body: 'Method not allowed',
+      body: '405 - Method not allowed',
       init: {
         status: HttpStatusCode.MethodNotAllowed,
         headers: defaultHeaders,
@@ -26,7 +27,7 @@ export const getResponse = async (method: string, url: string) => {
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
   if (!absolutePath) {
     return {
-      body: 'not found',
+      body: '404 - Not Found',
       init: {
         status: HttpStatusCode.NotFound,
         headers: defaultHeaders,
@@ -34,7 +35,27 @@ export const getResponse = async (method: string, url: string) => {
     }
   }
   if (absolutePath.endsWith('/index.html')) {
-    const content = await readFile(absolutePath, 'utf8')
+    let content
+    try {
+      content = await readFile(absolutePath, 'utf8')
+    } catch (error) {
+      if (error && error.code === ErrorCodes.ENOENT) {
+        return {
+          body: '404 - Not Found',
+          init: {
+            status: HttpStatusCode.NotFound,
+            headers: defaultHeaders,
+          },
+        }
+      }
+      return {
+        body: `500 - Internal Server Error`,
+        init: {
+          status: HttpStatusCode.ServerError,
+          headers: defaultHeaders,
+        },
+      }
+    }
     const newContent = InjectPreviewScript.injectPreviewScript(content)
     const headers = GetHeaders.getHeaders(absolutePath)
     return {
@@ -56,7 +77,27 @@ export const getResponse = async (method: string, url: string) => {
       },
     }
   }
-  const content = await FileSystem.readFile(absolutePath)
+  let content
+  try {
+    content = await FileSystem.readFile(absolutePath)
+  } catch (error) {
+    if (error && error.code === ErrorCodes.ENOENT) {
+      return {
+        body: '404 - Not Found',
+        init: {
+          status: HttpStatusCode.NotFound,
+          headers: defaultHeaders,
+        },
+      }
+    }
+    return {
+      body: `500 - Internal Server Error`,
+      init: {
+        status: HttpStatusCode.ServerError,
+        headers: defaultHeaders,
+      },
+    }
+  }
   const headers = GetHeaders.getHeaders(absolutePath)
   return {
     body: content,
