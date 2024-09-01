@@ -8,6 +8,7 @@ export const handleIndexHtml = async (filePath: string, frameAncestors: string):
     const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
       "default-src 'none'",
       "script-src 'self'",
+      "style-src 'self'",
       `frame-ancestors ${frameAncestors}`,
     ])
     const contentType = GetContentType.getContentType(filePath)
