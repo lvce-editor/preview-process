@@ -40,8 +40,7 @@ test('get - css file', async () => {
       status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'text/css',
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'same-origin',
       },
     },
   })

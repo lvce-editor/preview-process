@@ -7,10 +7,16 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 export const getHeaders = (absolutePath: string) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
-  const headers = {
+  const headers: Record<string, string> = {
     [HttpHeader.ContentType]: mime,
-    [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
-    [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+  }
+  // TODO support strong csp with webworkers
+  // TODO support csp for iframes inside iframes?
+  if (absolutePath.endsWith('.html')) {
+    headers[HttpHeader.CrossOriginResourcePolicy] = CrossOriginResourcePolicy.value
+    headers[HttpHeader.CrossOriginEmbedderPolicy] = CrossOriginEmbedderPolicy.value
+  } else {
+    headers[HttpHeader.CrossOriginResourcePolicy] = 'same-origin'
   }
   return {
     ...headers,
