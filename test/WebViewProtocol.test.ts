@@ -19,7 +19,7 @@ test('method not allowed - post', async () => {
   const method = HttpMethod.Post
   const url = '/test/media'
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: 'Method not allowed',
+    body: '405 - Method not allowed',
     init: {
       status: HttpStatusCode.MethodNotAllowed,
       headers: {
