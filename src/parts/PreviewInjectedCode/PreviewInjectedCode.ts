@@ -1,6 +1,11 @@
 export const injectedCode = `
 let commandMap = {}
 let port
+let id = 0
+
+const createId = () => {
+  return ++id
+}
 const callbacks = Object.create(null)
 
 
@@ -12,6 +17,7 @@ const handleMessage = async (event) => {
   const message = event.data
   if(isJsonRpcResponse(message)){
     const fn = callbacks[message.id]
+    delete callbacks[message.id]
     fn(message.result)
     return
   }
@@ -46,9 +52,9 @@ const withResolvers = () => {
 }
 
 const registerPromise = () => {
-  const id = 1
+  const id = createId()
   const {resolve, promise} = withResolvers()
-  callbacks[id] = { resolve }
+  callbacks[id] = resolve
   return {
     id, promise
   }
