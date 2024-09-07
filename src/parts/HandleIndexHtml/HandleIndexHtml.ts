@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 
 export const handleIndexHtml = async (filePath: string, frameAncestors: string): Promise<Response> => {
   try {
@@ -18,14 +20,16 @@ export const handleIndexHtml = async (filePath: string, frameAncestors: string):
     const newContent = InjectPreviewScript.injectPreviewScript(content)
     return new Response(newContent, {
       headers: {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Content-Security-Policy': csp,
-        'Content-Type': contentType,
+        [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
+        [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
+        [HttpHeader.ContentSecurityPolicy]: csp,
+        [HttpHeader.ContentType]: contentType,
       },
     })
   } catch (error) {
     console.error(`[preview-server] ${error}`)
-    return new Response('not found')
+    return new Response('not found', {
+      status: HttpStatusCode.NotFound,
+    })
   }
 }
