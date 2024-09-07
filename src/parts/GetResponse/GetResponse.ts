@@ -2,9 +2,10 @@ import { fileURLToPath } from 'node:url'
 import * as HandleIndexHtml from '../HandleIndexHtml/HandleIndexHtml.ts'
 import * as HandleOther from '../HandleOther/HandleOther.ts'
 import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
+import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 
 export const getResponse = async (pathName: string, frameAncestors: string, webViewRoot: string): Promise<Response> => {
-  const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
+  const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
   if (isHtml) {
     return HandleIndexHtml.handleIndexHtml(filePath, frameAncestors)
