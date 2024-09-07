@@ -9,6 +9,8 @@ export const handleIndexHtml = async (filePath: string, frameAncestors: string):
       "default-src 'none'",
       "script-src 'self'",
       "style-src 'self'",
+      "img-src 'self'",
+      "media-src 'self'",
       `frame-ancestors ${frameAncestors}`,
     ])
     const contentType = GetContentType.getContentType(filePath)
