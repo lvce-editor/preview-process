@@ -1,7 +1,10 @@
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
+import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.ts'
 
 export const handleOther = async (filePath: string) => {
   try {
@@ -10,10 +13,10 @@ export const handleOther = async (filePath: string) => {
     const content = await FileSystem.readFile(filePath)
     return new Response(content, {
       headers: {
-        'Cross-Origin-Resource-Policy': 'cross-origin', // TODO use same origin
-        'Cross-Origin-Embedder-Policy': 'require-corp', // TODO only for index html?
-        'Access-Control-Allow-Origin': '*', // TODO
-        'Content-Type': contentType,
+        [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value, // TODO use same origin
+        [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value, // TODO only for index html?
+        [HttpHeader.AccessControlAllowOrigin]: '*', // TODO
+        [HttpHeader.ContentType]: contentType,
       },
     })
   } catch (error) {
@@ -21,9 +24,9 @@ export const handleOther = async (filePath: string) => {
       return new Response('not found', {
         status: HttpStatusCode.NotFound,
         headers: {
-          'Cross-Origin-Resource-Policy': 'cross-origin',
-          'Cross-Origin-Embedder-Policy': 'require-corp',
-          'Access-Control-Allow-Origin': '*',
+          [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+          [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+          [HttpHeader.AccessControlAllowOrigin]: '*',
         },
       })
     }
