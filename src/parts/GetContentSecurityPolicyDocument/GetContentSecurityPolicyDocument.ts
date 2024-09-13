@@ -5,7 +5,7 @@ export const getContentSecurityPolicyDocument = (frameAncestors: string): string
     "default-src 'none'",
     "script-src 'self'",
     "style-src 'self'",
-    "img-src 'self'",
+    "img-src 'self' https:",
     "media-src 'self'",
     `frame-ancestors ${frameAncestors}`,
   ])
