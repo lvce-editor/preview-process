@@ -2,7 +2,7 @@ import { VError } from '@lvce-editor/verror'
 import * as WaitForServerToBeReady from '../WaitForServerToBeReady/WaitForServerToBeReady.ts'
 import * as WebViewServerState from '../WebViewServerState/WebViewServerState.ts'
 
-export const startWebViewServer = async (id: number, port: number) => {
+export const startWebViewServer = async (id: number, port: string) => {
   try {
     const server = WebViewServerState.get(id)
     if (server.server.listening) {
