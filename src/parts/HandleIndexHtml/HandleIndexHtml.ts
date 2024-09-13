@@ -1,20 +1,13 @@
 import { readFile } from 'node:fs/promises'
-import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
+import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
-import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 
 export const handleIndexHtml = async (filePath: string, frameAncestors: string): Promise<Response> => {
   try {
-    const csp = GetContentSecurityPolicy.getContentSecurityPolicy([
-      "default-src 'none'",
-      "script-src 'self'",
-      "style-src 'self'",
-      "img-src 'self'",
-      "media-src 'self'",
-      `frame-ancestors ${frameAncestors}`,
-    ])
+    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(frameAncestors)
     const contentType = GetContentType.getContentType(filePath)
     const content = await readFile(filePath, 'utf8')
     const newContent = InjectPreviewScript.injectPreviewScript(content)
