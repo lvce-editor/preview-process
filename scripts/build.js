@@ -17,18 +17,11 @@ const writeJson = async (path, json) => {
 }
 
 const getGitTagFromGit = async () => {
-  const { stdout, stderr, exitCode } = await execa(
-    'git',
-    ['describe', '--exact-match', '--tags'],
-    {
-      reject: false,
-    },
-  )
+  const { stdout, stderr, exitCode } = await execa('git', ['describe', '--exact-match', '--tags'], {
+    reject: false,
+  })
   if (exitCode) {
-    if (
-      exitCode === 128 &&
-      stderr.startsWith('fatal: no tag exactly matches')
-    ) {
+    if (exitCode === 128 && stderr.startsWith('fatal: no tag exactly matches')) {
       return '0.0.0-dev'
     }
     return '0.0.0-dev'
@@ -65,6 +58,9 @@ await execa(`npx`, ['rollup', '-c'])
 await cp(join(root, 'src'), join(root, 'dist', 'src'), {
   recursive: true,
 })
+await cp(join(root, 'files'), join(root, 'dist', 'files'), {
+  recursive: true,
+})
 
 const version = await getVersion()
 
@@ -90,3 +86,11 @@ import '../dist/index.js'
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+
+const indexJsPath = join(root, 'dist', 'dist', 'index.js')
+const oldContent = await readFile(indexJsPath, 'utf8')
+const newContent = oldContent.replace(
+  `const root = path.join(__dirname, '..', '..', '..');`,
+  `const root = path.join(__dirname, '..');`,
+)
+await writeFile(indexJsPath, newContent)
