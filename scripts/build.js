@@ -90,7 +90,7 @@ await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
 const indexJsPath = join(root, 'dist', 'dist', 'index.js')
 const oldContent = await readFile(indexJsPath, 'utf8')
 const newContent = oldContent.replace(
-  `const root = path.join(__dirname, '..', '..');`,
+  `const root = path.join(__dirname, '..', '..', '..');`,
   `const root = path.join(__dirname, '..');`,
 )
 await writeFile(indexJsPath, newContent)
