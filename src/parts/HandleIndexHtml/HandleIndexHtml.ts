@@ -5,9 +5,13 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 
-export const handleIndexHtml = async (filePath: string, frameAncestors: string): Promise<Response> => {
+export const handleIndexHtml = async (
+  filePath: string,
+  frameAncestors: string,
+  contentSecurityPolicy: string,
+): Promise<Response> => {
   try {
-    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(frameAncestors)
+    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(frameAncestors, contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
     const content = await readFile(filePath, 'utf8')
     const newContent = InjectPreviewScript.injectPreviewScript(content)
