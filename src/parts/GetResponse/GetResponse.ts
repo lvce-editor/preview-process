@@ -8,11 +8,12 @@ export const getResponse = async (
   frameAncestors: string,
   webViewRoot: string,
   contentSecurityPolicy: string,
+  iframeContent: string,
 ): Promise<Response> => {
   const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
   if (isHtml) {
-    return HandleIndexHtml.handleIndexHtml(filePath, frameAncestors, contentSecurityPolicy)
+    return HandleIndexHtml.handleIndexHtml(filePath, frameAncestors, contentSecurityPolicy, iframeContent)
   }
   if (filePath.endsWith('preview-injected.js')) {
     return HandlePreviewInjected.handlePreviewInjected()
