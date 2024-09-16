@@ -9,19 +9,27 @@ export const handleIndexHtml = async (
   filePath: string,
   frameAncestors: string,
   contentSecurityPolicy: string,
+  iframeContent: string,
 ): Promise<Response> => {
   try {
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(frameAncestors, contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
+    const headers = {
+      [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
+      [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
+      [HttpHeader.ContentSecurityPolicy]: csp,
+      [HttpHeader.ContentType]: contentType,
+    }
+    if (iframeContent) {
+      return new Response(iframeContent, {
+        headers,
+      })
+    }
+    // deprecated
     const content = await readFile(filePath, 'utf8')
     const newContent = InjectPreviewScript.injectPreviewScript(content)
     return new Response(newContent, {
-      headers: {
-        [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
-        [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
-        [HttpHeader.ContentSecurityPolicy]: csp,
-        [HttpHeader.ContentType]: contentType,
-      },
+      headers,
     })
   } catch (error) {
     console.error(`[preview-server] ${error}`)

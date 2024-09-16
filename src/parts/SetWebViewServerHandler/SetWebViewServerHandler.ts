@@ -6,8 +6,9 @@ export const setWebViewServerHandler = (
   frameAncestors: string,
   webViewRoot: string,
   contentSecurityPolicy: string,
+  iframeContent: string,
 ) => {
   const server = WebViewServerState.get(id)
-  const handler = CreateWebViewServerHandler.createHandler(frameAncestors, webViewRoot, contentSecurityPolicy)
+  const handler = CreateWebViewServerHandler.createHandler(frameAncestors, webViewRoot, contentSecurityPolicy, iframeContent)
   server.setHandler(handler)
 }
