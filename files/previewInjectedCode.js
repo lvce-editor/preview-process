@@ -29,6 +29,7 @@ const handleMessage = async (event) => {
 
 const handleMessageFromTestPort = (event) => {
   // TODO invoke test function and send back result
+  console.log({ event })
 }
 
 const handleWindowMessage = (event) => {
