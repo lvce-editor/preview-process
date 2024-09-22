@@ -28,10 +28,16 @@ const handleMessage = async (event) => {
 }
 
 const handleFirstMessage = (event) => {
-  const message = event.data
+  const { data, target } = event
+  const message = data
   port = message.params[0]
   port.onmessage = handleMessage
   port.postMessage('ready')
+  target.postMessage({
+    jsonrpc: '2.0',
+    id: message.id,
+    result: null,
+  })
 }
 
 window.addEventListener('message', handleFirstMessage, {
