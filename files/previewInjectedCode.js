@@ -27,22 +27,31 @@ const handleMessage = async (event) => {
   const result = await fn(...params)
 }
 
-const handleFirstMessage = (event) => {
+const handleMessageFromTestPort = (event) => {
+  // TODO invoke test function and send back result
+  console.log({ event })
+}
+
+const handleWindowMessage = (event) => {
   const { data, target } = event
   const message = data
   port = message.params[0]
-  port.onmessage = handleMessage
-  port.postMessage('ready')
-  target.postMessage({
-    jsonrpc: '2.0',
-    id: message.id,
-    result: null,
-  })
+  const portType = message.params[1]
+  if (portType === 'test') {
+    port.onmessage = handleMessageFromTestPort
+    port.postMessage('ready')
+  } else {
+    port.onmessage = handleMessage
+    port.postMessage('ready')
+    target.postMessage({
+      jsonrpc: '2.0',
+      id: message.id,
+      result: null,
+    })
+  }
 }
 
-window.addEventListener('message', handleFirstMessage, {
-  once: true,
-})
+window.addEventListener('message', handleWindowMessage)
 
 const withResolvers = () => {
   let _resolve
