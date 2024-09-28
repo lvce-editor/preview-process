@@ -29,7 +29,19 @@ const handleMessage = async (event) => {
 
 const handleMessageFromTestPort = (event) => {
   // TODO invoke test function and send back result
-  console.log({ event })
+  const { data, target } = event
+  const { method, params, id } = data
+  if (method === 'createObjectUrl') {
+    const blob = params[0]
+    const url = URL.createObjectURL(blob)
+    target.postMessage({
+      jsonrpc: '2.0',
+      id,
+      result: url,
+    })
+  } else {
+    throw new Error('unsupported method')
+  }
 }
 
 const handleWindowMessage = (event) => {
