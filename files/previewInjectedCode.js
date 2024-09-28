@@ -33,7 +33,7 @@ const handleMessageFromTestPort = (event) => {
 }
 
 const handleWindowMessage = (event) => {
-  const { data, target } = event
+  const { data } = event
   const message = data
   port = message.params[0]
   const portType = message.params[1]
@@ -43,11 +43,6 @@ const handleWindowMessage = (event) => {
   } else {
     port.onmessage = handleMessage
     port.postMessage('ready')
-    target.postMessage({
-      jsonrpc: '2.0',
-      id: message.id,
-      result: null,
-    })
   }
 }
 
