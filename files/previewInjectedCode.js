@@ -47,14 +47,15 @@ const handleMessageFromTestPort = (event) => {
 const handleWindowMessage = (event) => {
   const { data } = event
   const message = data
-  port = message.params[0]
+  const innerPort = message.params[0]
   const portType = message.params[1]
   if (portType === 'test') {
-    port.onmessage = handleMessageFromTestPort
-    port.postMessage('ready')
+    innerPort.onmessage = handleMessageFromTestPort
+    innerPort.postMessage('ready')
   } else {
-    port.onmessage = handleMessage
-    port.postMessage('ready')
+    innerPort.onmessage = handleMessage
+    innerPort.postMessage('ready')
+    port = innerPort
   }
 }
 
