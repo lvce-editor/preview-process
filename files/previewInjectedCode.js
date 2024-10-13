@@ -22,7 +22,7 @@ const handleMessage = async (event) => {
   const { method, params } = message
   const fn = commandMap[method]
   if (!fn) {
-    throw new Error('command not found ${method}')
+    throw new Error(`command not found ${method}`)
   }
   const result = await fn(...params)
 }
