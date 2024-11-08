@@ -14,5 +14,11 @@ export const getElectronFileResponseAbsolutePath = (url: string) => {
   if (pathName.endsWith('/')) {
     return pathName + 'index.html'
   }
+  if (pathName.startsWith('/remote//')) {
+    return pathName.slice('/remote/'.length)
+  }
+  if (pathName.startsWith('/remote/')) {
+    return pathName.slice('/remote'.length)
+  }
   return pathName
 }
