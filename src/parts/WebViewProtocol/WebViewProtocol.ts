@@ -1,38 +1,24 @@
 import { readFile } from 'node:fs/promises'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
 import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
+import * as InternalServerErrorResponse from '../InternalServerErrorResponse/InternalServerErrorResponse.ts'
+import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
+import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
-
-const defaultHeaders = {
-  'Cross-Origin-Resource-Policy': 'cross-origin',
-  'Cross-Origin-Embedder-Policy': 'require-corp',
-}
+import * as SuccessResponse from '../SuccessResponse/SuccessResponse.ts'
 
 export const getResponse = async (method: string, url: string) => {
   // TODO allow head requests
   if (method !== HttpMethod.Get) {
-    return {
-      body: '405 - Method not allowed',
-      init: {
-        status: HttpStatusCode.MethodNotAllowed,
-        headers: defaultHeaders,
-      },
-    }
+    return NotAllowedResponse.create()
   }
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
   if (!absolutePath) {
-    return {
-      body: '404 - Not Found',
-      init: {
-        status: HttpStatusCode.NotFound,
-        headers: defaultHeaders,
-      },
-    }
+    return NotFoundResponse.create()
   }
   if (absolutePath.endsWith('/index.html')) {
     let content
@@ -40,70 +26,28 @@ export const getResponse = async (method: string, url: string) => {
       content = await readFile(absolutePath, 'utf8')
     } catch (error) {
       if (error && error.code === ErrorCodes.ENOENT) {
-        return {
-          body: '404 - Not Found',
-          init: {
-            status: HttpStatusCode.NotFound,
-            headers: defaultHeaders,
-          },
-        }
+        return NotFoundResponse.create()
       }
-      return {
-        body: `500 - Internal Server Error`,
-        init: {
-          status: HttpStatusCode.ServerError,
-          headers: defaultHeaders,
-        },
-      }
+      return InternalServerErrorResponse.create()
     }
     const newContent = InjectPreviewScript.injectPreviewScript(content)
     const headers = GetHeaders.getHeaders(absolutePath)
-    return {
-      body: newContent,
-      init: {
-        status: HttpStatusCode.Ok,
-        headers,
-      },
-    }
+    return SuccessResponse.create(newContent, headers)
   }
   if (url.endsWith('preview-injected.js')) {
     const { injectedCode } = PreviewInjectedCode
     const headers = GetHeaders.getHeaders('/test/file.js')
-    return {
-      body: injectedCode,
-      init: {
-        status: HttpStatusCode.Ok,
-        headers,
-      },
-    }
+    return SuccessResponse.create(injectedCode, headers)
   }
   let content
   try {
     content = await FileSystem.readFile(absolutePath)
   } catch (error) {
     if (error && error.code === ErrorCodes.ENOENT) {
-      return {
-        body: '404 - Not Found',
-        init: {
-          status: HttpStatusCode.NotFound,
-          headers: defaultHeaders,
-        },
-      }
+      return NotFoundResponse.create()
     }
-    return {
-      body: `500 - Internal Server Error`,
-      init: {
-        status: HttpStatusCode.ServerError,
-        headers: defaultHeaders,
-      },
-    }
+    return InternalServerErrorResponse.create()
   }
   const headers = GetHeaders.getHeaders(absolutePath)
-  return {
-    body: content,
-    init: {
-      status: HttpStatusCode.Ok,
-      headers,
-    },
-  }
+  return SuccessResponse.create(content, headers)
 }
