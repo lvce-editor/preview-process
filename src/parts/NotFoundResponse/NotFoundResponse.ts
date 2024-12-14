@@ -10,3 +10,9 @@ export const create = () => {
     },
   }
 }
+
+export const notFoundResponse = {
+  absolutePath: '',
+  status: HttpStatusCode.NotFound,
+  headers: {},
+}
