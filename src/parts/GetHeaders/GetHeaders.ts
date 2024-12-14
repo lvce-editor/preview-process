@@ -4,11 +4,14 @@ import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOr
 import * as GetMimeType from '../GetMimeType/GetMimeType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 
-export const getHeaders = (absolutePath: string) => {
+export const getHeaders = (absolutePath: string, etag?: string) => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers: Record<string, string> = {
     [HttpHeader.ContentType]: mime,
+  }
+  if (etag) {
+    headers[HttpHeader.Etag] = etag
   }
   // TODO support strong csp with webworkers
   // TODO support csp for iframes inside iframes?
