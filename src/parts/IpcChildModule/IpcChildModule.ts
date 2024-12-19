@@ -1,24 +1,21 @@
 import {
-  IpcChildWithElectronMessagePort,
-  IpcChildWithElectronUtilityProcess,
-  IpcChildWithNodeForkedProcess,
-  IpcChildWithNodeWorker,
-  IpcChildWithWebSocket,
-} from '@lvce-editor/ipc'
+  ElectronMessagePortRpcClient,
+  ElectronUtilityProcessRpcClient,
+  NodeForkedProcessRpcClient,
+  NodeWorkerRpcClient,
+} from '@lvce-editor/rpc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
 export const getModule = (method: number) => {
   switch (method) {
     case IpcChildType.NodeForkedProcess:
-      return IpcChildWithNodeForkedProcess
+      return NodeForkedProcessRpcClient
     case IpcChildType.NodeWorker:
-      return IpcChildWithNodeWorker
+      return NodeWorkerRpcClient
     case IpcChildType.ElectronUtilityProcess:
-      return IpcChildWithElectronUtilityProcess
+      return ElectronUtilityProcessRpcClient
     case IpcChildType.ElectronMessagePort:
-      return IpcChildWithElectronMessagePort
-    case IpcChildType.WebSocket:
-      return IpcChildWithWebSocket
+      return ElectronMessagePortRpcClient
     default:
       throw new Error('unexpected ipc type')
   }
