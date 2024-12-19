@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { ServerResponse } from 'http'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -23,14 +24,18 @@ class FileNotFoundError extends Error {
 
 test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
-  const response = await HandleOther.handleOther('/test/not-found.txt')
+  const range = ''
+  const res = new ServerResponse({} as any)
+  const response = await HandleOther.handleOther('/test/not-found.txt', range, res)
   expect(response.status).toBe(404)
   expect(await response.text()).toBe('not found')
 })
 
 test('normal file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
-  const response = await HandleOther.handleOther('/test/not-found.txt')
+  const range = ''
+  const res = new ServerResponse({} as any)
+  const response = await HandleOther.handleOther('/test/not-found.txt', range, res)
   expect(response.status).toBe(200)
   expect(await response.text()).toBe('ok')
 })
