@@ -1,11 +1,9 @@
-import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
-import * as IpcChild from '../IpcChild/IpcChild.ts'
-import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
+import { ElectronMessagePortRpcClient } from '@lvce-editor/rpc'
+import * as CommandMap from '../CommandMap/CommandMap.ts'
 
 export const handleElectronMessagePort = async (messagePort: any) => {
-  const ipc = await IpcChild.listen({
-    method: IpcChildType.ElectronMessagePort,
+  await ElectronMessagePortRpcClient.create({
     messagePort,
+    commandMap: CommandMap.commandMap,
   })
-  HandleIpc.handleIpc(ipc)
 }

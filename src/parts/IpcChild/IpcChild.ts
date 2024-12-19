@@ -1,22 +1,9 @@
 import * as IpcChildModule from '../IpcChildModule/IpcChildModule.ts'
 
-export const listen = async ({
-  method,
-  ...params
-}: {
-  method: number
-  [key: string]: any
-}) => {
-  const module = await IpcChildModule.getModule(method)
+export const listen = async ({ method, ...params }: { method: number; [key: string]: any }) => {
+  const module = IpcChildModule.getModule(method)
   // @ts-ignore
-  const rawIpc = await module.listen(params)
+  const rpc = await module.create(params)
   // @ts-ignore
-  if (module.signal) {
-    // @ts-ignore
-    module.signal(rawIpc)
-  }
-
-  // @ts-ignore
-  const ipc = module.wrap(rawIpc)
-  return ipc
+  return rpc
 }
