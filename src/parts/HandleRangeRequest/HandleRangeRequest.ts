@@ -1,6 +1,6 @@
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
-import { ServerResponse } from 'node:http'
+import { OutgoingHttpHeaders, ServerResponse } from 'node:http'
 import { pipeline } from 'node:stream/promises'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
@@ -9,7 +9,7 @@ import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsS
 // TODO add lots of tests for this
 export const handleRangeRequest = async (filePath: string, range: string, res: ServerResponse) => {
   const stats = await stat(filePath)
-  let code = 206
+  let code = HttpStatusCode.PartialContent
   let [x, y] = range.replace('bytes=', '').split('-')
   let end = parseInt(y, 10) || stats.size - 1
   let start = parseInt(x, 10) || 0
@@ -28,12 +28,11 @@ export const handleRangeRequest = async (filePath: string, range: string, res: S
     res.statusCode = HttpStatusCode.OtherError
     return res.end()
   }
-  const headers: any = {}
-
-  headers[HttpHeader.ContentRange] = `bytes ${start}-${end}/${stats.size}`
-  headers[HttpHeader.ContentLength] = end - start + 1
-  headers[HttpHeader.AcceptRanges] = 'bytes'
-
+  const headers: OutgoingHttpHeaders = {
+    [HttpHeader.ContentRange]: `bytes ${start}-${end}/${stats.size}`,
+    [HttpHeader.ContentLength]: end - start + 1,
+    [HttpHeader.AcceptRanges]: 'bytes',
+  }
   res.writeHead(code, headers)
   const readStream = createReadStream(filePath, options)
   try {
