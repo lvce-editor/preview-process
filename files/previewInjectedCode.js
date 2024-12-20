@@ -25,6 +25,12 @@ const handleMessage = async (event) => {
     throw new Error(`command not found ${method}`)
   }
   const result = await fn(...params)
+  if (message.id) {
+    event.target.postMessage({
+      jsonrpc: '2.0',
+      result,
+    })
+  }
 }
 
 const handleMessageFromTestPort = (event) => {
