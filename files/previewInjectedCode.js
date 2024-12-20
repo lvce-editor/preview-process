@@ -28,6 +28,7 @@ const handleMessage = async (event) => {
   if (message.id) {
     event.target.postMessage({
       jsonrpc: '2.0',
+      id: message.id,
       result,
     })
   }
