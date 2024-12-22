@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as IsStreamPrematureCloseError from '../src/parts/IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
+import * as IsStreamPrematureCloseError from '../src/parts/IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
 
 test('isStreamPrematureCloseError - when error is undefined', () => {
   expect(IsStreamPrematureCloseError.isStreamPrematureCloseError(undefined)).toBe(undefined)

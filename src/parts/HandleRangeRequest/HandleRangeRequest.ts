@@ -9,10 +9,10 @@ import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsS
 // TODO add lots of tests for this
 export const handleRangeRequest = async (filePath: string, range: string, res: ServerResponse) => {
   const stats = await stat(filePath)
-  let code = HttpStatusCode.PartialContent
-  let [x, y] = range.replace('bytes=', '').split('-')
+  const code = HttpStatusCode.PartialContent
+  const [x, y] = range.replace('bytes=', '').split('-')
   let end = parseInt(y, 10) || stats.size - 1
-  let start = parseInt(x, 10) || 0
+  const start = parseInt(x, 10) || 0
 
   const options = {
     start,

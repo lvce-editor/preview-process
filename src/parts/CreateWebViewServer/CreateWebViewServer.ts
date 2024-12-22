@@ -1,7 +1,7 @@
 import { VError } from '@lvce-editor/verror'
 import { createServer } from 'node:http'
-import * as WebViewServerState from '../WebViewServerState/WebViewServerState.ts'
 import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
+import * as WebViewServerState from '../WebViewServerState/WebViewServerState.ts'
 
 export const createWebViewServer = (id: number): void => {
   try {
