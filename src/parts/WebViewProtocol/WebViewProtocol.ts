@@ -11,7 +11,7 @@ import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
 import * as SuccessResponse from '../SuccessResponse/SuccessResponse.ts'
 
-export const getResponse = async (method: string, url: string) => {
+export const getResponse = async (method: string, url: string): Promise<any> => {
   // TODO allow head requests
   if (method !== HttpMethod.Get) {
     return NotAllowedResponse.create()
