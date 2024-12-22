@@ -23,7 +23,6 @@ export const createHandler = (
       contentSecurityPolicy,
       iframeContent,
       range,
-      response,
     )
     await SendResponse.sendResponse(response, result)
   }
