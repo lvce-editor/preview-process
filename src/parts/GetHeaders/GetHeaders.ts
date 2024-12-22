@@ -4,7 +4,7 @@ import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOr
 import * as GetMimeType from '../GetMimeType/GetMimeType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 
-export const getHeaders = (absolutePath: string, etag?: string) => {
+export const getHeaders = (absolutePath: string, etag?: string): any => {
   const extension = extname(absolutePath)
   const mime = GetMimeType.getMimeType(extension)
   const headers: Record<string, string> = {

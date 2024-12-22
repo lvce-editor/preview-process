@@ -3,10 +3,11 @@ import {
   ElectronUtilityProcessRpcClient,
   NodeForkedProcessRpcClient,
   NodeWorkerRpcClient,
+  RpcClient,
 } from '@lvce-editor/rpc'
 import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
 
-export const getModule = (method: number) => {
+export const getModule = (method: number): RpcClient<any> => {
   switch (method) {
     case IpcChildType.NodeForkedProcess:
       return NodeForkedProcessRpcClient
