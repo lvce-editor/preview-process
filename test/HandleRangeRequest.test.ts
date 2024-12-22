@@ -22,30 +22,6 @@ const HandleRangeRequest = await import('../src/parts/HandleRangeRequest/HandleR
 const FsPromises = await import('node:fs/promises')
 const Fs = await import('node:fs')
 
-class MockServerResponse extends Writable {
-  headers = new Map()
-  statusCode = 200
-
-  setHeader(key: string, value: any): void {
-    this.headers.set(key, value)
-  }
-
-  getHeader(key: string): string {
-    return this.headers.get(key)
-  }
-
-  writeHead(statusCode: number, headers: any): void {
-    this.statusCode = statusCode
-    for (const [key, value] of Object.entries(headers)) {
-      this.setHeader(key, value)
-    }
-  }
-
-  _write(chunk: any, encoding: string, callback: (error?: Error | null) => void): void {
-    callback()
-  }
-}
-
 test('handleRangeRequest - should handle valid range request', async () => {
   const mockStat = {
     size: 1000,
@@ -58,15 +34,13 @@ test('handleRangeRequest - should handle valid range request', async () => {
   })
   jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
 
-  const res = new MockServerResponse()
   const range = 'bytes=0-100'
-  // @ts-expect-error
-  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
+  const response = await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range)
 
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader('Content-Range')).toBe('bytes 0-100/1000')
-  expect(res.getHeader('Content-Length')).toBe(101)
-  expect(res.getHeader('Accept-Ranges')).toBe('bytes')
+  expect(response.status).toBe(HttpStatusCode.PartialContent)
+  expect(response.headers.get('Content-Range')).toBe('bytes 0-100/1000')
+  expect(response.headers.get('Content-Length')).toBe('101')
+  expect(response.headers.get('Accept-Ranges')).toBe('bytes')
 })
 
 test('handleRangeRequest - should handle range request with end beyond file size', async () => {
@@ -81,14 +55,12 @@ test('handleRangeRequest - should handle range request with end beyond file size
   })
   jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
 
-  const res = new MockServerResponse()
   const range = 'bytes=0-1000'
-  // @ts-expect-error
-  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
+  const response = await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range)
 
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader('Content-Range')).toBe('bytes 0-499/500')
-  expect(res.getHeader('Content-Length')).toBe(500)
+  expect(response.status).toBe(HttpStatusCode.PartialContent)
+  expect(response.headers.get('Content-Range')).toBe('bytes 0-499/500')
+  expect(response.headers.get('Content-Length')).toBe('500')
 })
 
 test('handleRangeRequest - should handle range request with start beyond file size', async () => {
@@ -97,11 +69,9 @@ test('handleRangeRequest - should handle range request with start beyond file si
   }
   jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
 
-  const res = new MockServerResponse()
   const range = 'bytes=200-300'
-  // @ts-expect-error
-  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
+  const response = await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range)
 
-  expect(res.statusCode).toBe(HttpStatusCode.OtherError)
-  expect(res.getHeader('Content-Range')).toBe('bytes */100')
+  expect(response.status).toBe(HttpStatusCode.OtherError)
+  expect(response.headers.get('Content-Range')).toBe('bytes */100')
 })

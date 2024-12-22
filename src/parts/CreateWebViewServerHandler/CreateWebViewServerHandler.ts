@@ -28,11 +28,7 @@ export const createHandler = (
       contentSecurityPolicy,
       iframeContent,
       range,
-      response,
     )
-    if (result === emptyResponse) {
-      return
-    }
     await SendResponse.sendResponse(response, result)
   }
 

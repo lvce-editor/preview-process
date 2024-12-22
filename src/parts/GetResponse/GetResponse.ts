@@ -1,4 +1,3 @@
-import { ServerResponse } from 'node:http'
 import * as HandleIndexHtml from '../HandleIndexHtml/HandleIndexHtml.ts'
 import * as HandleOther from '../HandleOther/HandleOther.ts'
 import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
@@ -11,7 +10,6 @@ export const getResponse = async (
   contentSecurityPolicy: string,
   iframeContent: string,
   range: any,
-  response: ServerResponse,
 ): Promise<Response> => {
   const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
@@ -21,5 +19,5 @@ export const getResponse = async (
   if (filePath.endsWith('preview-injected.js')) {
     return HandlePreviewInjected.handlePreviewInjected()
   }
-  return HandleOther.handleOther(filePath, range, response)
+  return HandleOther.handleOther(filePath, range)
 }
