@@ -1,6 +1,7 @@
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import perfectionist from 'eslint-plugin-perfectionist'
+import nodePlugin from 'eslint-plugin-n'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -56,4 +57,5 @@ export default tseslint.config(
       ],
     },
   },
+  nodePlugin.configs['flat/recommended'],
 )
