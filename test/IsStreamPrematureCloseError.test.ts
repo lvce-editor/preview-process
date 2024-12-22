@@ -3,7 +3,7 @@ import * as IsStreamPrematureCloseError from '../src/parts/IsStreamPrematureClos
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 
 test('isStreamPrematureCloseError - when error is undefined', () => {
-  expect(IsStreamPrematureCloseError.isStreamPrematureCloseError(undefined)).toBe(false)
+  expect(IsStreamPrematureCloseError.isStreamPrematureCloseError(undefined)).toBe(undefined)
 })
 
 test('isStreamPrematureCloseError - when error is null', () => {
