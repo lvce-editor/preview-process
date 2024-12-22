@@ -17,9 +17,10 @@ export const handleRangeRequest = async (filePath: string, range: string): Promi
   if (end >= stats.size) {
     end = stats.size - 1
   }
+
   if (start >= stats.size) {
     return new Response(null, {
-      status: HttpStatusCode.OtherError,
+      status: HttpStatusCode.RangeNotSatisfiable,
       headers: {
         [HttpHeader.ContentRange]: `bytes */${stats.size}`,
       },
