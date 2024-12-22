@@ -16,6 +16,23 @@ export default tseslint.config(
     },
   },
   {
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      'perfectionist/sort-imports': [
+        'error',
+        {
+          type: 'natural',
+          order: 'asc',
+          newlinesBetween: 'never',
+        },
+      ],
+    },
+  },
+  nodePlugin.configs['flat/recommended'],
+  pluginJest.configs['flat/recommended'],
+  {
     ignores: [
       'dist',
       'coverage',
@@ -45,26 +62,10 @@ export default tseslint.config(
       'jest/no-disabled-tests': 'off',
     },
   },
-  {
-    plugins: {
-      perfectionist,
-    },
-    rules: {
-      'perfectionist/sort-imports': [
-        'error',
-        {
-          type: 'natural',
-          order: 'asc',
-          newlinesBetween: 'never',
-        },
-      ],
-    },
-  },
-  nodePlugin.configs['flat/recommended'],
+
   {
     rules: {
       'node/no-unpublished-require': ['error', { devDependencies: true }],
     },
   },
-  pluginJest.configs['flat/recommended'],
 )
