@@ -1,4 +1,3 @@
-import { ServerResponse } from 'node:http'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
@@ -9,7 +8,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 export const handleOther = async (filePath: string, range: any): Promise<Response> => {
   try {
     if (range) {
-      return HandleRangeRequest.handleRangeRequest(filePath, range)
+      return await HandleRangeRequest.handleRangeRequest(filePath, range)
     }
     const contentType = GetContentType.getContentType(filePath)
     // TODO figure out which of these headers are actually needed
