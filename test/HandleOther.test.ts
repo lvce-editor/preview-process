@@ -25,8 +25,7 @@ class FileNotFoundError extends Error {
 test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
   const range = ''
-  const res = new ServerResponse({} as any)
-  const response = await HandleOther.handleOther('/test/not-found.txt', range, res)
+  const response = await HandleOther.handleOther('/test/not-found.txt', range)
   expect(response.status).toBe(404)
   expect(await response.text()).toBe('not found')
 })
@@ -34,8 +33,7 @@ test('not found', async () => {
 test('normal file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
   const range = ''
-  const res = new ServerResponse({} as any)
-  const response = await HandleOther.handleOther('/test/not-found.txt', range, res)
+  const response = await HandleOther.handleOther('/test/not-found.txt', range)
   expect(response.status).toBe(200)
   expect(await response.text()).toBe('ok')
 })
