@@ -1,4 +1,4 @@
-export interface WithResolvers<T> {
+interface WithResolvers<T> {
   readonly resolve: () => void
   readonly promise: Promise<T>
 }

@@ -8,7 +8,7 @@ import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse
 export const getResponseInfo = async (request: any, absolutePath: string) => {
   const etag = await GetPathEtag.getPathEtag(absolutePath)
   if (!etag) {
-    return NotFoundResponse.notFoundResponse
+    return NotFoundResponse.create()
   }
   if (MatchesEtag.matchesEtag(request, etag)) {
     return NotModifiedResponse.notModifiedResponse
