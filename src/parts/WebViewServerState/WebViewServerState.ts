@@ -2,7 +2,7 @@ import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
 
 const servers = Object.create(null)
 
-export const set = (id: number, server: WebViewServer) => {
+export const set = (id: number, server: WebViewServer): void => {
   servers[id] = server
 }
 
