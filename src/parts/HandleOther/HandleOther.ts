@@ -6,7 +6,7 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 
-export const handleOther = async (filePath: string, range: any, res: ServerResponse): Promise<Response> => {
+export const handleOther = async (filePath: string, range: any): Promise<Response> => {
   try {
     if (range) {
       return HandleRangeRequest.handleRangeRequest(filePath, range)
