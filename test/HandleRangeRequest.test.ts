@@ -72,6 +72,6 @@ test('handleRangeRequest - should handle range request with start beyond file si
   const range = 'bytes=200-300'
   const response = await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range)
 
-  expect(response.status).toBe(HttpStatusCode.OtherError)
+  expect(response.status).toBe(HttpStatusCode.RangeNotSatisfiable)
   expect(response.headers.get('Content-Range')).toBe('bytes */100')
 })
