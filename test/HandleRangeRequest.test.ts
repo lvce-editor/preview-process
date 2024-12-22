@@ -1,8 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import { ServerResponse } from 'node:http'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
-import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
+import { Readable } from 'node:stream'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
+import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -11,7 +12,7 @@ beforeEach(() => {
 jest.unstable_mockModule('node:fs', () => {
   return {
     createReadStream: jest.fn(() => {
-      const stream = new (require('stream').Readable)()
+      const stream = new Readable()
       stream.push('test content')
       stream.push(null)
       return stream
