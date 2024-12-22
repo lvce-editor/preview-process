@@ -95,6 +95,9 @@
     "extensionsToTreatAsEsm": [
       ".ts"
     ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
     "transform": {
       "^.+\\.tsx?$": [
         "ts-jest",
@@ -102,6 +105,14 @@
           "useESM": true
         }
       ]
+    },
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 13,
+        "functions": 22,
+        "lines": 51
+      }
     }
   },
   "prettier": {
