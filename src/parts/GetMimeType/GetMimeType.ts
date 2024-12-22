@@ -1,6 +1,6 @@
 import * as MimeType from '../MimeType/MimeType.ts'
 
-export const getMimeType = (fileExtension: string) => {
+export const getMimeType = (fileExtension: string): string => {
   switch (fileExtension) {
     case '.html':
       return MimeType.TextHtml

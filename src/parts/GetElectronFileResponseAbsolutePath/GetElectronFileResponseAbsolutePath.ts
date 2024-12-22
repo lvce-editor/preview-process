@@ -1,4 +1,4 @@
-const getPathName = (url: string) => {
+const getPathName = (url: string): string => {
   try {
     const p = new URL(url).pathname
     return p
@@ -7,7 +7,7 @@ const getPathName = (url: string) => {
   }
 }
 
-export const getElectronFileResponseAbsolutePath = (url: string) => {
+export const getElectronFileResponseAbsolutePath = (url: string): string => {
   // TODO support windows paths
   // TODO disallow dot dot in paths
   const pathName = getPathName(url)
