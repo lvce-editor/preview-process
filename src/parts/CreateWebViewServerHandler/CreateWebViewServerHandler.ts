@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { emptyResponse } from '../EmptyResponse/EmptyResponse.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
@@ -26,9 +25,6 @@ export const createHandler = (
       range,
       response,
     )
-    if (result === emptyResponse) {
-      return
-    }
     await SendResponse.sendResponse(response, result)
   }
 
