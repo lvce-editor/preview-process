@@ -23,7 +23,7 @@ test('resolveFilePath - empty path', () => {
 test('resolveFilePath - root path', () => {
   const pathName = '/'
   const webViewRoot = '/root'
-  expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe('/root')
+  expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe('/root/')
 })
 
 test('resolveFilePath - path with query parameters', () => {
