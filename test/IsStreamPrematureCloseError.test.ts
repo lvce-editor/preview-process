@@ -7,7 +7,7 @@ test('isStreamPrematureCloseError - when error is undefined', () => {
 })
 
 test('isStreamPrematureCloseError - when error is null', () => {
-  expect(IsStreamPrematureCloseError.isStreamPrematureCloseError(null)).toBe(false)
+  expect(IsStreamPrematureCloseError.isStreamPrematureCloseError(null)).toBe(null)
 })
 
 test('isStreamPrematureCloseError - when error has no code', () => {
