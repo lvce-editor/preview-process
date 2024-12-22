@@ -1,5 +1,4 @@
 import { expect, test } from '@jest/globals'
-import * as DefaultHeaders from '../src/parts/DefaultHeaders/DefaultHeaders.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as NotFoundResponse from '../src/parts/NotFoundResponse/NotFoundResponse.ts'
 
@@ -8,7 +7,11 @@ test('create - returns correct not found response', () => {
     body: '404 - Not Found',
     init: {
       status: HttpStatusCode.NotFound,
-      headers: DefaultHeaders.defaultHeaders,
+      headers: {
+        'Content-Type': 'text/html',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      },
     },
   })
 })
