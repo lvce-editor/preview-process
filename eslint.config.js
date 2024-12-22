@@ -21,6 +21,7 @@ export default tseslint.config(
       'rollup.config.js',
       'eslint.config.js',
       'src/previewProcessMain.ts',
+      'src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts',
       'files/previewInjectedCode.js',
     ],
   },
