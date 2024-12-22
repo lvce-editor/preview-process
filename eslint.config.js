@@ -47,7 +47,12 @@ export default tseslint.config(
   {
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'error',
-      'node/no-unpublished-require': ['error', { devDependencies: true }],
+      'n/no-unpublished-import': [
+        'error',
+        {
+          allowModules: ['@jest/globals'],
+        },
+      ],
     },
   },
   {
