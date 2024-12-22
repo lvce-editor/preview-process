@@ -59,4 +59,9 @@ export default tseslint.config(
     },
   },
   nodePlugin.configs['flat/recommended'],
+  {
+    rules: {
+      'node/no-unpublished-require': ['error', { devDependencies: true }],
+    },
+  },
 )
