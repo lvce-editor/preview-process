@@ -39,7 +39,7 @@ test('handleRangeRequest - should handle valid range request', async () => {
 
   expect(response.status).toBe(HttpStatusCode.PartialContent)
   expect(response.headers.get('Content-Range')).toBe('bytes 0-100/1000')
-  expect(response.headers.get('Content-Length')).toBe(101)
+  expect(response.headers.get('Content-Length')).toBe('101')
   expect(response.headers.get('Accept-Ranges')).toBe('bytes')
 })
 
@@ -60,7 +60,7 @@ test('handleRangeRequest - should handle range request with end beyond file size
 
   expect(response.status).toBe(HttpStatusCode.PartialContent)
   expect(response.headers.get('Content-Range')).toBe('bytes 0-499/500')
-  expect(response.headers.get('Content-Length')).toBe(500)
+  expect(response.headers.get('Content-Length')).toBe('500')
 })
 
 test('handleRangeRequest - should handle range request with start beyond file size', async () => {
