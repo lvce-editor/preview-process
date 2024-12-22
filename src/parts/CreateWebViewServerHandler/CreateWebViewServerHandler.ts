@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { fileURLToPath } from 'node:url'
 import { emptyResponse } from '../EmptyResponse/EmptyResponse.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
@@ -11,6 +12,9 @@ export const createHandler = (
   contentSecurityPolicy: string,
   iframeContent: string,
 ): any => {
+  if (webViewRoot && webViewRoot.startsWith('file://')) {
+    webViewRoot = fileURLToPath(webViewRoot)
+  }
   const handleRequest = async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
     let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
