@@ -47,6 +47,11 @@ export default tseslint.config(
   {
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'error',
+      'node/no-unpublished-require': ['error', { devDependencies: true }],
+    },
+  },
+  {
+    rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
@@ -60,12 +65,6 @@ export default tseslint.config(
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
       'jest/no-disabled-tests': 'off',
-    },
-  },
-
-  {
-    rules: {
-      'node/no-unpublished-require': ['error', { devDependencies: true }],
     },
   },
 )
