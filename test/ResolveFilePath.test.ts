@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as ResolveFilePath from '../src/parts/ResolveFilePath/ResolveFilePath.js'
 import { join } from 'node:path'
+import * as ResolveFilePath from '../src/parts/ResolveFilePath/ResolveFilePath.js'
 
 test.skip('resolveFilePath - normal path', () => {
   const pathName = '/test/file.txt'
