@@ -11,7 +11,3 @@ export const registerCommands = (commandMap: any) => {
     registerCommand(key, value)
   }
 }
-
-export const getCommand = (key: string) => {
-  return state.commands[key]
-}
