@@ -1,6 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { fileURLToPath } from 'node:url'
-import { emptyResponse } from '../EmptyResponse/EmptyResponse.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
