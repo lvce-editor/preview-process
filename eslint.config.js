@@ -1,6 +1,7 @@
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import perfectionist from 'eslint-plugin-perfectionist'
+import pluginJest from 'eslint-plugin-jest'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -40,6 +41,7 @@ export default tseslint.config(
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
+      'jest/no-disabled-tests': 'off',
     },
   },
   {
@@ -57,4 +59,5 @@ export default tseslint.config(
       ],
     },
   },
+  pluginJest.configs['flat/recommended'],
 )
