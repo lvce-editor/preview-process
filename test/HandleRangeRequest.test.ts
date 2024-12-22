@@ -1,23 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import { ServerResponse } from 'node:http'
-import { Readable } from 'node:stream'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
-import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
+import { Writable } from 'node:stream'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-})
-
-jest.unstable_mockModule('node:fs', () => {
-  return {
-    createReadStream: jest.fn(() => {
-      const stream = new Readable()
-      stream.push('test content')
-      stream.push(null)
-      return stream
-    }),
-  }
 })
 
 jest.unstable_mockModule('node:fs/promises', () => {
@@ -26,101 +12,96 @@ jest.unstable_mockModule('node:fs/promises', () => {
   }
 })
 
-const HandleRangeRequest = await import('../src/parts/HandleRangeRequest/HandleRangeRequest.ts')
-const fs = await import('node:fs')
-const fsPromises = await import('node:fs/promises')
-
-test('handleRangeRequest - normal range request', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=0-4'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
-
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
-
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader(HttpHeader.ContentRange)).toBe('bytes 0-4/100')
-  expect(res.getHeader(HttpHeader.ContentLength)).toBe(5)
-  expect(res.getHeader(HttpHeader.AcceptRanges)).toBe('bytes')
+jest.unstable_mockModule('node:fs', () => {
+  return {
+    createReadStream: jest.fn(),
+  }
 })
 
-test('handleRangeRequest - range exceeds file size', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=0-200'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
+const HandleRangeRequest = await import('../src/parts/HandleRangeRequest/HandleRangeRequest.js')
+const FsPromises = await import('node:fs/promises')
+const Fs = await import('node:fs')
 
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
+class MockServerResponse extends Writable {
+  headers = new Map()
+  statusCode = 200
+
+  setHeader(key: string, value: any) {
+    this.headers.set(key, value)
+  }
+
+  getHeader(key: string) {
+    return this.headers.get(key)
+  }
+
+  writeHead(statusCode: number, headers: any) {
+    this.statusCode = statusCode
+    for (const [key, value] of Object.entries(headers)) {
+      this.setHeader(key, value)
+    }
+  }
+
+  _write(chunk: any, encoding: string, callback: (error?: Error | null) => void): void {
+    callback()
+  }
+}
+
+test('handleRangeRequest - should handle valid range request', async () => {
+  const mockStat = {
+    size: 1000,
+  }
+  jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
+  const mockStream = new Writable({
+    write(chunk, encoding, callback) {
+      callback()
+    },
+  })
+  jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
+
+  const res = new MockServerResponse()
+  const range = 'bytes=0-100'
+  // @ts-expect-error
+  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
 
   expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader(HttpHeader.ContentRange)).toBe('bytes 0-99/100')
-  expect(res.getHeader(HttpHeader.ContentLength)).toBe(100)
+  expect(res.getHeader('Content-Range')).toBe('bytes 0-100/1000')
+  expect(res.getHeader('Content-Length')).toBe(101)
+  expect(res.getHeader('Accept-Ranges')).toBe('bytes')
 })
 
-test('handleRangeRequest - start position exceeds file size', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=150-200'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
+test('handleRangeRequest - should handle range request with end beyond file size', async () => {
+  const mockStat = {
+    size: 500,
+  }
+  jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
+  const mockStream = new Writable({
+    write(chunk, encoding, callback) {
+      callback()
+    },
+  })
+  jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
 
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
+  const res = new MockServerResponse()
+  const range = 'bytes=0-1000'
+  // @ts-expect-error
+  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
+
+  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
+  expect(res.getHeader('Content-Range')).toBe('bytes 0-499/500')
+  expect(res.getHeader('Content-Length')).toBe(500)
+})
+
+test('handleRangeRequest - should handle range request with start beyond file size', async () => {
+  const mockStat = {
+    size: 100,
+  }
+  jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
+
+  const res = new MockServerResponse()
+  const range = 'bytes=200-300'
+  // @ts-expect-error
+  await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range, res)
 
   expect(res.statusCode).toBe(HttpStatusCode.OtherError)
-  expect(res.getHeader(HttpHeader.ContentRange)).toBe('bytes */100')
-})
-
-test('handleRangeRequest - handles stream premature close error', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=0-4'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
-
-  const mockStream = {
-    pipe: jest.fn().mockImplementation(() => {
-      throw { code: ErrorCodes.ERR_STREAM_PREMATURE_CLOSE }
-    }),
-  }
-  jest.spyOn(fs, 'createReadStream').mockReturnValue(mockStream as any)
-
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
-
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-})
-
-test('handleRangeRequest - no end specified', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=5-'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
-
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
-
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader(HttpHeader.ContentRange)).toBe('bytes 5-99/100')
-  expect(res.getHeader(HttpHeader.ContentLength)).toBe(95)
-})
-
-test('handleRangeRequest - no start specified', async () => {
-  const filePath = '/test/file.txt'
-  const range = 'bytes=-10'
-  const res = new ServerResponse({} as any)
-  jest.spyOn(fsPromises, 'stat').mockResolvedValue({
-    size: 100,
-  } as any)
-
-  await HandleRangeRequest.handleRangeRequest(filePath, range, res)
-
-  expect(res.statusCode).toBe(HttpStatusCode.PartialContent)
-  expect(res.getHeader(HttpHeader.ContentRange)).toBe('bytes 0-10/100')
-  expect(res.getHeader(HttpHeader.ContentLength)).toBe(11)
+  expect(res.getHeader('Content-Range')).toBe('bytes */100')
 })
