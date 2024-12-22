@@ -5,7 +5,7 @@ import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
 import * as NotModifiedResponse from '../NotModifiedResponse/NotModifiedResponse.ts'
 
-export const getResponseInfo = async (request: any, absolutePath: string) => {
+export const getResponseInfo = async (request: any, absolutePath: string): Promise<any> => {
   const etag = await GetPathEtag.getPathEtag(absolutePath)
   if (!etag) {
     return NotFoundResponse.create()

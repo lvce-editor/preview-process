@@ -19,6 +19,6 @@ const textMimeType: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
-export const getContentType = (filePath: string) => {
+export const getContentType = (filePath: string): string => {
   return textMimeType[extname(filePath)] || 'text/plain'
 }
