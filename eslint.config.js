@@ -1,7 +1,8 @@
 import eslint from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import perfectionist from 'eslint-plugin-perfectionist'
+import pluginJest from 'eslint-plugin-jest'
 import nodePlugin from 'eslint-plugin-n'
+import perfectionist from 'eslint-plugin-perfectionist'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -41,6 +42,7 @@ export default tseslint.config(
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
+      'jest/no-disabled-tests': 'off',
     },
   },
   {
@@ -64,4 +66,5 @@ export default tseslint.config(
       'node/no-unpublished-require': ['error', { devDependencies: true }],
     },
   },
+  pluginJest.configs['flat/recommended'],
 )
