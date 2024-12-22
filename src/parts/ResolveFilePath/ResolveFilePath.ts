@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 
-export const resolveFilePath = (pathName: string, webViewRoot: string) => {
+export const resolveFilePath = (pathName: string, webViewRoot: string): string => {
   // TODO remove this, double slash should not be allowed
   // TODO use path.resolve and verify that file path is in allowed roots
   if (pathName.startsWith('/remote//')) {
