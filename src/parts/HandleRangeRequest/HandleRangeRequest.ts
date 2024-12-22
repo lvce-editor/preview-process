@@ -7,7 +7,7 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
 
 // TODO add lots of tests for this
-export const handleRangeRequest = async (filePath: string, range: string, res: ServerResponse) => {
+export const handleRangeRequest = async (filePath: string, range: string, res: ServerResponse): Promise<void> => {
   const stats = await stat(filePath)
   const code = HttpStatusCode.PartialContent
   const [x, y] = range.replace('bytes=', '').split('-')
@@ -26,7 +26,8 @@ export const handleRangeRequest = async (filePath: string, range: string, res: S
   if (start >= stats.size) {
     res.setHeader(HttpHeader.ContentRange, `bytes */${stats.size}`)
     res.statusCode = HttpStatusCode.OtherError
-    return res.end()
+    res.end()
+    return
   }
   const headers: OutgoingHttpHeaders = {
     [HttpHeader.ContentRange]: `bytes ${start}-${end}/${stats.size}`,

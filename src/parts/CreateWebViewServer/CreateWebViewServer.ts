@@ -12,14 +12,14 @@ export const createWebViewServer = (id: number): void => {
     const webViewServer: WebViewServer = {
       server,
       handler: undefined,
-      setHandler(handleRequest) {
+      setHandler(handleRequest): void {
         if (this.handler) {
           return
         }
         this.handler = handleRequest
         this.server.on('request', handleRequest)
       },
-      listen(port, callback) {
+      listen(port, callback): void {
         this.server.listen(port, callback)
       },
     }
