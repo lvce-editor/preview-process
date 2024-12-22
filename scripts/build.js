@@ -55,9 +55,6 @@ await mkdir(dist, { recursive: true })
 
 await execa(`npx`, ['rollup', '-c'])
 
-await cp(join(root, 'src'), join(root, 'dist', 'src'), {
-  recursive: true,
-})
 await cp(join(root, 'files'), join(root, 'dist', 'files'), {
   recursive: true,
 })
