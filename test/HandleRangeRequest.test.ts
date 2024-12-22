@@ -26,15 +26,15 @@ class MockServerResponse extends Writable {
   headers = new Map()
   statusCode = 200
 
-  setHeader(key: string, value: any) {
+  setHeader(key: string, value: any): void {
     this.headers.set(key, value)
   }
 
-  getHeader(key: string) {
+  getHeader(key: string): string {
     return this.headers.get(key)
   }
 
-  writeHead(statusCode: number, headers: any) {
+  writeHead(statusCode: number, headers: any): void {
     this.statusCode = statusCode
     for (const [key, value] of Object.entries(headers)) {
       this.setHeader(key, value)
@@ -52,7 +52,7 @@ test('handleRangeRequest - should handle valid range request', async () => {
   }
   jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
   const mockStream = new Writable({
-    write(chunk, encoding, callback) {
+    write(chunk, encoding, callback): void {
       callback()
     },
   })
@@ -75,7 +75,7 @@ test('handleRangeRequest - should handle range request with end beyond file size
   }
   jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
   const mockStream = new Writable({
-    write(chunk, encoding, callback) {
+    write(chunk, encoding, callback): void {
       callback()
     },
   })

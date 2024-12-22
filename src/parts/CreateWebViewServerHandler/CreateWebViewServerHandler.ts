@@ -10,7 +10,7 @@ export const createHandler = (
   webViewRoot: string,
   contentSecurityPolicy: string,
   iframeContent: string,
-) => {
+): any => {
   const handleRequest = async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
     let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
