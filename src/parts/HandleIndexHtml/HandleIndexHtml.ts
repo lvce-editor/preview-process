@@ -16,7 +16,7 @@ export const handleIndexHtml = async (
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
     const headers = {
-      [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+      [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.CrossOrigin,
       [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
       [HttpHeader.ContentSecurityPolicy]: csp,
       [HttpHeader.ContentType]: contentType,

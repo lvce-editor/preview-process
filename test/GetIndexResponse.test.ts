@@ -20,7 +20,7 @@ test('getIndexResponse', async () => {
       headers: {
         'Content-Security-Policy': "default-src 'self'",
         'Content-Type': 'text/html',
-        'Cross-Origin-Resource-Policy': 'cross-origin',
+        'Cross-Origin-Resource-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin',
       },

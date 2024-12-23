@@ -1,4 +1,6 @@
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
+
 export const defaultHeaders = {
-  'Cross-Origin-Resource-Policy': 'cross-origin',
-  'Cross-Origin-Embedder-Policy': 'require-corp',
+  [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
+  [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
 }
