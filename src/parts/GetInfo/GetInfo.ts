@@ -1,6 +1,6 @@
 import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
 
-const RE_URL_MATCH = /^([a-z\-]+):\/\/([a-z\-\.]+)/
+const RE_URL_MATCH = /^([a-z-]+):\/\/([a-z-.]+)/
 
 // TODO make scheme dynamic
 const allowedProtocols = ['lvce-webview', 'lvce-oss-webview']
