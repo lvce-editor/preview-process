@@ -17,7 +17,7 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   if (method !== HttpMethod.Get) {
     return NotAllowedResponse.create()
   }
-  const info = GetInfo(url)
+  const info = GetInfo.getInfo(url)
   // TODO maybe combine this with webview server handler
   const webViewRoot = info.webViewRoot
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
