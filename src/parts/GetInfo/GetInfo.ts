@@ -1,3 +1,4 @@
+import type { Info } from '../Info.ts'
 import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
 
 const RE_URL_MATCH = /^([a-z-]+):\/\/([a-z-.]+)/
@@ -5,7 +6,7 @@ const RE_URL_MATCH = /^([a-z-]+):\/\/([a-z-.]+)/
 // TODO make scheme dynamic
 const allowedProtocols = ['lvce-webview', 'lvce-oss-webview']
 
-export const getInfo = (url: string) => {
+export const getInfo = (url: string): Info => {
   const match = url.match(RE_URL_MATCH)
   if (!match) {
     throw new Error(`Failed to parse url`)
