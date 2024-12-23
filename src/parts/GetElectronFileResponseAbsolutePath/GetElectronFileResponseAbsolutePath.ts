@@ -1,3 +1,5 @@
+import { join } from 'node:path'
+
 const getPathName = (url: string): string => {
   try {
     const p = new URL(url).pathname
@@ -7,7 +9,14 @@ const getPathName = (url: string): string => {
   }
 }
 
-export const getElectronFileResponseAbsolutePath = (url: string): string => {
+export const getElectronFileResponseAbsolutePath = (url: string, webViewRoot?: string, indexHtmlContent?: string): string => {
+  if (webViewRoot) {
+    const pathName = getPathName(url)
+    if (pathName === '/') {
+      return join(webViewRoot, '')
+    }
+    console.log({ pathName })
+  }
   // TODO support windows paths
   // TODO disallow dot dot in paths
   const pathName = getPathName(url)
