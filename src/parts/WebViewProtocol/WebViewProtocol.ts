@@ -3,6 +3,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
 import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
+import * as GetInfo from '../GetInfo/GetInfo.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import * as InternalServerErrorResponse from '../InternalServerErrorResponse/InternalServerErrorResponse.ts'
@@ -16,6 +17,9 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   if (method !== HttpMethod.Get) {
     return NotAllowedResponse.create()
   }
+  const info = GetInfo.getInfo(url)
+  // TODO maybe combine this with webview server handler
+  const webViewRoot = info.webViewRoot
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
   if (!absolutePath) {
     return NotFoundResponse.create()
