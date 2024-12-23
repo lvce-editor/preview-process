@@ -8,6 +8,7 @@ const getPathName = (url: string): string => {
     return ''
   }
 }
+import * as GetPathName from '../GetPathName/GetPathName.ts'
 
 export const getElectronFileResponseAbsolutePath = (url: string, webViewRoot?: string, indexHtmlContent?: string): string => {
   if (webViewRoot) {
@@ -19,7 +20,7 @@ export const getElectronFileResponseAbsolutePath = (url: string, webViewRoot?: s
   }
   // TODO support windows paths
   // TODO disallow dot dot in paths
-  const pathName = getPathName(url)
+  const pathName = GetPathName.getPathName2(url)
   if (pathName.endsWith('/')) {
     return pathName + 'index.html'
   }
