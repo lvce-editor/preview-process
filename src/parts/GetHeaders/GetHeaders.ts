@@ -16,7 +16,7 @@ export const getHeaders = (absolutePath: string, etag?: string): any => {
   // TODO support strong csp with webworkers
   // TODO support csp for iframes inside iframes?
   if (absolutePath.endsWith('.html')) {
-    headers[HttpHeader.CrossOriginResourcePolicy] = CrossOriginResourcePolicy.value
+    headers[HttpHeader.CrossOriginResourcePolicy] = CrossOriginResourcePolicy.SameOrigin
     headers[HttpHeader.CrossOriginEmbedderPolicy] = CrossOriginEmbedderPolicy.value
   } else {
     headers[HttpHeader.CrossOriginResourcePolicy] = 'same-origin'

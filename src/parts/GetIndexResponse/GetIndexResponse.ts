@@ -17,7 +17,7 @@ export const getIndexResponse = async (info: Info): Promise<any> => {
         [HttpHeader.ContentSecurityPolicy]: info.contentSecurityPolicy,
         [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
         [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
-        [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+        [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.SameOrigin, // TODO find out why in browser it works differently than in electron
       },
     },
   }

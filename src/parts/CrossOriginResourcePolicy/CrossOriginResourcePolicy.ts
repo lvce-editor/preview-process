@@ -1,1 +1,2 @@
-export const value = 'cross-origin'
+export const SameOrigin = 'same-origin'
+export const CrossOrigin = 'cross-origin'
