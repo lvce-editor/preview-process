@@ -42,7 +42,7 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   const info = getInfo(url)
   // TODO maybe combine this with webview server handler
   const webViewRoot = info.webViewRoot
-  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url, webViewRoot)
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
   if (!absolutePath) {
     return NotFoundResponse.create()
   }
