@@ -10,6 +10,7 @@ import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
 import * as SuccessResponse from '../SuccessResponse/SuccessResponse.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 
 export const getResponse = async (method: string, url: string): Promise<any> => {
   // TODO allow head requests
@@ -19,7 +20,17 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   const info = GetInfo.getInfo(url)
   const pathName = GetPathName.getPathName2(url)
   if (pathName === '/') {
-    return info.iframeContent
+    const headers = GetHeaders.getHeaders('/test/index.html')
+    return {
+      body: info.iframeContent,
+      init: {
+        status: 200,
+        headers: {
+          ...headers,
+          [HttpHeader.ContentSecurityPolicy]: info.contentSecurityPolicy,
+        },
+      },
+    }
   }
   if (url.endsWith('preview-injected.js')) {
     const { injectedCode } = PreviewInjectedCode
