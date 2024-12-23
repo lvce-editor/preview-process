@@ -1,16 +1,9 @@
-const getPathName = (url: string): string => {
-  try {
-    const p = new URL(url).pathname
-    return p
-  } catch {
-    return ''
-  }
-}
+import * as GetPathName from '../GetPathName/GetPathName.ts'
 
 export const getElectronFileResponseAbsolutePath = (url: string): string => {
   // TODO support windows paths
   // TODO disallow dot dot in paths
-  const pathName = getPathName(url)
+  const pathName = GetPathName.getPathName2(url)
   if (pathName.endsWith('/')) {
     return pathName + 'index.html'
   }
