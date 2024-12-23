@@ -8,7 +8,7 @@ export const state: State = {
   infos: Object.create(null),
 }
 
-export const set = (webViewId: string, info: Info) => {
+export const set = (webViewId: string, info: Info): void => {
   state[webViewId] = info
 }
 
