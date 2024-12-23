@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
+import type { Info } from '../src/parts/Info.ts'
 import * as GetIndexResponse from '../src/parts/GetIndexResponse/GetIndexResponse.ts'
 import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
-import type { Info } from '../src/parts/Info.ts'
 
 test('getIndexResponse', async () => {
   const info: Info = {
