@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { join } from 'node:path'
+=======
+>>>>>>> origin/main
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 
 export const getElectronFileResponseAbsolutePath = (url: string, webViewRoot?: string, indexHtmlContent?: string): string => {
