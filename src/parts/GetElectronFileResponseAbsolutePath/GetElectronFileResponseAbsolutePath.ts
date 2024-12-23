@@ -1,18 +1,9 @@
 import { join } from 'node:path'
-
-const getPathName = (url: string): string => {
-  try {
-    const p = new URL(url).pathname
-    return p
-  } catch {
-    return ''
-  }
-}
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 
 export const getElectronFileResponseAbsolutePath = (url: string, webViewRoot?: string, indexHtmlContent?: string): string => {
   if (webViewRoot) {
-    const pathName = getPathName(url)
+    const pathName = GetPathName.getPathName(url)
     if (pathName === '/') {
       return join(webViewRoot, '')
     }
