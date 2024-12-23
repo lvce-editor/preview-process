@@ -5,7 +5,6 @@ import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 
 export const getResponse = async (
   pathName: string,
-  frameAncestors: string,
   webViewRoot: string,
   contentSecurityPolicy: string,
   iframeContent: string,
@@ -14,7 +13,7 @@ export const getResponse = async (
   const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
   if (isHtml) {
-    return HandleIndexHtml.handleIndexHtml(filePath, frameAncestors, contentSecurityPolicy, iframeContent)
+    return HandleIndexHtml.handleIndexHtml(filePath, contentSecurityPolicy, iframeContent)
   }
   if (filePath.endsWith('preview-injected.js')) {
     return HandlePreviewInjected.handlePreviewInjected()
