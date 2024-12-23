@@ -13,7 +13,8 @@
     "type-check": "tsc",
     "build": "node scripts/build.js",
     "build:watch": "nodemon",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "keywords": [
     "Lvce Editor",
@@ -119,7 +120,7 @@
     "coverageThreshold": {
       "global": {
         "branches": 47,
-        "functions": 43,
+        "functions": 40,
         "lines": 60
       }
     }

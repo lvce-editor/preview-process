@@ -8,11 +8,7 @@ import pluginTypeScript from '@babel/preset-typescript'
 const options = {
   input: 'src/previewProcessMain.ts',
   preserveEntrySignatures: 'strict',
-  external: [
-    '@lvce-editor/ipc',
-    '@lvce-editor/json-rpc',
-    '@lvce-editor/verror',
-  ],
+  external: ['@lvce-editor/ipc', '@lvce-editor/json-rpc', '@lvce-editor/verror'],
   treeshake: {
     propertyReadSideEffects: false,
   },
