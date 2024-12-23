@@ -7,12 +7,11 @@ import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript
 
 export const handleIndexHtml = async (
   filePath: string,
-  frameAncestors: string,
   contentSecurityPolicy: string,
   iframeContent: string,
 ): Promise<Response> => {
   try {
-    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(frameAncestors, contentSecurityPolicy)
+    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
     const headers = {
       [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',

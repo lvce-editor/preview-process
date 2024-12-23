@@ -5,12 +5,7 @@ import * as GetResponse from '../GetResponse/GetResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
 
 // TODO deprecated frame ancestors
-export const createHandler = (
-  frameAncestors: string,
-  webViewRoot: string,
-  contentSecurityPolicy: string,
-  iframeContent: string,
-): any => {
+export const createHandler = (webViewRoot: string, contentSecurityPolicy: string, iframeContent: string): any => {
   if (webViewRoot && webViewRoot.startsWith('file://')) {
     webViewRoot = fileURLToPath(webViewRoot)
   }
@@ -20,14 +15,7 @@ export const createHandler = (
       pathName += 'index.html'
     }
     const range = request.headers.range
-    const result = await GetResponse.getResponse(
-      pathName,
-      frameAncestors,
-      webViewRoot,
-      contentSecurityPolicy,
-      iframeContent,
-      range,
-    )
+    const result = await GetResponse.getResponse(pathName, webViewRoot, contentSecurityPolicy, iframeContent, range)
     await SendResponse.sendResponse(response, result)
   }
 
