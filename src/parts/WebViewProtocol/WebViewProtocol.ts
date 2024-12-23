@@ -1,11 +1,11 @@
-import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
-import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
 import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as GetInfo from '../GetInfo/GetInfo.ts'
+import * as GetPathName from '../GetPathName/GetPathName.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
-import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import * as InternalServerErrorResponse from '../InternalServerErrorResponse/InternalServerErrorResponse.ts'
 import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
@@ -18,31 +18,27 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
     return NotAllowedResponse.create()
   }
   const info = GetInfo.getInfo(url)
-  // TODO maybe combine this with webview server handler
-  const webViewRoot = info.webViewRoot
-  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
-  if (!absolutePath) {
-    return NotFoundResponse.create()
-  }
-  if (absolutePath.endsWith('/index.html')) {
-    let content
-    try {
-      content = await readFile(absolutePath, 'utf8')
-    } catch (error) {
-      if (error && error.code === ErrorCodes.ENOENT) {
-        return NotFoundResponse.create()
-      }
-      return InternalServerErrorResponse.create()
+  const pathName = GetPathName.getPathName2(url)
+  if (pathName === '/') {
+    const headers = GetHeaders.getHeaders('/test/index.html')
+    return {
+      body: info.iframeContent,
+      init: {
+        status: 200,
+        headers: {
+          ...headers,
+          [HttpHeader.ContentSecurityPolicy]: info.contentSecurityPolicy,
+        },
+      },
     }
-    const newContent = InjectPreviewScript.injectPreviewScript(content)
-    const headers = GetHeaders.getHeaders(absolutePath)
-    return SuccessResponse.create(newContent, headers)
   }
   if (url.endsWith('preview-injected.js')) {
     const { injectedCode } = PreviewInjectedCode
     const headers = GetHeaders.getHeaders('/test/file.js')
     return SuccessResponse.create(injectedCode, headers)
   }
+  // TODO use stat and etag
+  const absolutePath = join(info.webViewRoot, pathName)
   let content
   try {
     content = await FileSystem.readFile(absolutePath)
