@@ -1,4 +1,6 @@
 import { readFile } from 'node:fs/promises'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
+import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.ts'
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
@@ -14,8 +16,8 @@ export const handleIndexHtml = async (
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
     const headers = {
-      [HttpHeader.CrossOriginResourcePolicy]: 'cross-origin',
-      [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
+      [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.value,
+      [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
       [HttpHeader.ContentSecurityPolicy]: csp,
       [HttpHeader.ContentType]: contentType,
     }
