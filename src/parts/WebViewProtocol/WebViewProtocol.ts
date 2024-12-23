@@ -8,15 +8,41 @@ import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript
 import * as InternalServerErrorResponse from '../InternalServerErrorResponse/InternalServerErrorResponse.ts'
 import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
 import * as NotFoundResponse from '../NotFoundResponse/NotFoundResponse.ts'
+import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
 import * as SuccessResponse from '../SuccessResponse/SuccessResponse.ts'
+
+const RE_URL_MATCH = /^([a-z\-]+):\/\/([a-z\-\.]+)/
+
+// TODO make scheme dynamic
+const allowedProtocols = ['lvce-webview', 'lvce-oss-webview']
+
+const getInfo = (url: string) => {
+  const match = url.match(RE_URL_MATCH)
+  if (!match) {
+    throw new Error(`Failed to parse url`)
+  }
+  const protocol = match[1]
+  const domain = match[2]
+  if (!allowedProtocols.includes(protocol)) {
+    throw new Error(`unsupported protocol`)
+  }
+  const item = InfoRegistry.get(domain)
+  if (!item) {
+    throw new Error(`webview info not found`)
+  }
+  return item
+}
 
 export const getResponse = async (method: string, url: string): Promise<any> => {
   // TODO allow head requests
   if (method !== HttpMethod.Get) {
     return NotAllowedResponse.create()
   }
-  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url)
+  const info = getInfo(url)
+  // TODO maybe combine this with webview server handler
+  const webViewRoot = info.webViewRoot
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(url, webViewRoot)
   if (!absolutePath) {
     return NotFoundResponse.create()
   }
