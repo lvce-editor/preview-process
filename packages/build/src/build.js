@@ -54,6 +54,10 @@ await mkdir(dist, { recursive: true })
 
 await bundleJs()
 
+await cp(join(root, 'files'), join(root, 'dist', 'files'), {
+  recursive: true,
+})
+
 const version = await getVersion()
 
 const packageJson = await readJson(join(root, 'packages', 'about-view', 'package.json'))
@@ -66,9 +70,26 @@ delete packageJson.xo
 delete packageJson.directories
 delete packageJson.nodemonConfig
 packageJson.version = version
-packageJson.main = 'dist/aboutWorkerMain.js'
+packageJson.main = 'dist/index.js'
 
 await writeJson(join(dist, 'package.json'), packageJson)
 
+await mkdir(join(dist, 'bin'))
+await writeFile(
+  join(dist, 'bin', 'previewProcess.js'),
+  `#!/usr/bin/env node
+
+import '../dist/index.js'
+`,
+)
+
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+
+const indexJsPath = join(root, 'dist', 'dist', 'index.js')
+const oldContent = await readFile(indexJsPath, 'utf8')
+const newContent = oldContent.replace(
+  `const root = path.join(__dirname, '..', '..', '..');`,
+  `const root = path.join(__dirname, '..');`,
+)
+await writeFile(indexJsPath, newContent)
