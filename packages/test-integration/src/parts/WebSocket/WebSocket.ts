@@ -34,9 +34,20 @@ export const invoke = async (ws: WS, method: string, params: Record<string, any>
   const response = await promise
   if (response && response.result && response.result.exceptionDetails) {
     throw new Error(response.result.exceptionDetails.exception.description)
-  } else {
+  }
+  if (response && response.error && response.error.message) {
+    throw new Error(response.error.message)
+  }
+  if (response && response.result && response.result.result) {
     return response.result.result
   }
+  if (response && response.result) {
+    return response.result
+  }
+  if (response) {
+    return response
+  }
+  return response
 }
 
 export const dispose = (ws: WS): void => {
