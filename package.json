@@ -8,6 +8,7 @@
     "postinstall": "lerna bootstrap --ci",
     "lint": "eslint .",
     "test": "lerna run test",
+    "test-integration": "lerna run test-integration",
     "type-check": "tsc -b",
     "build": "node packages/build/src/build.js",
     "format": "prettier --write ."

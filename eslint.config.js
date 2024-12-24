@@ -74,6 +74,7 @@ export default tseslint.config(
       '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
       'jest/no-disabled-tests': 'off',
+      'n/no-unsupported-features/es-syntax': 'off',
     },
   },
 )

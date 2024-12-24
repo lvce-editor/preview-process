@@ -1,4 +1,4 @@
-import { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
+import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
 
 export const waitForServerToBeReady = async (server: WebViewServer, port: string): Promise<void> => {
   const { resolve, promise } = Promise.withResolvers<void>()
