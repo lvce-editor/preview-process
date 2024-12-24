@@ -14,13 +14,10 @@ test('preview process - internal server error', async () => {
   // TODO file path has duplicate slash for some reason, it should only have one slash or backslash.
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
-
   const previewProcess = createPreviewProcess({
     execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
-  console.log('before connect')
   const client = await connectToCdp(debugPort)
-  console.log('after connect')
   const global = await client.Runtime.evaluate({
     expression: 'globalThis',
   })
