@@ -1,12 +1,12 @@
-import { test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 import * as WebSocket from '../src/parts/WebSocket/WebSocket.js'
+import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
-  // @ts-ignore
   const previewProcess = createPreviewProcess({
     execArgv: [`--inspect=${debugPort}`, '--experimental-strip-types'],
   })
@@ -18,6 +18,9 @@ test('preview process - internal server error', async () => {
 
   // Connect to debug websocket
   const ws = await WebSocket.connect(wsUrl)
+
+  // Enable Runtime domain
+  await WebSocket.invoke(ws, 'Runtime.enable', {})
 
   // First compile the script
   await WebSocket.invoke(ws, 'Runtime.compileScript', {
@@ -42,18 +45,18 @@ test('preview process - internal server error', async () => {
 
   console.log({ rr })
 
-  // const id = 1
-  // const port = await getPort()
-  // const root = getRoot()
+  const id = 1
+  const port = await getPort()
+  const root = getRoot()
 
-  // await previewProcess.invoke('WebViewServer.create', id)
-  // await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
-  // await previewProcess.invoke('WebViewServer.start', id, port)
+  await previewProcess.invoke('WebViewServer.create', id)
+  await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
+  await previewProcess.invoke('WebViewServer.start', id, port)
 
-  // const response2 = await get(`http://localhost:${port}/any-file.txt`)
-  // expect(response2.status).toBe(500)
-  // expect(await response2.text()).toBe('[preview-server] Error: EACCES: permission denied')
+  const response2 = await get(`http://localhost:${port}/any-file.txt`)
+  expect(response2.status).toBe(500)
+  expect(await response2.text()).toBe('[preview-server] Error: EACCES: permission denied')
 
-  // WebSocket.dispose(ws)
-  // previewProcess[Symbol.dispose]()
+  WebSocket.dispose(ws)
+  previewProcess[Symbol.dispose]()
 })
