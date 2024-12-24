@@ -1,11 +1,12 @@
 import { expect, test } from '@jest/globals'
+import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 
 test('preview process - serves injected js', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
-  const port = '3003'
+  const port = await getPort()
   const root = new URL('../../../', import.meta.url)
 
   await previewProcess.invoke('WebViewServer.create', id)
