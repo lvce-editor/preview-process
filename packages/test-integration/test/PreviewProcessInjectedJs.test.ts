@@ -14,7 +14,7 @@ test('preview process - serves injected js', async () => {
   await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
   await previewProcess.invoke('WebViewServer.start', id, port)
 
-  const response = await get('http://localhost:3003/preview-injected.js')
+  const response = await get(`http://localhost:${port}/preview-injected.js`)
   expect(response.status).toBe(200)
   expect(response.headers.get('content-type')).toBe('text/javascript')
 
