@@ -16,15 +16,11 @@ export const connect = async (url: string): Promise<WS> => {
 }
 
 export const invoke = async (ws: WS, method: string, params: Record<string, any>): Promise<any> => {
-  const { promise, resolve, reject } = Promise.withResolvers<any>()
+  const { promise, resolve } = Promise.withResolvers<any>()
 
   ws.once('message', (data): void => {
     const response = JSON.parse(data.toString())
-    if (response.result.exceptionDetails) {
-      reject(new Error(response.result.exceptionDetails.exception.description))
-    } else {
-      resolve(response.result)
-    }
+    resolve(response)
   })
 
   ws.send(
@@ -35,7 +31,12 @@ export const invoke = async (ws: WS, method: string, params: Record<string, any>
     }),
   )
 
-  return promise
+  const response = await promise
+  if (response && response.result && response.result.exceptionDetails) {
+    throw new Error(response.result.exceptionDetails.exception.description)
+  } else {
+    return response.result.result
+  }
 }
 
 export const dispose = (ws: WS): void => {
