@@ -23,7 +23,7 @@ test('preview process - internal server error', async () => {
   await WebSocket.invoke(ws, 'Runtime.enable', {})
 
   // First compile the script
-  await WebSocket.invoke(ws, 'Runtime.compileScript', {
+  const rr1 = await WebSocket.invoke(ws, 'Runtime.compileScript', {
     expression: `
       const fs = require('fs/promises');
       fs.readFile = () => {
@@ -31,12 +31,14 @@ test('preview process - internal server error', async () => {
         error.code = 'EACCES';
         throw error;
       }
+        throw new Error('oops')
     `,
     sourceURL: 'test.js',
     persistScript: true,
     scriptId: 'my-script',
   })
 
+  console.log({ rr1 })
   // Then run it
   const rr = await WebSocket.invoke(ws, 'Runtime.runScript', {
     scriptId: 'my-script',
@@ -44,6 +46,13 @@ test('preview process - internal server error', async () => {
   })
 
   console.log({ rr })
+
+  const rr2 = await WebSocket.invoke(ws, 'Runtime.evaluate', {
+    expression: 'typeof globalThis.abc',
+    returnByValue: true,
+  })
+
+  console.log({ rr, rr2 })
 
   const id = 1
   const port = await getPort()
