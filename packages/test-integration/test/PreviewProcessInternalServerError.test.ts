@@ -8,7 +8,7 @@ import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
-  const ajs = new URL('./a.js', import.meta.url).toString()
+  const ajs = new URL('../src/a.js', import.meta.url).toString()
   const root = getRoot()
   const rootPath = fileURLToPath(root)
   // TODO file path has duplicate slash for some reason, it should only have one slash or backslash.
