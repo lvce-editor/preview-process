@@ -14,7 +14,7 @@ const createPreviewProcess = (): any => {
     async send(method: string, ...params: any[]): Promise<void> {
       return new Promise((resolve) => {
         const messageId = Math.random()
-        const listener = (message: any) => {
+        const listener = (message: any): void => {
           if (message.id === messageId) {
             childProcess.off('message', listener)
             resolve(message.result)
