@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
+import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.ts'
 import { get } from '../src/parts/Get/Get.ts'
-import getPort from 'get-port'
 
 test('preview process - create and start server', async () => {
   const previewProcess = createPreviewProcess()
