@@ -54,7 +54,7 @@ await mkdir(dist, { recursive: true })
 
 await bundleJs()
 
-await cp(join(root, 'files'), join(root, 'dist', 'files'), {
+await cp(join(root, 'packages', 'preview-process', 'files'), join(root, '.tmp', 'dist', 'files'), {
   recursive: true,
 })
 
