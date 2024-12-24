@@ -8,7 +8,7 @@ const PREVIEW_PROCESS_PATH = join(__dirname, '../../preview-process/src/previewP
 
 interface PreviewProcess {
   readonly invoke: (method: string, ...params: unknown[]) => Promise<unknown>
-  readonly dispose: () => void
+  readonly [Symbol.dispose]: () => void
 }
 
 const createPreviewProcess = (): PreviewProcess => {
@@ -34,7 +34,7 @@ const createPreviewProcess = (): PreviewProcess => {
       })
       return promise
     },
-    dispose(): void {
+    [Symbol.dispose](): void {
       childProcess.kill()
     },
   }
@@ -67,7 +67,7 @@ test('preview process - create and start server', async () => {
   expect(response.status).toBe(200)
   expect(await response.text()).toBe('<h1>Hello World</h1>')
 
-  previewProcess.dispose()
+  previewProcess[Symbol.dispose]()
 })
 
 test('preview process - serve static files', async () => {
@@ -87,7 +87,7 @@ test('preview process - serve static files', async () => {
   const json = await response.json()
   expect(json).toHaveProperty('name')
 
-  previewProcess.dispose()
+  previewProcess[Symbol.dispose]()
 })
 
 test('preview process - 404 for non-existent files', async () => {
@@ -103,5 +103,5 @@ test('preview process - 404 for non-existent files', async () => {
   const response = await get('http://localhost:3002/non-existent-file.txt')
   expect(response.status).toBe(404)
 
-  previewProcess.dispose()
+  previewProcess[Symbol.dispose]()
 })
