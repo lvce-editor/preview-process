@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
 import getPort from 'get-port'
+import { connectToCdp } from '../src/parts/ConnectToCdp/ConnectToCdp.ts'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
-import CDP from 'chrome-remote-interface'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
@@ -13,14 +13,7 @@ test('preview process - internal server error', async () => {
     execArgv: [`--inspect-brk=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
 
-  await new Promise((r) => {
-    setTimeout(r, 1000)
-  })
-
-  const client = await CDP({
-    host: 'localhost',
-    port: Number(debugPort),
-  })
+  const client = await connectToCdp(debugPort)
   await client.Debugger.enable()
   await client.Runtime.enable()
   await client.Runtime.evaluate({
