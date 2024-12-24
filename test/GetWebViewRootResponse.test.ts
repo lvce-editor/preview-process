@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
-import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 import type { Info } from '../src/parts/Info.ts'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.ts'
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.ts', () => {
   return {
