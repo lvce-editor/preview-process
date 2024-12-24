@@ -86,7 +86,7 @@ import '../dist/index.js'
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
 
-const indexJsPath = join(root, 'dist', 'dist', 'index.js')
+const indexJsPath = join(root, '.tmp', 'dist', 'dist', 'index.js')
 const oldContent = await readFile(indexJsPath, 'utf8')
 const newContent = oldContent.replace(
   `const root = path.join(__dirname, '..', '..', '..');`,

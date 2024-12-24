@@ -15,7 +15,7 @@ const options = {
     propertyReadSideEffects: false,
   },
   output: {
-    file: join(root, '.tmp/dist/dist/previewProcessMain.js'),
+    file: join(root, '.tmp/dist/dist/index.js'),
     format: 'es',
     freeze: false,
     generatedCode: {
