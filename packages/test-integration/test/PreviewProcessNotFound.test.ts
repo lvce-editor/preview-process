@@ -7,10 +7,11 @@ test('preview process - 404 for non-existent files', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
   const port = await getPort()
+  const root = new URL('../../../', import.meta.url)
 
   await previewProcess.invoke('WebViewServer.create', id)
-  await previewProcess.invoke('WebViewServer.setInfo', id, 'test', process.cwd(), '', '')
-  await previewProcess.invoke('WebViewServer.setHandler', id, '', process.cwd(), '', '')
+  await previewProcess.invoke('WebViewServer.setInfo', id, 'test', root, '', '')
+  await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
   await previewProcess.invoke('WebViewServer.start', id, port.toString())
 
   const response = await get(`http://localhost:${port}/non-existent-file.txt`)
