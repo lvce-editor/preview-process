@@ -44,9 +44,13 @@ test('getWebViewRootResponse - internal server error', async () => {
 
   const response = await GetWebViewRootResponse.getWebViewRootResponse(mockInfo, '/error.txt')
   expect(response).toEqual({
-    body: 'Internal Server Error',
+    body: '500 - Internal Server Error',
     init: {
       status: 500,
+      headers: {
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      },
     },
   })
 })
@@ -62,7 +66,6 @@ test('getWebViewRootResponse - success', async () => {
       headers: {
         'Content-Type': 'text/plain',
         'Cross-Origin-Resource-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
       },
     },
   })
