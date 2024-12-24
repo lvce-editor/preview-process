@@ -6,12 +6,12 @@ import { fileURLToPath } from 'node:url'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const PREVIEW_PROCESS_PATH = join(__dirname, '../../preview-process/src/previewProcessMain.ts')
 
-const createPreviewProcess = () => {
+const createPreviewProcess = (): any => {
   const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
     execArgv: ['--experimental-strip-types'],
   })
   return {
-    async send(method: string, ...params: any[]) {
+    async send(method: string, ...params: any[]): Promise<void> {
       return new Promise((resolve) => {
         const messageId = Math.random()
         const listener = (message: any) => {
@@ -29,13 +29,13 @@ const createPreviewProcess = () => {
         })
       })
     },
-    dispose() {
+    dispose(): void {
       childProcess.kill()
     },
   }
 }
 
-const get = async (url: string) => {
+const get = async (url: string): Promise<any> => {
   const response = await fetch(url)
   return response
 }
