@@ -77,8 +77,13 @@ test('get - file not found', async () => {
   error.code = 'ENOENT'
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: 'not found',
+    body: '404 - Not Found',
     init: {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      },
       status: HttpStatusCode.NotFound,
     },
   })
@@ -104,14 +109,13 @@ test('get - index.html', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/index.html'
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: '<h1>hello world</h1>',
+    body: undefined,
     init: {
       status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'text/html',
         'Cross-Origin-Resource-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Cross-Origin-Opener-Policy': 'same-origin',
       },
     },
   })
