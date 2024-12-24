@@ -21,7 +21,7 @@ export const createPreviewProcess = (options: { execArgv?: string[] } = {}): Pre
       const listener = (message: any): void => {
         if (message.id === messageId) {
           childProcess.off('message', listener)
-          resolve(message.result)
+          resolve(message)
         }
       }
       childProcess.on('message', listener)
@@ -31,7 +31,11 @@ export const createPreviewProcess = (options: { execArgv?: string[] } = {}): Pre
         method,
         params,
       })
-      return promise
+      const response = await promise
+      if (response.error) {
+        throw new Error(response.error.message)
+      }
+      return response.result
     },
     [Symbol.dispose](): void {
       childProcess.kill()
