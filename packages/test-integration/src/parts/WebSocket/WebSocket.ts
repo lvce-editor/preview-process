@@ -1,15 +1,18 @@
 import { WebSocket as WS } from 'ws'
 
 export interface WebSocketMessage {
-  id: number
-  method: string
-  params: Record<string, any>
+  readonly id: number
+  readonly method: string
+  readonly params: Record<string, any>
 }
 
 export const connect = async (url: string): Promise<WS> => {
   const ws = new WS(url)
-  await new Promise((resolve) => ws.once('open', resolve))
-  return ws
+  const { promise, resolve } = Promise.withResolvers<WS>()
+  ws.once('open', () => {
+    resolve(ws)
+  })
+  return promise
 }
 
 export const invoke = async (ws: WS, method: string, params: Record<string, any>): Promise<any> => {
