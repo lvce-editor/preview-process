@@ -2,13 +2,14 @@ import { expect, test } from '@jest/globals'
 import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
+import { getRoot } from '../src/parts/GetRoot/GetRoot.ts'
 
 test('preview process - create and start server', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
   const port = await getPort()
-  const root = new URL('../../../', import.meta.url)
   const csp = "default-src 'self'; script-src 'self'"
+  const root = getRoot()
 
   await previewProcess.invoke('WebViewServer.create', id)
   await previewProcess.invoke('WebViewServer.setHandler', id, '', root, csp, '<h1>Hello World</h1>')
