@@ -11,7 +11,7 @@ test('getInfo - returns correct info', () => {
 
   SetInfo.setInfo(id, webViewId, webViewRoot, contentSecurityPolicy, iframeContent)
 
-  const info = GetInfo.getInfo('lvce-webview://test-domain')
+  const info = GetInfo.getInfo('lvce-webview://test')
   expect(info).toEqual({
     webViewId,
     webViewRoot,
