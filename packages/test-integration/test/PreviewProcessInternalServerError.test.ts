@@ -22,13 +22,21 @@ test('preview process - internal server error', async () => {
   // Override fs.readFile to simulate EACCES error
   await WebSocket.invoke(ws, 'Runtime.evaluate', {
     expression: `
-      const fs = require('node:fs')
-      const oldReadFile = fs.promises.readFile
-      fs.promises.readFile = (path) => {
-        const error = new Error('EACCES: permission denied')
-        error.code = 'EACCES'
-        throw error
-      }
+      import { readFile } from 'node:fs/promises';
+      import { Module } from 'node:module';
+
+      // Try to override the module cache
+      const mod = new Module('fs');
+      mod.exports = {
+        promises: {
+          readFile: () => {
+            const error = new Error('EACCES: permission denied');
+            error.code = 'EACCES';
+            throw error;
+          }
+        }
+      };
+      Module._cache['node:fs'] = mod;
     `,
   })
 
