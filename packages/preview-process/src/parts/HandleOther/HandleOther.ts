@@ -28,7 +28,12 @@ export const handleOther = async (filePath: string, range: any): Promise<Respons
         },
       })
     }
-    console.error(error)
-    return new Response(`[preview-server] ${error}`)
+    console.error(`[preview-server] ${error}`)
+    return new Response(`Internal Server Error`, {
+      status: HttpStatusCode.ServerError,
+      headers: {
+        [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+      },
+    })
   }
 }

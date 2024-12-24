@@ -26,8 +26,7 @@ test('preview process - internal server error', async () => {
 
   const response = await get(`http://localhost:${port}/any-file.txt`)
   expect(response.status).toBe(500)
-  expect(await response.text()).toBe('[preview-server] Error: EACCES: permission denied')
+  expect(await response.text()).toBe('Internal Server Error')
 
-  // await client.close()
   previewProcess[Symbol.dispose]()
 })
