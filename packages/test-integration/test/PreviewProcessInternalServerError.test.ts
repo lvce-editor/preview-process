@@ -10,18 +10,9 @@ test('preview process - internal server error', async () => {
   const ajs = new URL('./a.js', import.meta.url).toString()
 
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect-brk=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
+    execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
-
   const client = await connectToCdp(debugPort)
-  await client.Debugger.enable()
-  await client.Runtime.enable()
-  await client.Runtime.evaluate({
-    expression: 'typeof require',
-  })
-  // console.log({ r12 })
-  await client.Runtime.runIfWaitingForDebugger()
-
   const global = await client.Runtime.evaluate({
     expression: 'globalThis',
   })
