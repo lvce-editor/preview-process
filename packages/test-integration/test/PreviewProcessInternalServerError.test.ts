@@ -22,7 +22,7 @@ test('preview process - internal server error', async () => {
   await client.Runtime.enable()
 
   // First compile the script
-  await client.Runtime.compileScript({
+  const r1 = await client.Runtime.compileScript({
     expression: `
       const fs = require('node:fs/promises')
       const originalReadFile = fs.readFile
@@ -31,16 +31,27 @@ test('preview process - internal server error', async () => {
         error.code = 'EACCES'
         throw error
       }
+
+      throw new Error('hello from script')
     `,
     sourceURL: 'test.js',
     persistScript: true,
-    executionContextId: 1,
   })
 
+  if (!r1.scriptId) {
+    throw new Error(`Failed to compile script`)
+  }
+
   // Then run it
-  await client.Runtime.runScript({
-    scriptId: '1',
+  const r2 = await client.Runtime.runScript({
+    scriptId: r1.scriptId,
   })
+
+  if (r2 && r2.result && r2.result.subtype === 'error') {
+    throw new Error(r2.result.description)
+  }
+
+  console.log({ r2 })
 
   const id = 1
   const port = await getPort()
