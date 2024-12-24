@@ -38,6 +38,7 @@ export default tseslint.config(
       'dist',
       '**/coverage/**',
       'scripts',
+      '**/a.js',
       'rollup.config.js',
       'eslint.config.js',
       'packages/preview-process/src/previewProcessMain.ts',
