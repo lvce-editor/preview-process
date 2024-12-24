@@ -17,8 +17,6 @@ test('preview process - internal server error', async () => {
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
 
-  console.log({ filePath })
-
   await previewProcess.invoke('Test.mockFs', 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')
 
   const id = 1
