@@ -6,7 +6,12 @@ import { fileURLToPath } from 'node:url'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const PREVIEW_PROCESS_PATH = join(__dirname, '../../preview-process/src/previewProcessMain.ts')
 
-const createPreviewProcess = (): any => {
+interface PreviewProcess {
+  readonly send: (method: string, ...params: unknown[]) => Promise<unknown>
+  readonly dispose: () => void
+}
+
+const createPreviewProcess = (): PreviewProcess => {
   const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
     execArgv: ['--experimental-strip-types'],
   })
