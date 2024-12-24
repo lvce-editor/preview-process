@@ -58,7 +58,7 @@ test('internal server error', async () => {
   const response = await HandleOther.handleOther('/test/file.txt', range)
   expect(await response.text()).toBe('Internal Server Error')
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(error)
+  expect(spy).toHaveBeenCalledWith(`[preview-server] Error: Internal error`)
 })
 
 test('with range header', async () => {
