@@ -99,7 +99,6 @@ test('get - preview injected', async () => {
       headers: {
         'Content-Type': 'text/javascript',
         'Cross-Origin-Resource-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
       },
     },
   })
