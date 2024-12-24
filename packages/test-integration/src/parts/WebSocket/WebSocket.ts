@@ -6,7 +6,7 @@ export interface WebSocketMessage {
   params: Record<string, any>
 }
 
-export const connect = async (url: string) => {
+export const connect = async (url: string): Promise<WS> => {
   const ws = new WS(url)
   await new Promise((resolve) => ws.once('open', resolve))
   return ws
@@ -15,7 +15,7 @@ export const connect = async (url: string) => {
 export const invoke = async (ws: WS, method: string, params: Record<string, any>) => {
   const { promise, resolve, reject } = Promise.withResolvers<any>()
 
-  ws.once('message', (data) => {
+  ws.once('message', (data): void => {
     const response = JSON.parse(data.toString())
     if (response.result.exceptionDetails) {
       reject(new Error(response.result.exceptionDetails.exception.description))
@@ -35,6 +35,6 @@ export const invoke = async (ws: WS, method: string, params: Record<string, any>
   return promise
 }
 
-export const dispose = (ws: WS) => {
+export const dispose = (ws: WS): void => {
   ws.close()
 }
