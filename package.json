@@ -5,8 +5,7 @@
   "main": "",
   "type": "module",
   "scripts": {
-    "test": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch",
+    "test": "lerna run test",
     "type-check": "tsc",
     "build": "node packages/build/src/build.js",
     "build:watch": "nodemon",
