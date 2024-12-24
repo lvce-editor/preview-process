@@ -5,11 +5,11 @@
   "main": "",
   "type": "module",
   "scripts": {
-    "test": "lerna run test",
-    "type-check": "tsc",
-    "build": "node packages/build/src/build.js",
-    "build:watch": "nodemon",
+    "postinstall": "lerna bootstrap --ci",
     "lint": "eslint .",
+    "test": "lerna run test",
+    "type-check": "tsc -b",
+    "build": "node packages/build/src/build.js",
     "format": "prettier --write ."
   },
   "keywords": [
