@@ -30,7 +30,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@lvce-editor/rpc": "^1.13.0",
+    "@lvce-editor/rpc": "^1.14.0",
     "@lvce-editor/verror": "^1.6.0"
   },
   "devDependencies": {
