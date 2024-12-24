@@ -43,9 +43,10 @@ test('preview process - internal server error', async () => {
   const port = await getPort()
   const root = getRoot()
 
-  await previewProcess.invoke('WebViewServer.create', id)
-  await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
-  await previewProcess.invoke('WebViewServer.start', id, port)
+  // Get WebSocket URL from Chrome DevTools Protocol
+  const response = await get(`http://localhost:${debugPort}/json/list`)
+  const data = await response.json()
+  const wsUrl = data[0].webSocketDebuggerUrl
 
   const response2 = await get(`http://localhost:${port}/any-file.txt`)
   expect(response2.status).toBe(500)
