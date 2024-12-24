@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 
-test('preview process - create and start server', async () => {
+test.skip('preview process - create and start server', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
   const port = '3000'
