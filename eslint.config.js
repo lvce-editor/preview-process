@@ -48,6 +48,8 @@ export default tseslint.config(
   },
   {
     rules: {
+      '@typescript-eslint/consistent-type-exports': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
       'n/no-unpublished-import': [
         'error',
