@@ -23,16 +23,13 @@ test('preview process - internal server error', async () => {
 
   // First compile the script
   const r1 = await client.Runtime.compileScript({
-    expression: `
-      const fs = require('node:fs/promises')
-      const originalReadFile = fs.readFile
-      fs.readFile = () => {
-        const error = new Error('EACCES: permission denied')
-        error.code = 'EACCES'
-        throw error
-      }
-
+    expression: `(async ()=>{
+      const fs = await import('node:fs/promises')
       throw new Error('hello from script')
+
+    })()
+
+
     `,
     sourceURL: 'test.js',
     persistScript: true,
@@ -45,6 +42,7 @@ test('preview process - internal server error', async () => {
   // Then run it
   const r2 = await client.Runtime.runScript({
     scriptId: r1.scriptId,
+    awaitPromise: true,
   })
 
   if (r2 && r2.result && r2.result.subtype === 'error') {
