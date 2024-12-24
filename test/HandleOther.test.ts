@@ -1,5 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import { ServerResponse } from 'http'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -26,14 +26,41 @@ test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
   const range = ''
   const response = await HandleOther.handleOther('/test/not-found.txt', range)
-  expect(response.status).toBe(404)
+  expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
+  expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
 })
 
 test('normal file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
   const range = ''
-  const response = await HandleOther.handleOther('/test/not-found.txt', range)
-  expect(response.status).toBe(200)
+  const response = await HandleOther.handleOther('/test/file.txt', range)
+  expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('ok')
+  expect(response.headers.get('Content-Type')).toBe('text/plain')
+  expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
+})
+
+test('css file', async () => {
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
+  const range = ''
+  const response = await HandleOther.handleOther('/test/styles.css', range)
+  expect(response.status).toBe(HttpStatusCode.Ok)
+  expect(await response.text()).toBe('.test{color:red}')
+  expect(response.headers.get('Content-Type')).toBe('text/css')
+})
+
+test('internal server error', async () => {
+  const error = new Error('Internal error')
+  jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
+  const range = ''
+  const response = await HandleOther.handleOther('/test/file.txt', range)
+  expect(await response.text()).toBe('[preview-server] Error: Internal error')
+})
+
+test('with range header', async () => {
+  const range = 'bytes=0-100'
+  const response = await HandleOther.handleOther('/test/video.mp4', range)
+  // TODO
+  // expect(response.headers.get('Accept-Ranges')).toBe('bytes')
 })
