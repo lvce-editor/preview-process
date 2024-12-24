@@ -1,38 +1,38 @@
 import { expect, test } from '@jest/globals'
 import { join } from 'node:path'
-import * as ResolveFilePath from '../src/parts/ResolveFilePath/ResolveFilePath.js'
+import * as ResolveFilePath from '../src/parts/ResolveFilePath/ResolveFilePath.ts'
 
-test.skip('resolveFilePath - normal path', () => {
+test('resolveFilePath - normal path', () => {
   const pathName = '/test/file.txt'
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe(join('/root', 'test/file.txt'))
 })
 
-test.skip('resolveFilePath - path with dots', () => {
+test('resolveFilePath - path with dots', () => {
   const pathName = '/test/../file.txt'
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe(join('/root', 'file.txt'))
 })
 
-test.skip('resolveFilePath - empty path', () => {
+test('resolveFilePath - empty path', () => {
   const pathName = ''
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe('/root')
 })
 
-test.skip('resolveFilePath - root path', () => {
+test('resolveFilePath - root path', () => {
   const pathName = '/'
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe('/root/')
 })
 
-test.skip('resolveFilePath - path with query parameters', () => {
+test('resolveFilePath - path with query parameters', () => {
   const pathName = '/test/file.txt?query=value'
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe(join('/root', 'test/file.txt'))
 })
 
-test.skip('resolveFilePath - path with hash', () => {
+test('resolveFilePath - path with hash', () => {
   const pathName = '/test/file.txt#section'
   const webViewRoot = '/root'
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe(join('/root', 'test/file.txt'))
