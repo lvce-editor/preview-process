@@ -7,7 +7,9 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const PREVIEW_PROCESS_PATH = join(__dirname, '../../preview-process/src/previewProcessMain.ts')
 
 const createPreviewProcess = () => {
-  const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'])
+  const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
+    execArgv: ['--experimental-strip-types'],
+  })
   return {
     async send(method: string, ...params: any[]) {
       return new Promise((resolve) => {
