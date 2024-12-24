@@ -10,9 +10,9 @@ export interface PreviewProcess {
   readonly [Symbol.dispose]: () => void
 }
 
-export const createPreviewProcess = (): PreviewProcess => {
+export const createPreviewProcess = (options: { execArgv?: string[] } = {}): PreviewProcess => {
   const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
-    execArgv: ['--experimental-strip-types'],
+    execArgv: options.execArgv || ['--experimental-strip-types'],
   })
   return {
     async invoke(method: string, ...params: any[]): Promise<void> {
