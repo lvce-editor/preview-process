@@ -10,7 +10,6 @@ test('preview process - serves injected js', async () => {
   const root = new URL('../../../', import.meta.url)
 
   await previewProcess.invoke('WebViewServer.create', id)
-  await previewProcess.invoke('WebViewServer.setInfo', id, 'test', root, '', '')
   await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
   await previewProcess.invoke('WebViewServer.start', id, port)
 
