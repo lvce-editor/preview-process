@@ -21,6 +21,8 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.ApplicationJson
     case '.mp3':
       return MimeType.AudioMpeg
+    case '.txt':
+      return MimeType.TextPlain
     default:
       console.warn(`unsupported file extension: ${fileExtension}`)
       return ''
