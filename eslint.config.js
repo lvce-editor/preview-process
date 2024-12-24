@@ -34,6 +34,7 @@ export default tseslint.config(
   pluginJest.configs['flat/recommended'],
   {
     ignores: [
+      '.tmp',
       'dist',
       'coverage',
       'scripts',
