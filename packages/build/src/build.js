@@ -60,7 +60,7 @@ await cp(join(root, 'files'), join(root, 'dist', 'files'), {
 
 const version = await getVersion()
 
-const packageJson = await readJson(join(root, 'packages', 'about-view', 'package.json'))
+const packageJson = await readJson(join(root, 'packages', 'preview-process', 'package.json'))
 
 delete packageJson.scripts
 delete packageJson.devDependencies
