@@ -59,4 +59,4 @@ test('preview process - internal server error', async () => {
 
   await client.close()
   previewProcess[Symbol.dispose]()
-}, 10210201)
+})
