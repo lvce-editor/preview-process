@@ -22,6 +22,7 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   if (url.endsWith('preview-injected.js')) {
     return GetPreviewInjectedResponse.getPreviewInjectedResponse(PreviewInjectedCode.injectedCode)
   }
+  // TODO maybe rename this route to /file when running in electron
   if (pathName.startsWith('/remote')) {
     return GetRemoteResponse.getRemoteResponse(pathName, info.webViewRoot)
   }
