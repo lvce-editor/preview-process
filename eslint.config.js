@@ -75,6 +75,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unnecessary-condition': 'off',
       'jest/no-disabled-tests': 'off',
       'n/no-unsupported-features/es-syntax': 'off',
+      '@typescript-eslint/no-base-to-string': 'off',
     },
   },
 )
