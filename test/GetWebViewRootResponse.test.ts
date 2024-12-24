@@ -26,8 +26,13 @@ test('getWebViewRootResponse - file not found', async () => {
 
   const response = await GetWebViewRootResponse.getWebViewRootResponse(mockInfo, '/not-found.txt')
   expect(response).toEqual({
-    body: 'not found',
+    body: '404 - Not Found',
     init: {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      },
       status: 404,
     },
   })
