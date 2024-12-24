@@ -36,7 +36,7 @@ export default tseslint.config(
     ignores: [
       '.tmp',
       'dist',
-      'coverage',
+      '**/coverage/**',
       'scripts',
       'rollup.config.js',
       'eslint.config.js',
