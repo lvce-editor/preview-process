@@ -8,7 +8,7 @@ import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect=${debugPort}`, '--experimental-strip-types'],
+    execArgv: [`--inspect=${debugPort}`],
   })
 
   // Get WebSocket URL from Chrome DevTools Protocol
@@ -20,20 +20,24 @@ test('preview process - internal server error', async () => {
   const ws = await WebSocket.connect(wsUrl)
 
   // Override fs.readFile to simulate EACCES error
-  await WebSocket.invoke(ws, 'Runtime.evaluate', {
-    expression: `
-      (async () => {
-        const fs = await import('node:fs/promises')
-        const originalReadFile = fs.readFile
-        fs.readFile = () => {
-          const error = new Error('EACCES: permission denied')
-          error.code = 'EACCES'
-          throw error
-        }
-      })()
+  const x = await WebSocket.invoke(ws, 'Runtime.evaluate', {
+    expression: `(async ()=>{
+    // const fs = await import('fs')
+    return [...process.execArgv]
+  })()
+    //const fs = await import('node:fs/promises')
+    // const originalReadFile = fs.readFile
+    // fs.readFile = () => {
+    //   const error = new Error('EACCES: permission denied')
+    //   error.code = 'EACCES'
+    //   throw error
+    // }
     `,
     awaitPromise: true,
+    returnByValue: true,
   })
+
+  console.log({ x })
 
   const id = 1
   const port = await getPort()
