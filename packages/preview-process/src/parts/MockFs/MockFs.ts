@@ -1,26 +1,24 @@
-export const mockFs = async () => {
+export const mockFs = async (
+  moduleName: string,
+  key: string,
+  arg0: string,
+  errorMessage: string,
+  errorCode: string,
+): Promise<void> => {
   const m = await import('node:module')
-
   const require = m.default.createRequire(import.meta.url)
-
-  const fs = require('node:fs/promises')
-
-  const mock = () => {
-    throw new Error('oops')
+  const mockedModule = require(moduleName)
+  const originalFn = mockedModule[key].bind(mockedModule)
+  const mock = (...args: any[]): Promise<any> => {
+    console.log({ arg: args })
+    if (args[0] === arg0) {
+      const error = new Error(errorMessage)
+      // @ts-ignore
+      error.code = errorCode
+      throw error
+    }
+    return originalFn(...args)
   }
-  fs.writeFile = mock
-
-  const rr1 = fs.writeFile === mock
-
+  mockedModule[key] = mock
   m.syncBuiltinESMExports()
-  // later
-
-  const rr = await (async () => {
-    const fs = await import('node:fs/promises')
-    await fs.writeFile('/tmp/abc.txt', 'abc')
-    console.log(fs.writeFile)
-    return fs.writeFile === mock
-  })()
-
-  return `${rr} ${rr1}`
 }

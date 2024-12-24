@@ -3,6 +3,7 @@ import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
+import { fileURLToPath } from 'url'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
@@ -10,22 +11,14 @@ test('preview process - internal server error', async () => {
     execArgv: [`--inspect=${debugPort}`, '--experimental-strip-types'],
   })
 
-  // await new Promise((r) => {
-  //   setTimeout(r, 1000)
-  // })
+  const root = getRoot()
+  const rootPath = fileURLToPath(root)
+  const filePath = `${rootPath}/any-file.txt`
 
-  // const client = await CDP({
-  //   host: 'localhost',
-  //   port: Number(debugPort),
-  // })
-  // await client.Runtime.enable()
-
-  const r = await previewProcess.invoke('Test.mockFs')
-  console.log({ r })
+  await previewProcess.invoke('Test.mockFs', 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')
 
   const id = 1
   const port = await getPort()
-  const root = getRoot()
 
   await previewProcess.invoke('WebViewServer.create', id)
   await previewProcess.invoke('WebViewServer.setHandler', id, '', root, '', '')
