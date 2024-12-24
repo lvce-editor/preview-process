@@ -3,8 +3,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-// const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../preview-process/src/previewProcessMain.ts')
-const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../../.tmp/dist/dist/index.js')
+const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../preview-process/src/previewProcessMain.ts')
 
 export interface PreviewProcess {
   readonly invoke: (method: string, ...params: unknown[]) => Promise<unknown>
@@ -22,7 +21,7 @@ export const createPreviewProcess = (options: { execArgv?: string[] } = {}): Pre
       const listener = (message: any): void => {
         if (message.id === messageId) {
           childProcess.off('message', listener)
-          resolve(message.result)
+          resolve(message)
         }
       }
       childProcess.on('message', listener)
@@ -32,7 +31,11 @@ export const createPreviewProcess = (options: { execArgv?: string[] } = {}): Pre
         method,
         params,
       })
-      return promise
+      const response = await promise
+      if (response.error) {
+        throw new Error(response.error.message)
+      }
+      return response.result
     },
     [Symbol.dispose](): void {
       childProcess.kill()
