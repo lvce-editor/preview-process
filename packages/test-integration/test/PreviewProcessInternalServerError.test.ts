@@ -32,6 +32,7 @@ test('preview process - internal server error', async () => {
         }
       })()
     `,
+    awaitPromise: true,
   })
 
   const id = 1
