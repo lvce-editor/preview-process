@@ -42,6 +42,7 @@ export default tseslint.config(
       'src/previewProcessMain.ts',
       'src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts',
       'files/previewInjectedCode.js',
+      'packages/build',
     ],
   },
   {

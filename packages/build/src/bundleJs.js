@@ -1,19 +1,21 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { babel } from '@rollup/plugin-babel'
 import pluginTypeScript from '@babel/preset-typescript'
+import { babel } from '@rollup/plugin-babel'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import { join } from 'path'
+import { rollup } from 'rollup'
+import { root } from './root.js'
 
 /**
  * @type {import('rollup').RollupOptions}
  */
 const options = {
-  input: 'src/previewProcessMain.ts',
+  input: join(root, 'packages/about-view/src/aboutWorkerMain.ts'),
   preserveEntrySignatures: 'strict',
-  external: ['@lvce-editor/ipc', '@lvce-editor/json-rpc', '@lvce-editor/verror'],
   treeshake: {
     propertyReadSideEffects: false,
   },
   output: {
-    file: 'dist/dist/index.js',
+    file: join(root, '.tmp/dist/dist/aboutWorkerMain.js'),
     format: 'es',
     freeze: false,
     generatedCode: {
@@ -21,6 +23,7 @@ const options = {
       objectShorthand: true,
     },
   },
+  external: ['electron', 'ws'],
   plugins: [
     babel({
       babelHelpers: 'bundled',
@@ -31,4 +34,8 @@ const options = {
   ],
 }
 
-export default options
+export const bundleJs = async () => {
+  const input = await rollup(options)
+  // @ts-ignore
+  await input.write(options.output)
+}
