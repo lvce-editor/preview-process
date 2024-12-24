@@ -11,6 +11,10 @@
   "author": "",
   "license": "MIT",
   "description": "",
+  "dependencies": {
+    "get-port": "^7.1.0",
+    "ky": "^1.7.4"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/node": "^22.9.0",
@@ -39,8 +43,5 @@
     "testMatch": [
       "**/test/**"
     ]
-  },
-  "dependencies": {
-    "ky": "^1.7.4"
   }
 }
