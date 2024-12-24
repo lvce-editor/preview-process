@@ -18,7 +18,9 @@ test('preview process - internal server error', async () => {
   const previewProcess = createPreviewProcess({
     execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
+  console.log('before connect')
   const client = await connectToCdp(debugPort)
+  console.log('after connect')
   const global = await client.Runtime.evaluate({
     expression: 'globalThis',
   })
@@ -60,4 +62,4 @@ test('preview process - internal server error', async () => {
 
   await client.close()
   previewProcess[Symbol.dispose]()
-})
+}, 10210201)
