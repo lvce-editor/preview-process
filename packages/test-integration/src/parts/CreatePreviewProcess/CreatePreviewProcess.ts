@@ -3,8 +3,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-// const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../preview-process/src/previewProcessMain.ts')
-const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../../.tmp/dist/dist/index.js')
+const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../preview-process/src/previewProcessMain.ts')
 
 export interface PreviewProcess {
   readonly invoke: (method: string, ...params: unknown[]) => Promise<unknown>
