@@ -7,7 +7,6 @@ import * as WebViewProtocol from '../WebViewProtocol/WebViewProtocol.ts'
 
 export const commandMap = {
   'HandleElectronMessagePort.handleElectronMessagePort': HandleElectronMessagePort.handleElectronMessagePort,
-  'WebViewProtocol.getResponse': WebViewProtocol.getResponse,
   'WebViewServer.create': CreateWebViewServer.createWebViewServer,
   'WebViewServer.setHandler': SetWebViewServerHandler.setWebViewServerHandler,
   'WebViewServer.start': StartWebViewServer.startWebViewServer,
