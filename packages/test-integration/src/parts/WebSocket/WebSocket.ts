@@ -12,7 +12,7 @@ export const connect = async (url: string): Promise<WS> => {
   return ws
 }
 
-export const invoke = async (ws: WS, method: string, params: Record<string, any>) => {
+export const invoke = async (ws: WS, method: string, params: Record<string, any>): Promise<any> => {
   const { promise, resolve, reject } = Promise.withResolvers<any>()
 
   ws.once('message', (data): void => {
