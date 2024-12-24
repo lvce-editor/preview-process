@@ -10,7 +10,6 @@ export const mockFs = async (
   const mockedModule = require(moduleName)
   const originalFn = mockedModule[key].bind(mockedModule)
   const mock = (...args: any[]): Promise<any> => {
-    console.log({ args })
     if (args[0] === arg0) {
       const error = new Error(errorMessage)
       // @ts-ignore
