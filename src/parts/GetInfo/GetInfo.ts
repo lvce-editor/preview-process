@@ -1,18 +1,12 @@
 import type { Info } from '../Info.ts'
+import * as GetProtocolMatch from '../GetProtocolMatch/GetProtocolMatch.ts'
 import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
-
-const RE_URL_MATCH = /^([a-z-]+):\/\/([a-z-.]+)/
 
 // TODO make scheme dynamic
 const allowedProtocols = ['lvce-webview', 'lvce-oss-webview']
 
 export const getInfo = (url: string): Info => {
-  const match = url.match(RE_URL_MATCH)
-  if (!match) {
-    throw new Error(`Failed to parse url`)
-  }
-  const protocol = match[1]
-  const domain = match[2]
+  const { protocol, domain } = GetProtocolMatch.getProtocolMatch(url)
   if (!allowedProtocols.includes(protocol)) {
     throw new Error(`unsupported protocol`)
   }
