@@ -7,8 +7,10 @@ import CDP from 'chrome-remote-interface'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
+  const ajs = new URL('./a.js', import.meta.url).toString()
+
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types'],
+    execArgv: [`--inspect-brk=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
 
   await new Promise((r) => {
@@ -19,21 +21,41 @@ test('preview process - internal server error', async () => {
     host: 'localhost',
     port: Number(debugPort),
   })
+  await client.Debugger.enable()
   await client.Runtime.enable()
-
   await client.Runtime.evaluate({
-    expression: `
-      (async () => {
-        const fs = await import('node:fs/promises')
-        const originalReadFile = fs.readFile
-        fs.readFile = () => {
-          const error = new Error('EACCES: permission denied')
-          error.code = 'EACCES'
-          throw error
-        }
-      })()
-    `,
-    awaitPromise: true,
+    expression: 'typeof require',
+  })
+  // console.log({ r12 })
+  await client.Runtime.runIfWaitingForDebugger()
+
+  const global = await client.Runtime.evaluate({
+    expression: 'globalThis',
+  })
+  const filePath = ''
+  await client.Runtime.callFunctionOn({
+    objectId: global.result.objectId,
+    functionDeclaration: `function(moduleName, key, arg0, errorMessage, errorCode){
+  const global = this
+  global.mockModule(moduleName, key, arg0, errorMessage, errorCode)
+}`,
+    arguments: [
+      {
+        value: 'node:fs/promises',
+      },
+      {
+        value: 'readFile',
+      },
+      {
+        value: filePath,
+      },
+      {
+        value: 'Access Denied',
+      },
+      {
+        value: 'EACCES',
+      },
+    ],
   })
 
   const id = 1
