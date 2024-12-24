@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
+import { fileURLToPath } from 'node:url'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
-import { fileURLToPath } from 'node:url'
 
 test('preview process - serves injected js', async () => {
   const previewProcess = createPreviewProcess()
