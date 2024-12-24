@@ -14,7 +14,7 @@ test('preview process - internal server error', async () => {
   const root = getRoot()
   const rootPath = fileURLToPath(root)
   // TODO file path has duplicate slash for some reason, it should only have one slash or backslash.
-  const slash = process.platform === 'win32' ? '\\\\' : '/'
+  const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
 
   console.log({ filePath })
