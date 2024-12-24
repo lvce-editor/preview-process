@@ -54,8 +54,11 @@ test('internal server error', async () => {
   const error = new Error('Internal error')
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
   const range = ''
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const response = await HandleOther.handleOther('/test/file.txt', range)
   expect(await response.text()).toBe('[preview-server] Error: Internal error')
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(error)
 })
 
 test('with range header', async () => {
