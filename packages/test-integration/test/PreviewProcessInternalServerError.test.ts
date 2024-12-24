@@ -11,7 +11,14 @@ test('preview process - internal server error', async () => {
     execArgv: [`--inspect=${debugPort}`],
   })
 
-  const client = await CDP({ port: debugPort })
+  await new Promise((r) => {
+    setTimeout(r, 1000)
+  })
+
+  const client = await CDP({
+    host: 'localhost',
+    port: Number(debugPort),
+  })
   await client.Runtime.enable()
 
   // First compile the script
