@@ -34,14 +34,16 @@ export default tseslint.config(
   pluginJest.configs['flat/recommended'],
   {
     ignores: [
+      '.tmp',
       'dist',
-      'coverage',
+      '**/coverage/**',
       'scripts',
       'rollup.config.js',
       'eslint.config.js',
-      'src/previewProcessMain.ts',
-      'src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts',
-      'files/previewInjectedCode.js',
+      'packages/preview-process/src/previewProcessMain.ts',
+      'packages/preview-process/src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts',
+      'packages/preview-process/files/previewInjectedCode.js',
+      'packages/build',
     ],
   },
   {
