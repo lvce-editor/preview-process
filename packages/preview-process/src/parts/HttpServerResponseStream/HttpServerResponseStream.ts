@@ -1,5 +1,5 @@
+import type { ServerResponse } from 'node:http'
 import { createReadStream } from 'node:fs'
-import { ServerResponse } from 'node:http'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
 import * as PipelineResponse from '../PipelineResponse/PipelineResponse.ts'
