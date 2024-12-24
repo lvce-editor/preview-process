@@ -1,15 +1,10 @@
-import { expect, jest, test } from '@jest/globals'
-
-jest.unstable_mockModule('../src/parts/PreviewInjectedCode/PreviewInjectedCode.ts', () => {
-  return {
-    injectedCode: 'console.log("mocked code")',
-  }
-})
+import { expect, test } from '@jest/globals'
 
 const GetPreviewInjectedResponse = await import('../src/parts/GetPreviewInjectedResponse/GetPreviewInjectedResponse.ts')
 
 test('getPreviewInjectedResponse', async () => {
-  const response = await GetPreviewInjectedResponse.getPreviewInjectedResponse()
+  const injectedCode = 'console.log("mocked code")'
+  const response = await GetPreviewInjectedResponse.getPreviewInjectedResponse(injectedCode)
 
   expect(response).toEqual({
     body: 'console.log("mocked code")',

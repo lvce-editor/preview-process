@@ -6,6 +6,7 @@ import * as GetRemoteResponse from '../GetRemoteResponse/GetRemoteResponse.ts'
 import * as GetWebViewRootResponse from '../GetWebViewRootResponse/GetWebViewRootResponse.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
+import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
 
 export const getResponse = async (method: string, url: string): Promise<any> => {
   // TODO allow head requests
@@ -19,7 +20,7 @@ export const getResponse = async (method: string, url: string): Promise<any> => 
   }
   // TODO use pathname
   if (url.endsWith('preview-injected.js')) {
-    return GetPreviewInjectedResponse.getPreviewInjectedResponse()
+    return GetPreviewInjectedResponse.getPreviewInjectedResponse(PreviewInjectedCode.injectedCode)
   }
   if (pathName.startsWith('/remote')) {
     return GetRemoteResponse.getRemoteResponse(pathName, info.webViewRoot)
