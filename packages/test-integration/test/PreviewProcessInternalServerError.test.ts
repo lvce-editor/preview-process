@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
 import getPort from 'get-port'
+import { fileURLToPath } from 'url'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
-import { fileURLToPath } from 'url'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
