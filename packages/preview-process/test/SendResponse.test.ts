@@ -34,9 +34,10 @@ class MockServerResponse extends Writable {
   }
 
   // @ts-ignore
-  end(chunk?: string) {
+  end(chunk?: Buffer) {
+    console.log('end', chunk)
     if (chunk) {
-      this.write(Buffer.from(chunk))
+      this._write(Buffer.from(chunk))
     }
     super.end()
   }
@@ -58,7 +59,7 @@ const createMockReadableStream = (content: string) =>
     },
   })
 
-test.only('sendResponse - handles successful response with body', async () => {
+test('sendResponse - handles successful response with body', async () => {
   const mockResponse = createMockResponse()
   const mockStream = createMockReadableStream('test content')
   const result = new Response(mockStream, {
@@ -95,10 +96,10 @@ test.only('sendResponse - handles ENOENT error', async () => {
   // @ts-ignore
   error.code = 'ENOENT'
   const mockStream = createMockReadableStream('')
-  mockStream.destroy(error)
-
   const result = new Response(mockStream)
-  await SendResponse.sendResponse(mockResponse, result)
+  const promise = SendResponse.sendResponse(mockResponse, result)
+  mockStream.destroy(error)
+  await promise
   expect(mockResponse.statusCode).toBe(HttpStatusCode.NotFound)
   expect((mockResponse as any).getContent()).toBe('Not Found')
 })
