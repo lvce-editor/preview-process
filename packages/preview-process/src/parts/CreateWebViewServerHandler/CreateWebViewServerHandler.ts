@@ -29,6 +29,7 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
       webViewRoot,
       contentSecurityPolicy,
       iframeContent,
+      stream: false,
     }
 
     const result = await GetResponse.getResponse(requestOptions, handlerOptions)
