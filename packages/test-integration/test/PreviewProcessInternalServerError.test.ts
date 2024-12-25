@@ -34,6 +34,6 @@ test('preview process - internal server error', async () => {
   expect(response.status).toBe(500)
   expect(await response.text()).toBe('Internal Server Error')
 
-  await client.close()
+  await client[Symbol.dispose]()
   previewProcess[Symbol.dispose]()
 })
