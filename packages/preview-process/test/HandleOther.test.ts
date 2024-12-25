@@ -77,6 +77,7 @@ test('css file', async () => {
 
 test('internal server error', async () => {
   const error = new Error('Internal error')
+  jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
