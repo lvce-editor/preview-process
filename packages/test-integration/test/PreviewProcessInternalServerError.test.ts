@@ -5,6 +5,7 @@ import { connectToCdp } from '../src/parts/ConnectToCdp/ConnectToCdp.ts'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
+import { mockModule } from '../src/parts/MockModule/MockModule.js'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
@@ -18,33 +19,8 @@ test('preview process - internal server error', async () => {
     execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
   const client = await connectToCdp(debugPort)
-  const global = await client.Runtime.evaluate({
-    expression: 'globalThis',
-  })
-  await client.Runtime.callFunctionOn({
-    objectId: global.result.objectId,
-    functionDeclaration: `function(moduleName, key, arg0, errorMessage, errorCode){
-  const global = this
-  global.mockModule(moduleName, key, arg0, errorMessage, errorCode)
-}`,
-    arguments: [
-      {
-        value: 'node:fs/promises',
-      },
-      {
-        value: 'readFile',
-      },
-      {
-        value: filePath,
-      },
-      {
-        value: 'Access Denied',
-      },
-      {
-        value: 'EACCES',
-      },
-    ],
-  })
+
+  await mockModule(client, 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')
 
   const id = 1
   const port = await getPort()
