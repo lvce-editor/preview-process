@@ -49,8 +49,6 @@ test('not found', async () => {
 })
 
 test('normal file', async () => {
-  const etag = '"123"'
-  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
   const requestOptions = {
     method: 'GET',
@@ -66,8 +64,6 @@ test('normal file', async () => {
 })
 
 test('css file', async () => {
-  const etag = '"css123"'
-  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
   const requestOptions = {
     method: 'GET',
