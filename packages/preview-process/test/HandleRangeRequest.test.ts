@@ -75,3 +75,24 @@ test('handleRangeRequest - should handle range request with start beyond file si
   expect(response.status).toBe(HttpStatusCode.RangeNotSatisfiable)
   expect(response.headers.get('Content-Range')).toBe('bytes */100')
 })
+
+test('handleRangeRequest - should handle open-ended range request', async () => {
+  const mockStat = {
+    size: 1000,
+  }
+  jest.spyOn(FsPromises, 'stat').mockResolvedValue(mockStat as any)
+  const mockStream = new Writable({
+    write(chunk, encoding, callback): void {
+      callback()
+    },
+  })
+  jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
+
+  const range = 'bytes=0-'
+  const response = await HandleRangeRequest.handleRangeRequest('/test/video.mp4', range)
+
+  expect(response.status).toBe(HttpStatusCode.PartialContent)
+  expect(response.headers.get('Content-Range')).toBe('bytes 0-999/1000')
+  expect(response.headers.get('Content-Length')).toBe('1000')
+  expect(response.headers.get('Accept-Ranges')).toBe('bytes')
+})
