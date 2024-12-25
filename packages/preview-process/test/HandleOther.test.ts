@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
+import * as GetPathEtag from '../src/parts/GetPathEtag/GetPathEtag.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -22,10 +23,18 @@ class FileNotFoundError extends Error {
   }
 }
 
+const handlerOptions = {
+  webViewRoot: '',
+  contentSecurityPolicy: '',
+  iframeContent: '',
+}
+
 test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
-  const range = ''
-  const response = await HandleOther.handleOther('/test/not-found.txt', range)
+  const response = await HandleOther.handleOther('/test/not-found.txt', {
+    method: 'GET',
+    path: '/test/not-found.txt',
+  })
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
@@ -33,8 +42,10 @@ test('not found', async () => {
 
 test('normal file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
-  const range = ''
-  const response = await HandleOther.handleOther('/test/file.txt', range)
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+  })
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('ok')
   expect(response.headers.get('Content-Type')).toBe('text/plain')
@@ -43,8 +54,10 @@ test('normal file', async () => {
 
 test('css file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
-  const range = ''
-  const response = await HandleOther.handleOther('/test/styles.css', range)
+  const response = await HandleOther.handleOther('/test/styles.css', {
+    method: 'GET',
+    path: '/test/styles.css',
+  })
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('.test{color:red}')
   expect(response.headers.get('Content-Type')).toBe('text/css')
@@ -53,17 +66,81 @@ test('css file', async () => {
 test('internal server error', async () => {
   const error = new Error('Internal error')
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
-  const range = ''
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const response = await HandleOther.handleOther('/test/file.txt', range)
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+  })
   expect(await response.text()).toBe('Internal Server Error')
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(`[preview-server] Error: Internal error`)
 })
 
 test('with range header', async () => {
-  const range = 'bytes=0-100'
-  const response = await HandleOther.handleOther('/test/video.mp4', range)
+  const response = await HandleOther.handleOther('/test/video.mp4', {
+    method: 'GET',
+    path: '/test/video.mp4',
+    range: 'bytes=0-100',
+  })
   // TODO
   // expect(response.headers.get('Accept-Ranges')).toBe('bytes')
+})
+
+test('should return 304 when etag matches', async () => {
+  const mockEtag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(mockEtag)
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
+
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+    headers: {
+      'if-none-match': mockEtag,
+    },
+  })
+  expect(response.status).toBe(HttpStatusCode.NotModified)
+  expect(response.headers.get('ETag')).toBe(mockEtag)
+  expect(await response.text()).toBe('')
+})
+
+test('should return 200 with etag when etag does not match', async () => {
+  const mockEtag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(mockEtag)
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
+
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+    headers: {
+      'if-none-match': '"456"',
+    },
+  })
+  expect(response.status).toBe(HttpStatusCode.Ok)
+  expect(response.headers.get('ETag')).toBe(mockEtag)
+  expect(await response.text()).toBe('test')
+})
+
+test('should return 200 with etag when no if-none-match header', async () => {
+  const mockEtag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(mockEtag)
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
+
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+  })
+  expect(response.status).toBe(HttpStatusCode.Ok)
+  expect(response.headers.get('ETag')).toBe(mockEtag)
+  expect(await response.text()).toBe('test')
+})
+
+test('should return 404 when getPathEtag returns null', async () => {
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(null)
+
+  const response = await HandleOther.handleOther('/test/file.txt', {
+    method: 'GET',
+    path: '/test/file.txt',
+  })
+  expect(response.status).toBe(HttpStatusCode.NotFound)
+  expect(await response.text()).toBe('not found')
 })
