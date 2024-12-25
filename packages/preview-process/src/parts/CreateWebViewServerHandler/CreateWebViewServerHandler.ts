@@ -15,7 +15,14 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
       pathName += 'index.html'
     }
     const range = request.headers.range
-    const result = await GetResponse.getResponse(pathName, webViewRoot, contentSecurityPolicy, iframeContent, range)
+    const result = await GetResponse.getResponse(
+      pathName,
+      webViewRoot,
+      contentSecurityPolicy,
+      iframeContent,
+      range,
+      request.method,
+    )
     await SendResponse.sendResponse(response, result)
   }
 
