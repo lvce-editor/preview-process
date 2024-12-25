@@ -1,12 +1,12 @@
 import { readFile } from 'node:fs/promises'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
+import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.ts'
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
-import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
-import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
 export const handleIndexHtml = async (filePath: string, request: RequestOptions, options: HandlerOptions): Promise<Response> => {
