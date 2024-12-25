@@ -3,7 +3,7 @@ import getPort from 'get-port'
 import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePreviewProcess.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 
-test.skip('preview process - handles HEAD requests', async () => {
+test('preview process - handles HEAD requests', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
   const port = await getPort()
