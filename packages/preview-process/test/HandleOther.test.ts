@@ -146,9 +146,9 @@ test('should return 200 with etag when etag does not match', async () => {
 
 test('should return 200 with etag when no if-none-match header', async () => {
   const mockEtag = '"123"'
+  const mockStream = createMockStream('test')
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(mockEtag)
-  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
-
+  jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
   const response = await HandleOther.handleOther('/test/file.txt', {
     method: 'GET',
     path: '/test/file.txt',
@@ -189,7 +189,8 @@ test('with matching etag', async () => {
 test('with non-matching etag', async () => {
   const etag = '"123"'
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
-  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test content'))
+  const mockStream = createMockStream('test content')
+  jest.spyOn(Fs, 'createReadStream').mockReturnValue(mockStream as any)
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
