@@ -20,8 +20,8 @@ test('preview process - handles invalid range request', async () => {
     },
   })
 
-  expect(response.status).toBe(416) // Range Not Satisfiable
-  expect(response.headers.get('Content-Range')).toMatch(/^bytes \*\/\d+$/)
+  expect(response.status).toBe(400) // Bad Request
+  expect(await response.text()).toBe('Invalid Range')
 
   previewProcess[Symbol.dispose]()
 })

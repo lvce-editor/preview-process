@@ -8,14 +8,25 @@ export const handleRangeRequest = async (filePath: string, range: string): Promi
   const stats = await stat(filePath)
   const code = HttpStatusCode.PartialContent
   const [x, y] = range.replace('bytes=', '').split('-')
-  let end = parseInt(y, 10) || stats.size - 1
-  const start = parseInt(x, 10) || 0
+  const end = parseInt(y, 10)
+  const start = parseInt(x, 10)
+
+  if (isNaN(start) || isNaN(end)) {
+    return new Response('Invalid Range', {
+      status: HttpStatusCode.BadRequest,
+      headers: {
+        [HttpHeader.ContentRange]: `bytes */${stats.size}`,
+      },
+    })
+  }
+
   const options = {
     start,
-    end,
+    end: end || stats.size - 1,
   }
+
   if (end >= stats.size) {
-    end = stats.size - 1
+    options.end = stats.size - 1
   }
 
   if (start >= stats.size) {
@@ -26,12 +37,13 @@ export const handleRangeRequest = async (filePath: string, range: string): Promi
       },
     })
   }
+
   const readStream = createReadStream(filePath, options)
   return new Response(readStream, {
     status: code,
     headers: {
-      [HttpHeader.ContentRange]: `bytes ${start}-${end}/${stats.size}`,
-      [HttpHeader.ContentLength]: `${end - start + 1}`,
+      [HttpHeader.ContentRange]: `bytes ${start}-${options.end}/${stats.size}`,
+      [HttpHeader.ContentLength]: `${options.end - start + 1}`,
       [HttpHeader.AcceptRanges]: 'bytes',
     },
   })
