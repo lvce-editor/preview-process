@@ -18,7 +18,7 @@ jest.unstable_mockModule('node:fs', () => {
   }
 })
 
-const HandleRangeRequest = await import('../src/parts/HandleRangeRequest/HandleRangeRequest.js')
+const HandleRangeRequest = await import('../src/parts/HandleRangeRequest/HandleRangeRequest.ts')
 const FsPromises = await import('node:fs/promises')
 const Fs = await import('node:fs')
 
