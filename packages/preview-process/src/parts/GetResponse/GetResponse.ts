@@ -1,6 +1,8 @@
 import * as HandleIndexHtml from '../HandleIndexHtml/HandleIndexHtml.ts'
 import * as HandleOther from '../HandleOther/HandleOther.ts'
 import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
+import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 
 export const getResponse = async (
@@ -9,7 +11,13 @@ export const getResponse = async (
   contentSecurityPolicy: string,
   iframeContent: string,
   range: any,
+  method: string | undefined,
 ): Promise<Response> => {
+  if (method !== HttpMethod.Get) {
+    return new Response('Method Not Allowed', {
+      status: HttpStatusCode.MethodNotAllowed,
+    })
+  }
   const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
   if (isHtml) {
