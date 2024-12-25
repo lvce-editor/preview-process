@@ -17,6 +17,7 @@
     "ky": "^1.7.4",
     "wait-for-localhost": "^4.1.0",
     "wait-on": "^8.0.1",
+    "wait-port": "^1.1.0",
     "ws": "^8.18.0"
   },
   "devDependencies": {
