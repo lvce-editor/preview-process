@@ -1,6 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
-import * as GetPathEtag from '../src/parts/GetPathEtag/GetPathEtag.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -12,8 +11,15 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.ts', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/GetPathEtag/GetPathEtag.ts', () => {
+  return {
+    getPathEtag: jest.fn(),
+  }
+})
+
 const HandleOther = await import('../src/parts/HandleOther/HandleOther.ts')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.ts')
+const GetPathEtag = await import('../src/parts/GetPathEtag/GetPathEtag.ts')
 
 class FileNotFoundError extends Error {
   constructor() {
@@ -55,6 +61,8 @@ test('normal file', async () => {
 })
 
 test('css file', async () => {
+  const etag = '"css123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
   const requestOptions = {
     method: 'GET',
@@ -64,11 +72,12 @@ test('css file', async () => {
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('.test{color:red}')
   expect(response.headers.get('Content-Type')).toBe('text/css')
+  expect(response.headers.get('ETag')).toBe(etag)
 })
 
 test('internal server error', async () => {
   const error = new Error('Internal error')
-  jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockRejectedValue(error)
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
