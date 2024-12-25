@@ -24,6 +24,12 @@ jest.unstable_mockModule('node:fs', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ResolveFilePath/ResolveFilePath.ts', () => {
+  return {
+    resolveFilePath: jest.fn((path) => path),
+  }
+})
+
 const HandleOther = await import('../src/parts/HandleOther/HandleOther.ts')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.ts')
 const GetPathEtag = await import('../src/parts/GetPathEtag/GetPathEtag.ts')
