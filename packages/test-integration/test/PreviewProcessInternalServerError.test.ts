@@ -12,7 +12,6 @@ test('preview process - internal server error', async () => {
   const ajs = new URL('../src/a.js', import.meta.url).toString()
   const root = getRoot()
   const rootPath = fileURLToPath(root)
-  // TODO file path has duplicate slash for some reason, it should only have one slash or backslash.
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
   const previewProcess = createPreviewProcess({
@@ -20,6 +19,13 @@ test('preview process - internal server error', async () => {
   })
 
   const client = await connectToCdp(debugPort)
+
+  await mockModule(client.Runtime, {
+    moduleName: 'node:fs/promises',
+    functionName: 'stat',
+    filePath,
+    returnValue: { size: 1000 },
+  })
 
   await mockModule(client.Runtime, {
     moduleName: 'node:fs/promises',
