@@ -1,5 +1,6 @@
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
+import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
 export const handlePreviewInjected = async (): Promise<Response> => {
   try {
@@ -12,6 +13,6 @@ export const handlePreviewInjected = async (): Promise<Response> => {
     })
   } catch (error) {
     console.error(`[preview-server] ${error}`)
-    return new Response('not found')
+    return new NotFoundResponse()
   }
 }
