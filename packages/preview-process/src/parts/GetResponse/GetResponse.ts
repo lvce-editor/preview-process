@@ -4,14 +4,12 @@ import * as HandleIndexHtml from '../HandleIndexHtml/HandleIndexHtml.ts'
 import * as HandleOther from '../HandleOther/HandleOther.ts'
 import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
+import { MethodNotAllowedResponse } from '../Responses/MethodNotAllowedResponse.ts'
 
 export const getResponse = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
   if (request.method !== HttpMethod.Get && request.method !== HttpMethod.Head) {
-    return new Response('Method Not Allowed', {
-      status: HttpStatusCode.MethodNotAllowed,
-    })
+    return new MethodNotAllowedResponse()
   }
   const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
   const isHtml = filePath.endsWith('index.html')
