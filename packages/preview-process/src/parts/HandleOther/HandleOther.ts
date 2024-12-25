@@ -3,15 +3,15 @@ import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
-import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
-import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import { ContentResponse } from '../Responses/ContentResponse.ts'
+import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
+import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
-export const handleOther = async (filePath: string, request: RequestOptions): Promise<Response> => {
+export const handleOther = async (filePath: string, requestOptions: RequestOptions): Promise<Response> => {
   try {
-    if (request.range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, request.range)
+    if (requestOptions.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
     }
 
     const etag = await GetPathEtag.getPathEtag(filePath)
@@ -36,28 +36,12 @@ export const handleOther = async (filePath: string, request: RequestOptions): Pr
 
     const contentType = GetContentType.getContentType(filePath)
     const content = await FileSystem.readFile(filePath)
-    return new Response(content, {
-      headers: {
-        [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
-        [HttpHeader.ContentType]: contentType,
-        [HttpHeader.Etag]: etag,
-      },
-    })
+    return new ContentResponse(content, contentType)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
-      return new Response('not found', {
-        status: HttpStatusCode.NotFound,
-        headers: {
-          [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
-        },
-      })
+      return new NotFoundResponse()
     }
     console.error(`[preview-server] ${error}`)
-    return new Response(`Internal Server Error`, {
-      status: HttpStatusCode.ServerError,
-      headers: {
-        [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
-      },
-    })
+    return new ServerErrorResponse()
   }
 }
