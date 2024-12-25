@@ -1,12 +1,12 @@
+import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
-import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
-import { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 
 export const handleOther = async (filePath: string, request: RequestOptions): Promise<Response> => {
   try {
