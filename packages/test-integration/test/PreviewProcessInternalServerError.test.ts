@@ -7,13 +7,7 @@ import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 import { mockModule } from '../src/parts/MockModule/MockModule.js'
 
-const isWindows = process.platform === 'win32'
-
 test('preview process - internal server error', async () => {
-  // TODO
-  if (isWindows) {
-    return
-  }
   const debugPort = await getPort()
   const ajs = new URL('../src/a.js', import.meta.url).toString()
   const root = getRoot()
@@ -22,8 +16,9 @@ test('preview process - internal server error', async () => {
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect=${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
+    execArgv: [`--inspect=localhost:${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
   })
+
   const client = await connectToCdp(debugPort)
 
   await mockModule(client, 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')

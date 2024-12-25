@@ -1,4 +1,4 @@
-import { fork } from 'node:child_process'
+import { ChildProcess, fork } from 'node:child_process'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -7,14 +7,17 @@ const PREVIEW_PROCESS_PATH = join(__dirname, '../../../../preview-process/src/pr
 
 export interface PreviewProcess {
   readonly invoke: (method: string, ...params: unknown[]) => Promise<unknown>
+  readonly childProcess: ChildProcess
   readonly [Symbol.dispose]: () => void
 }
 
 export const createPreviewProcess = (options: { execArgv?: string[] } = {}): PreviewProcess => {
   const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
     execArgv: options.execArgv || ['--experimental-strip-types'],
+    stdio: 'pipe',
   })
   return {
+    childProcess,
     async invoke(method: string, ...params: any[]): Promise<void> {
       const { promise, resolve } = Promise.withResolvers<any>()
       const messageId = Math.random()

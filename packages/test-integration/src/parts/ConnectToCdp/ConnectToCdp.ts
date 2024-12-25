@@ -7,6 +7,7 @@ export const connectToCdp = async (debugPort: number): Promise<CDP.Client> => {
     host: 'localhost',
     output: 'silent',
     timeout: 15000,
+    path: '/json/list',
   })
   const client = await CDP({
     host: 'localhost',
