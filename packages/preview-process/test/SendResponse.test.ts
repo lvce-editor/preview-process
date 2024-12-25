@@ -5,31 +5,42 @@ import { EventEmitter } from 'node:events'
 import * as SendResponse from '../src/parts/SendResponse/SendResponse.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
-class MockServerResponse extends EventEmitter {
+class MockServerResponse extends Writable {
   statusCode = 200
   headersSent = false
   #headers = new Map()
+  chunks: Buffer[] = []
 
-  getHeader(key: string) {
-    return this.#headers.get(key)
+  constructor() {
+    super()
+    this.on('finish', () => {
+      this.emit('end')
+    })
   }
 
-  setHeader(key: string, value: string) {
-    this.#headers.set(key, value)
+  getHeader(name: string) {
+    return this.#headers.get(name)
   }
 
+  setHeader(name: string, value: string) {
+    this.#headers.set(name, value)
+  }
+
+  _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void): void {
+    this.chunks.push(chunk)
+    callback()
+  }
+
+  // @ts-ignore
   end(chunk?: string) {
     if (chunk) {
-      this.emit('data', chunk)
+      this.write(Buffer.from(chunk))
     }
-    this.emit('end')
+    super.end()
   }
 
-  writeHead(statusCode: number, headers: object) {
-    this.statusCode = statusCode
-    for (const [key, value] of Object.entries(headers)) {
-      this.setHeader(key, value)
-    }
+  getContent(): string {
+    return Buffer.concat(this.chunks).toString()
   }
 }
 
@@ -42,13 +53,6 @@ const createMockReadableStream = (content: string) =>
     read() {
       this.push(content)
       this.push(null)
-    },
-  })
-
-const createMockWritableStream = () =>
-  new Writable({
-    write(chunk, encoding, callback) {
-      callback()
     },
   })
 
@@ -65,6 +69,7 @@ test('sendResponse - handles successful response with body', async () => {
   await SendResponse.sendResponse(mockResponse, result)
   expect(mockResponse.statusCode).toBe(HttpStatusCode.Ok)
   expect(mockResponse.getHeader('Content-Type')).toBe('text/plain')
+  expect((mockResponse as any).getContent()).toBe('test content')
 })
 
 test('sendResponse - handles response without body', async () => {
@@ -79,6 +84,7 @@ test('sendResponse - handles response without body', async () => {
   await SendResponse.sendResponse(mockResponse, result)
   expect(mockResponse.statusCode).toBe(HttpStatusCode.NotModified)
   expect(mockResponse.getHeader('ETag')).toBe('"123"')
+  expect((mockResponse as any).getContent()).toBe('')
 })
 
 test('sendResponse - handles ENOENT error', async () => {
@@ -92,6 +98,7 @@ test('sendResponse - handles ENOENT error', async () => {
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
   expect(mockResponse.statusCode).toBe(HttpStatusCode.NotFound)
+  expect((mockResponse as any).getContent()).toBe('Not Found')
 })
 
 test('sendResponse - handles stream premature close', async () => {
@@ -104,7 +111,7 @@ test('sendResponse - handles stream premature close', async () => {
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
-  expect(mockResponse.statusCode).toBe(HttpStatusCode.Ok) // Status should remain unchanged
+  expect(mockResponse.statusCode).toBe(HttpStatusCode.Ok)
 })
 
 test('sendResponse - handles other errors', async () => {
@@ -112,12 +119,12 @@ test('sendResponse - handles other errors', async () => {
   const error = new Error('Unknown error')
   const mockStream = createMockReadableStream('')
   mockStream.destroy(error)
-
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
   expect(mockResponse.statusCode).toBe(HttpStatusCode.ServerError)
+  expect((mockResponse as any).getContent()).toBe('Internal Server Error')
   expect(spy).toHaveBeenCalledWith('[preview-process] Error: Unknown error')
 })
 
@@ -131,5 +138,5 @@ test('sendResponse - does not modify headers if already sent', async () => {
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
-  expect(mockResponse.statusCode).toBe(200) // Should remain unchanged
+  expect(mockResponse.statusCode).toBe(200)
 })
