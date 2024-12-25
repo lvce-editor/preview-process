@@ -1,5 +1,5 @@
+import { createReadStream } from 'node:fs'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
-import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
@@ -26,8 +26,8 @@ export const handleOther = async (filePath: string, requestOptions: RequestOptio
     }
 
     const contentType = GetContentType.getContentType(filePath)
-    const content = await FileSystem.readFile(filePath)
-    return new ContentResponse(content, contentType, etag)
+    const stream = createReadStream(filePath)
+    return new ContentResponse(stream, contentType, etag)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
       return new NotFoundResponse()
