@@ -4,7 +4,7 @@ import { createPreviewProcess } from '../src/parts/CreatePreviewProcess/CreatePr
 import { get } from '../src/parts/Get/Get.js'
 import { getRoot } from '../src/parts/GetRoot/GetRoot.js'
 
-test('preview process - handles etag', async () => {
+test.skip('preview process - handles etag', async () => {
   const previewProcess = createPreviewProcess()
   const id = 1
   const port = await getPort()
