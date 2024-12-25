@@ -9,7 +9,7 @@ export const routes: RouteHandler[] = [
     pattern: /index\.html$/,
     handler: async (request, options): Promise<Response> => {
       const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
-      return HandleIndexHtml.handleIndexHtml(filePath, options)
+      return HandleIndexHtml.handleIndexHtml(filePath, request, options)
     },
   },
   {
