@@ -13,18 +13,27 @@ export const getResponse = async (
   range: any,
   method: string | undefined,
 ): Promise<Response> => {
-  if (method !== HttpMethod.Get) {
+  if (method !== HttpMethod.Get && method !== HttpMethod.Head) {
     return new Response('Method Not Allowed', {
       status: HttpStatusCode.MethodNotAllowed,
     })
   }
   const filePath = ResolveFilePath.resolveFilePath(pathName, webViewRoot)
   const isHtml = filePath.endsWith('index.html')
+  let response
   if (isHtml) {
-    return HandleIndexHtml.handleIndexHtml(filePath, contentSecurityPolicy, iframeContent)
+    response = await HandleIndexHtml.handleIndexHtml(filePath, contentSecurityPolicy, iframeContent)
+  } else if (filePath.endsWith('preview-injected.js')) {
+    response = await HandlePreviewInjected.handlePreviewInjected()
+  } else {
+    response = await HandleOther.handleOther(filePath, range)
   }
-  if (filePath.endsWith('preview-injected.js')) {
-    return HandlePreviewInjected.handlePreviewInjected()
+
+  if (method === HttpMethod.Head) {
+    return new Response(null, {
+      status: response.status,
+      headers: response.headers,
+    })
   }
-  return HandleOther.handleOther(filePath, range)
+  return response
 }
