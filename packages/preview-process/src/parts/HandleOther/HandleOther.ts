@@ -4,19 +4,43 @@ import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 
-export const handleOther = async (filePath: string, range: any): Promise<Response> => {
+export const handleOther = async (filePath: string, request: RequestOptions): Promise<Response> => {
   try {
-    if (range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, range)
+    if (request.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, request.range)
     }
+
+    const etag = await GetPathEtag.getPathEtag(filePath)
+    if (!etag) {
+      return new Response('not found', {
+        status: HttpStatusCode.NotFound,
+        headers: {
+          [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+        },
+      })
+    }
+
+    if (request && MatchesEtag.matchesEtag(request, etag)) {
+      return new Response(null, {
+        status: HttpStatusCode.NotModified,
+        headers: {
+          [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+          [HttpHeader.Etag]: etag,
+        },
+      })
+    }
+
     const contentType = GetContentType.getContentType(filePath)
-    // TODO figure out which of these headers are actually needed
     const content = await FileSystem.readFile(filePath)
     return new Response(content, {
       headers: {
         [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
         [HttpHeader.ContentType]: contentType,
+        [HttpHeader.Etag]: etag,
       },
     })
   } catch (error) {
