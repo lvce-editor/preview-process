@@ -7,16 +7,14 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
-export const handleOther = async (
-  filePath: string,
-  requestOptions: RequestOptions,
-  handlerOptions: HandlerOptions,
-): Promise<Response> => {
+export const handleOther = async (requestOptions: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
+  const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handleOther.webViewRoot)
   try {
     if (requestOptions.range) {
       return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)

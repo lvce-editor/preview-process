@@ -51,7 +51,7 @@ test('not found', async () => {
     path: '/test/not-found.txt',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
@@ -66,7 +66,7 @@ test('normal file', async () => {
     path: '/test/file.txt',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('ok')
   expect(response.headers.get('Content-Type')).toBe('text/plain')
@@ -83,7 +83,7 @@ test('css file', async () => {
     path: '/test/styles.css',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('.test{color:red}')
   expect(response.headers.get('Content-Type')).toBe('text/css')
@@ -99,7 +99,7 @@ test('internal server error', async () => {
     headers: {},
   }
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(await response.text()).toBe('Internal Server Error')
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(`[preview-server] Error: Internal error`)
@@ -112,7 +112,7 @@ test('with range header', async () => {
     range: 'bytes=0-100',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   // TODO
   // expect(response.headers.get('Accept-Ranges')).toBe('bytes')
 })
@@ -129,7 +129,7 @@ test('should return 304 when etag matches', async () => {
       'if-none-match': mockEtag,
     },
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotModified)
   expect(response.headers.get('ETag')).toBe(mockEtag)
   expect(await response.text()).toBe('')
@@ -147,7 +147,7 @@ test('should return 200 with etag when etag does not match', async () => {
       'if-none-match': '"456"',
     },
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('ETag')).toBe(mockEtag)
   expect(await response.text()).toBe('test')
@@ -163,7 +163,7 @@ test('should return 200 with etag when no if-none-match header', async () => {
     path: '/test/file.txt',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('ETag')).toBe(mockEtag)
   expect(await response.text()).toBe('test')
@@ -178,7 +178,7 @@ test('should return 404 when getPathEtag returns null', async () => {
     path: '/test/file.txt',
     headers: {},
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
 })
@@ -193,7 +193,7 @@ test('with matching etag', async () => {
       'if-none-match': etag,
     },
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotModified)
   expect(response.headers.get('ETag')).toBe(etag)
 })
@@ -209,7 +209,7 @@ test('with non-matching etag', async () => {
       'if-none-match': '"456"',
     },
   }
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, handlerOptions)
+  const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('ETag')).toBe(etag)
   expect(await response.text()).toBe('test content')
@@ -233,7 +233,7 @@ test('streaming response', async () => {
     headers: {},
   }
 
-  const response = await HandleOther.handleOther(requestOptions.path, requestOptions, streamingOptions)
+  const response = await HandleOther.handleOther(requestOptions, streamingOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('Content-Type')).toBe('text/plain')
   expect(response.headers.get('ETag')).toBe(etag)
