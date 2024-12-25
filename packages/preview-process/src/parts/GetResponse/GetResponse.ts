@@ -5,6 +5,7 @@ import * as HandleOther from '../HandleOther/HandleOther.ts'
 import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
+import { HeadResponse } from '../Responses/HeadResponse.ts'
 import { MethodNotAllowedResponse } from '../Responses/MethodNotAllowedResponse.ts'
 
 export const getResponse = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
@@ -22,10 +23,7 @@ export const getResponse = async (request: RequestOptions, options: HandlerOptio
     response = await HandleOther.handleOther(filePath, request)
   }
   if (request.method === HttpMethod.Head) {
-    return new Response(null, {
-      status: response.status,
-      headers: response.headers,
-    })
+    return new HeadResponse(response.status, response.headers)
   }
   return response
 }
