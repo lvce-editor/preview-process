@@ -1,7 +1,12 @@
 import CDP from 'chrome-remote-interface'
 import waitPort from 'wait-port'
 
-export const connectToCdp = async (debugPort: number): Promise<CDP.Client> => {
+export interface CdpConnection {
+  readonly Runtime: CDP.Client['Runtime']
+  readonly [Symbol.dispose]: () => Promise<void>
+}
+
+export const connectToCdp = async (debugPort: number): Promise<CdpConnection> => {
   await waitPort({
     port: debugPort,
     host: 'localhost',
@@ -14,5 +19,10 @@ export const connectToCdp = async (debugPort: number): Promise<CDP.Client> => {
     port: debugPort,
   })
   await client.Runtime.enable()
-  return client
+  return {
+    Runtime: client.Runtime,
+    async [Symbol.dispose](): Promise<void> {
+      await client.close()
+    },
+  }
 }

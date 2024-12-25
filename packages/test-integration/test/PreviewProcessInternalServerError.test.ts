@@ -21,7 +21,7 @@ test('preview process - internal server error', async () => {
 
   const client = await connectToCdp(debugPort)
 
-  await mockModule(client, 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')
+  await mockModule(client.Runtime, 'node:fs/promises', 'readFile', filePath, 'Access Denied', 'EACCES')
 
   const id = 1
   const port = await getPort()
@@ -34,6 +34,6 @@ test('preview process - internal server error', async () => {
   expect(response.status).toBe(500)
   expect(await response.text()).toBe('Internal Server Error')
 
-  await client.close()
+  await client[Symbol.dispose]()
   previewProcess[Symbol.dispose]()
 })
