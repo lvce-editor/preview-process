@@ -29,5 +29,5 @@ test('preview process - handles open-ended range request', async () => {
   expect(text).toContain('{')
   expect(text.length).toBeGreaterThan(0)
 
-  await previewProcess[Symbol.dispose]()
+  previewProcess[Symbol.dispose]()
 })
