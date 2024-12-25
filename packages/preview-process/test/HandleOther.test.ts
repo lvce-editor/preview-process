@@ -149,3 +149,35 @@ test('should return 404 when getPathEtag returns null', async () => {
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
 })
+
+test('with matching etag', async () => {
+  const etag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/file.txt',
+    headers: {
+      'if-none-match': etag,
+    },
+  }
+  const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
+  expect(response.status).toBe(HttpStatusCode.NotModified)
+  expect(response.headers.get('ETag')).toBe(etag)
+})
+
+test('with non-matching etag', async () => {
+  const etag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test content'))
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/file.txt',
+    headers: {
+      'if-none-match': '"456"',
+    },
+  }
+  const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
+  expect(response.status).toBe(HttpStatusCode.Ok)
+  expect(response.headers.get('ETag')).toBe(etag)
+  expect(await response.text()).toBe('test content')
+})

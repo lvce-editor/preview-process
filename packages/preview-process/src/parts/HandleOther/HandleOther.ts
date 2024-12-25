@@ -1,10 +1,13 @@
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
+import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
+import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
 export const handleOther = async (filePath: string, requestOptions: RequestOptions): Promise<Response> => {
@@ -12,9 +15,19 @@ export const handleOther = async (filePath: string, requestOptions: RequestOptio
     if (requestOptions.range) {
       return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
     }
+
+    const etag = await GetPathEtag.getPathEtag(filePath)
+    if (!etag) {
+      return new NotFoundResponse()
+    }
+
+    if (MatchesEtag.matchesEtag(requestOptions, etag)) {
+      return new NotModifiedResponse(etag)
+    }
+
     const contentType = GetContentType.getContentType(filePath)
     const content = await FileSystem.readFile(filePath)
-    return new ContentResponse(content, contentType)
+    return new ContentResponse(content, contentType, etag)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
       return new NotFoundResponse()
