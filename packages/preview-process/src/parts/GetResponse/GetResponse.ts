@@ -4,8 +4,8 @@ import * as FindMatchingRoute from '../FindMatchingRoute/FindMatchingRoute.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import { HeadResponse } from '../Responses/HeadResponse.ts'
 import { MethodNotAllowedResponse } from '../Responses/MethodNotAllowedResponse.ts'
-import * as Routes from '../Routes/Routes.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
+import * as Routes from '../Routes/Routes.ts'
 
 export const getResponse = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
   if (request.method !== HttpMethod.Get && request.method !== HttpMethod.Head) {
