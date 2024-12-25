@@ -7,19 +7,18 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
-export const handleOther = async (
-  filePath: string,
-  requestOptions: RequestOptions,
-  handlerOptions: HandlerOptions,
-): Promise<Response> => {
+export const handleOther = async (request: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
   try {
-    if (requestOptions.range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
+    const filePath = ResolveFilePath.resolveFilePath(request.path, handlerOptions.webViewRoot)
+
+    if (request.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, request.range)
     }
 
     const etag = await GetPathEtag.getPathEtag(filePath)
@@ -27,7 +26,7 @@ export const handleOther = async (
       return new NotFoundResponse()
     }
 
-    if (MatchesEtag.matchesEtag(requestOptions, etag)) {
+    if (MatchesEtag.matchesEtag(request, etag)) {
       return new NotModifiedResponse(etag)
     }
 
