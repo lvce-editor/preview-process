@@ -17,14 +17,14 @@ class MockServerResponse extends Writable {
     })
   }
 
-  getHeader(name: string) {
+  getHeader(name: string): string {
     if (name === 'Content-Type') {
       return this.#headers.get('content-type')
     }
     return this.#headers.get(name)
   }
 
-  setHeader(name: string, value: string) {
+  setHeader(name: string, value: string): void {
     this.#headers.set(name, value)
   }
 
@@ -34,7 +34,7 @@ class MockServerResponse extends Writable {
   }
 
   // @ts-ignore
-  end(chunk?: Buffer) {
+  end(chunk?: Buffer): void {
     if (chunk) {
       this._write(Buffer.from(chunk), '', () => {})
     }
@@ -52,7 +52,7 @@ const createMockResponse = () => {
 
 const createMockReadableStream = (content: string) =>
   new Readable({
-    read() {
+    read(): void {
       this.push(content)
       this.push(null)
     },
