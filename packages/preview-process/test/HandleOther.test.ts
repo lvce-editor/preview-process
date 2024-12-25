@@ -26,7 +26,9 @@ jest.unstable_mockModule('node:fs', () => {
 
 jest.unstable_mockModule('../src/parts/ResolveFilePath/ResolveFilePath.ts', () => {
   return {
-    resolveFilePath: jest.fn((path) => path),
+    resolveFilePath(path: string): string {
+      return path
+    },
   }
 })
 
