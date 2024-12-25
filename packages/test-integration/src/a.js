@@ -13,7 +13,16 @@ globalThis.mockModule = (moduleName, options) => {
         throw error
       }
       if (options.returnValue !== undefined) {
-        return options.returnValue
+        const value = options.returnValue
+        const modified = {
+          ...value,
+        }
+        if (value.isDirectory !== undefined) {
+          modified.isDirectory = () => value.isDirectory
+          modified.isFile = () => value.isFile
+          modified.mtime = new Date(value.mtime)
+        }
+        return modified
       }
     }
     return originalFn(...args)
