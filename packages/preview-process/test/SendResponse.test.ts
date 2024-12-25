@@ -1,5 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
-import { Readable } from 'node:stream'
+import { Readable, Writable } from 'node:stream'
 import { ServerResponse } from 'node:http'
 import { EventEmitter } from 'node:events'
 import * as SendResponse from '../src/parts/SendResponse/SendResponse.ts'
@@ -7,19 +7,15 @@ import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
 class MockServerResponse extends EventEmitter {
   statusCode = 200
-  #headersSent = false
+  headersSent = false
+  #headers = new Map()
 
-  get headersSent() {
-    return this.#headersSent
+  getHeader(key: string) {
+    return this.#headers.get(key)
   }
-
-  set headersSent(value) {
-    this.#headersSent = value
-  }
-  headers = new Map()
 
   setHeader(key: string, value: string) {
-    this.headers.set(key, value)
+    this.#headers.set(key, value)
   }
 
   end(chunk?: string) {
@@ -41,7 +37,7 @@ const createMockResponse = () => {
   return new MockServerResponse() as unknown as ServerResponse
 }
 
-const createMockStream = (content: string) =>
+const createMockReadableStream = (content: string) =>
   new Readable({
     read() {
       this.push(content)
@@ -49,10 +45,17 @@ const createMockStream = (content: string) =>
     },
   })
 
+const createMockWritableStream = () =>
+  new Writable({
+    write(chunk, encoding, callback) {
+      callback()
+    },
+  })
+
 test('sendResponse - handles successful response with body', async () => {
   const mockResponse = createMockResponse()
-  const mockStream = createMockStream('test content')
-  const result = new Response(mockStream, {
+  const mockStream = createMockReadableStream('test content')
+  const result = new Response(mockStream as any, {
     status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/plain',
@@ -83,11 +86,8 @@ test('sendResponse - handles ENOENT error', async () => {
   const error = new Error('ENOENT')
   // @ts-ignore
   error.code = 'ENOENT'
-  const mockStream = new Readable({
-    read() {
-      this.emit('error', error)
-    },
-  })
+  const mockStream = createMockReadableStream('')
+  mockStream.destroy(error)
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
@@ -99,11 +99,8 @@ test('sendResponse - handles stream premature close', async () => {
   const error = new Error('premature close')
   // @ts-ignore
   error.code = 'ERR_STREAM_PREMATURE_CLOSE'
-  const mockStream = new Readable({
-    read() {
-      this.emit('error', error)
-    },
-  })
+  const mockStream = createMockReadableStream('')
+  mockStream.destroy(error)
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
@@ -113,11 +110,9 @@ test('sendResponse - handles stream premature close', async () => {
 test('sendResponse - handles other errors', async () => {
   const mockResponse = createMockResponse()
   const error = new Error('Unknown error')
-  const mockStream = new Readable({
-    read() {
-      this.emit('error', error)
-    },
-  })
+  const mockStream = createMockReadableStream('')
+  mockStream.destroy(error)
+
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   const result = new Response(mockStream)
@@ -131,11 +126,8 @@ test('sendResponse - does not modify headers if already sent', async () => {
   // @ts-ignore
   mockResponse.headersSent = true
   const error = new Error('Unknown error')
-  const mockStream = new Readable({
-    read() {
-      this.emit('error', error)
-    },
-  })
+  const mockStream = createMockReadableStream('')
+  mockStream.destroy(error)
 
   const result = new Response(mockStream)
   await SendResponse.sendResponse(mockResponse, result)
