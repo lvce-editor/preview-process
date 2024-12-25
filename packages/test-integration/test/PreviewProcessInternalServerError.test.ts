@@ -16,7 +16,7 @@ test('preview process - internal server error', async () => {
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect=localhost:${debugPort}`, '--experimental-vm-modules', '--experimental-strip-types', `--import=${ajs}`],
+    execArgv: [`--inspect=localhost:${debugPort}`, '--experimental-strip-types', `--import=${ajs}`],
   })
 
   const client = await connectToCdp(debugPort)
