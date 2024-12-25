@@ -1,30 +1,50 @@
-import * as GetIndexResponse from '../GetIndexResponse/GetIndexResponse.ts'
 import * as GetInfo from '../GetInfo/GetInfo.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
-import * as GetPreviewInjectedResponse from '../GetPreviewInjectedResponse/GetPreviewInjectedResponse.ts'
-import * as GetRemoteResponse from '../GetRemoteResponse/GetRemoteResponse.ts'
-import * as GetWebViewRootResponse from '../GetWebViewRootResponse/GetWebViewRootResponse.ts'
-import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
-import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
-import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 
-export const getResponse = async (method: string, url: string): Promise<any> => {
-  // TODO allow head requests
-  if (method !== HttpMethod.Get) {
-    return NotAllowedResponse.create()
+interface ElectronResponse {
+  readonly body: any
+  readonly init: {
+    readonly status: number
+    readonly headers: any
   }
+}
+
+const serializeHeaders = (headers: Response['headers']): any => {
+  const serialized = Object.create(null)
+  for (const [key, value] of headers) {
+    serialized[key] = value
+  }
+  return serialized
+}
+
+const serializeResponse = async (response: Response): Promise<ElectronResponse> => {
+  const buffer = await response.arrayBuffer()
+  return {
+    body: buffer,
+    init: {
+      status: response.status,
+      headers: serializeHeaders(response.headers),
+    },
+  }
+}
+
+export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
   const info = GetInfo.getInfo(url)
   const pathName = GetPathName.getPathName2(url)
-  if (pathName === '/') {
-    return GetIndexResponse.getIndexResponse(info)
+  const requestOptions = {
+    method,
+    path: pathName,
+    headers: {},
   }
-  // TODO use pathname
-  if (url.endsWith('preview-injected.js')) {
-    return GetPreviewInjectedResponse.getPreviewInjectedResponse(PreviewInjectedCode.injectedCode)
+  const handlerOptions: HandlerOptions = {
+    contentSecurityPolicy: info.contentSecurityPolicy,
+    iframeContent: info.iframeContent,
+    stream: false,
+    webViewRoot: info.webViewRoot,
   }
-  // TODO maybe rename this route to /file when running in electron
-  if (pathName.startsWith('/remote')) {
-    return GetRemoteResponse.getRemoteResponse(pathName, info.webViewRoot)
-  }
-  return GetWebViewRootResponse.getWebViewRootResponse(info, pathName)
+  const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
+  const serializedResponse = await serializeResponse(jsResponse)
+  return serializedResponse
 }
