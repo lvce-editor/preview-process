@@ -1,10 +1,11 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { fileURLToPath } from 'node:url'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
+import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
 
-// TODO deprecated frame ancestors
 export const createHandler = (webViewRoot: string, contentSecurityPolicy: string, iframeContent: string): any => {
   if (webViewRoot && webViewRoot.startsWith('file://')) {
     webViewRoot = fileURLToPath(webViewRoot)
@@ -16,15 +17,20 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
     if (pathName === '/') {
       pathName += 'index.html'
     }
-    const range = request.headers.range
-    const result = await GetResponse.getResponse(
-      pathName,
+
+    const requestOptions: RequestOptions = {
+      method: request.method || 'GET',
+      range: request.headers.range,
+      path: pathName,
+    }
+
+    const handlerOptions: HandlerOptions = {
       webViewRoot,
       contentSecurityPolicy,
       iframeContent,
-      range,
-      request.method,
-    )
+    }
+
+    const result = await GetResponse.getResponse(requestOptions, handlerOptions)
     await SendResponse.sendResponse(response, result)
   }
 
