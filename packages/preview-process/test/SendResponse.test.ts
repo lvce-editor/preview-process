@@ -1,5 +1,5 @@
+import type { ServerResponse } from 'node:http'
 import { expect, jest, test } from '@jest/globals'
-import { ServerResponse } from 'node:http'
 import { Readable, Writable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as SendResponse from '../src/parts/SendResponse/SendResponse.ts'

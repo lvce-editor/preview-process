@@ -1,8 +1,8 @@
 import type { ServerResponse } from 'node:http'
 import { pipeline } from 'node:stream/promises'
-import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
-import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
+import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsStreamPrematureCloseError.ts'
 
 export const sendResponse = async (response: ServerResponse, result: Response): Promise<void> => {
   try {
