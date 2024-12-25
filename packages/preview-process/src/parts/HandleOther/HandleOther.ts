@@ -14,12 +14,12 @@ import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
 export const handleOther = async (
   filePath: string,
-  request: RequestOptions,
+  requestOptions: RequestOptions,
   handlerOptions: HandlerOptions,
 ): Promise<Response> => {
   try {
-    if (request.range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, request.range)
+    if (requestOptions.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
     }
 
     const etag = await GetPathEtag.getPathEtag(filePath)
@@ -27,7 +27,7 @@ export const handleOther = async (
       return new NotFoundResponse()
     }
 
-    if (MatchesEtag.matchesEtag(request, etag)) {
+    if (MatchesEtag.matchesEtag(requestOptions, etag)) {
       return new NotModifiedResponse(etag)
     }
 
