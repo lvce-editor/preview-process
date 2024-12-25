@@ -131,3 +131,106 @@ test('get - invalid url format', async () => {
   const url = 'not-a-url'
   await expect(WebViewProtocol.getResponse(method, url)).rejects.toThrow('Failed to parse url')
 })
+
+test('method not allowed - put', async () => {
+  const method = HttpMethod.Put
+  const url = 'lvce-webview://test/media'
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: '405 - Method not allowed',
+    init: {
+      status: HttpStatusCode.MethodNotAllowed,
+      headers: {
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
+    },
+  })
+})
+
+test('get - png image file', async () => {
+  const method = HttpMethod.Get
+  const url = 'lvce-webview://test/media/image.png'
+  const imageBuffer = Buffer.from([137, 80, 78, 71]) // PNG magic numbers
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(imageBuffer)
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: imageBuffer,
+    init: {
+      status: HttpStatusCode.Ok,
+      headers: {
+        'Content-Type': 'image/png',
+        'Cross-Origin-Resource-Policy': 'same-origin',
+      },
+    },
+  })
+})
+
+test('get - svg file', async () => {
+  const method = HttpMethod.Get
+  const url = 'lvce-webview://test/media/icon.svg'
+  const svgContent = Buffer.from('<svg></svg>')
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(svgContent)
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: svgContent,
+    init: {
+      status: HttpStatusCode.Ok,
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Cross-Origin-Resource-Policy': 'same-origin',
+      },
+    },
+  })
+})
+
+test('get - json file', async () => {
+  const method = HttpMethod.Get
+  const url = 'lvce-webview://test/data/config.json'
+  const jsonContent = Buffer.from('{"key": "value"}')
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(jsonContent)
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: jsonContent,
+    init: {
+      status: HttpStatusCode.Ok,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cross-Origin-Resource-Policy': 'same-origin',
+      },
+    },
+  })
+})
+
+test('get - unknown file type', async () => {
+  const method = HttpMethod.Get
+  const url = 'lvce-webview://test/data/unknown.xyz'
+  const content = Buffer.from('content')
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(content)
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: content,
+    init: {
+      status: HttpStatusCode.Ok,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Cross-Origin-Resource-Policy': 'same-origin',
+      },
+    },
+  })
+})
+
+test('get - permission error', async () => {
+  const method = HttpMethod.Get
+  const url = 'lvce-webview://test/protected/file.txt'
+  const error = new Error('EACCES: permission denied')
+  // @ts-ignore
+  error.code = 'EACCES'
+  jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
+  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
+    body: '403 - Forbidden',
+    init: {
+      status: HttpStatusCode.Forbidden,
+      headers: {
+        'Content-Type': 'text/html',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+      },
+    },
+  })
+})
