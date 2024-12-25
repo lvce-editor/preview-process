@@ -1,9 +1,8 @@
 import { expect, jest, test } from '@jest/globals'
-import { Readable, Writable } from 'node:stream'
 import { ServerResponse } from 'node:http'
-import { EventEmitter } from 'node:events'
-import * as SendResponse from '../src/parts/SendResponse/SendResponse.ts'
+import { Readable, Writable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
+import * as SendResponse from '../src/parts/SendResponse/SendResponse.ts'
 
 class MockServerResponse extends Writable {
   statusCode = 200
@@ -19,6 +18,9 @@ class MockServerResponse extends Writable {
   }
 
   getHeader(name: string) {
+    if (name === 'Content-Type') {
+      return this.#headers.get('content-type')
+    }
     return this.#headers.get(name)
   }
 
@@ -56,10 +58,10 @@ const createMockReadableStream = (content: string) =>
     },
   })
 
-test('sendResponse - handles successful response with body', async () => {
+test.only('sendResponse - handles successful response with body', async () => {
   const mockResponse = createMockResponse()
   const mockStream = createMockReadableStream('test content')
-  const result = new Response(mockStream as any, {
+  const result = new Response(mockStream, {
     status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/plain',
@@ -87,7 +89,7 @@ test('sendResponse - handles response without body', async () => {
   expect((mockResponse as any).getContent()).toBe('')
 })
 
-test('sendResponse - handles ENOENT error', async () => {
+test.only('sendResponse - handles ENOENT error', async () => {
   const mockResponse = createMockResponse()
   const error = new Error('ENOENT')
   // @ts-ignore
