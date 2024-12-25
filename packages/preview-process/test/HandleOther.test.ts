@@ -40,6 +40,7 @@ test('not found', async () => {
   const requestOptions = {
     method: 'GET',
     path: '/test/not-found.txt',
+    headers: {},
   }
   const response = await HandleOther.handleOther('/test/not-found.txt', requestOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
@@ -48,16 +49,20 @@ test('not found', async () => {
 })
 
 test('normal file', async () => {
+  const etag = '"123"'
+  jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
+    headers: {},
   }
   const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('ok')
   expect(response.headers.get('Content-Type')).toBe('text/plain')
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
+  expect(response.headers.get('ETag')).toBe(etag)
 })
 
 test('css file', async () => {
@@ -67,6 +72,7 @@ test('css file', async () => {
   const requestOptions = {
     method: 'GET',
     path: '/test/styles.css',
+    headers: {},
   }
   const response = await HandleOther.handleOther('/test/styles.css', requestOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -81,6 +87,7 @@ test('internal server error', async () => {
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
+    headers: {},
   }
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
@@ -94,6 +101,7 @@ test('with range header', async () => {
     method: 'GET',
     path: '/test/video.mp4',
     range: 'bytes=0-100',
+    headers: {},
   }
   const response = await HandleOther.handleOther('/test/video.mp4', requestOptions)
   // TODO
@@ -142,6 +150,7 @@ test('should return 200 with etag when no if-none-match header', async () => {
   const response = await HandleOther.handleOther('/test/file.txt', {
     method: 'GET',
     path: '/test/file.txt',
+    headers: {},
   })
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('ETag')).toBe(mockEtag)
@@ -155,6 +164,7 @@ test('should return 404 when getPathEtag returns null', async () => {
   const response = await HandleOther.handleOther('/test/file.txt', {
     method: 'GET',
     path: '/test/file.txt',
+    headers: {},
   })
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
