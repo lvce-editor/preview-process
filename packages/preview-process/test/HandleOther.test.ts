@@ -230,7 +230,7 @@ test('with non-matching etag', async () => {
 test('streaming response', async () => {
   const etag = '"123"'
   const mockStream = new Readable({
-    read() {
+    read(): void {
       this.push('test content')
       this.push(null)
     },
