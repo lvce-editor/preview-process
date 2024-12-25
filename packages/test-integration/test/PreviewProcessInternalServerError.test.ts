@@ -9,14 +9,14 @@ import { mockModule } from '../src/parts/MockModule/MockModule.js'
 
 test('preview process - internal server error', async () => {
   const debugPort = await getPort()
-  const ajs = new URL('../src/a.js', import.meta.url).toString()
+  const mockCdpImport = new URL('../src/mockCdpImport.js', import.meta.url).toString()
   const root = getRoot()
   const rootPath = fileURLToPath(root)
   // TODO file path has duplicate slash for some reason, it should only have one slash or backslash.
   const slash = process.platform === 'win32' ? '\\' : '/'
   const filePath = `${rootPath}${slash}any-file.txt`
   const previewProcess = createPreviewProcess({
-    execArgv: [`--inspect=localhost:${debugPort}`, '--experimental-strip-types', `--import=${ajs}`],
+    execArgv: [`--inspect=localhost:${debugPort}`, '--experimental-strip-types', `--import=${mockCdpImport}`],
   })
 
   const client = await connectToCdp(debugPort)
