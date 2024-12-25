@@ -2,8 +2,7 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 
 export class ServerErrorResponse extends Response {
-  constructor(error: Error) {
-    console.error(`[preview-server] ${error}`)
+  constructor() {
     super('Internal Server Error', {
       status: HttpStatusCode.ServerError,
       headers: {
