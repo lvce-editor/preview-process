@@ -14,7 +14,7 @@ export const routes: RouteHandler[] = [
   },
   {
     pattern: /preview-injected\.js$/,
-    handler: async () => HandlePreviewInjected.handlePreviewInjected(),
+    handler: HandlePreviewInjected.handlePreviewInjected,
   },
   {
     pattern: /.*/,
