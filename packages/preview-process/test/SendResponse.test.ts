@@ -46,11 +46,11 @@ class MockServerResponse extends Writable {
   }
 }
 
-const createMockResponse = () => {
+const createMockResponse = (): ServerResponse => {
   return new MockServerResponse() as unknown as ServerResponse
 }
 
-const createMockReadableStream = (content: string) =>
+const createMockReadableStream = (content: string): Readable =>
   new Readable({
     read(): void {
       this.push(content)
