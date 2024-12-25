@@ -10,6 +10,8 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
   if (webViewRoot && webViewRoot.startsWith('file://')) {
     webViewRoot = fileURLToPath(webViewRoot)
   }
+  // TODO configuration can be added via setInfo. then the request handler doesn't need to be a closure,
+  // but instead can retrieve the info from infoState (matching by request protocol / request url)
   const handleRequest = async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
     let pathName = GetPathName.getPathName(request)
     if (pathName === '/') {
