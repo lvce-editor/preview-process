@@ -1,17 +1,17 @@
 import type CDP from 'chrome-remote-interface'
 
 export const mockModule = async (
-  client: CDP.Client,
+  runtime: CDP.Client['Runtime'],
   moduleName: string,
   key: string,
   arg0: string,
   errorMessage: string,
   errorCode: string,
 ): Promise<void> => {
-  const global = await client.Runtime.evaluate({
+  const global = await runtime.evaluate({
     expression: 'globalThis',
   })
-  await client.Runtime.callFunctionOn({
+  await runtime.callFunctionOn({
     objectId: global.result.objectId,
     functionDeclaration: `function(moduleName, key, arg0, errorMessage, errorCode){
       const global = this
