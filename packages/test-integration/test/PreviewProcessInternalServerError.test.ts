@@ -23,6 +23,18 @@ test('preview process - internal server error', async () => {
 
   await mockModule(client.Runtime, {
     moduleName: 'node:fs/promises',
+    functionName: 'stat',
+    filePath,
+    returnValue: {
+      size: 1000,
+      isDirectory: false,
+      isFile: true,
+      mtime: new Date('2024-01-01').toISOString(),
+    },
+  })
+
+  await mockModule(client.Runtime, {
+    moduleName: 'node:fs/promises',
     functionName: 'readFile',
     filePath,
     errorMessage: 'Access Denied',
