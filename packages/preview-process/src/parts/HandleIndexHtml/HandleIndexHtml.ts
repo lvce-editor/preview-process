@@ -7,9 +7,12 @@ import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDo
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
+import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
-export const handleIndexHtml = async (filePath: string, request: RequestOptions, options: HandlerOptions): Promise<Response> => {
+export const handleIndexHtml = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
+  const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
+
   try {
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(options.contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
