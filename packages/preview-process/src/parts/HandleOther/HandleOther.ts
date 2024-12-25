@@ -14,7 +14,7 @@ import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 
 export const handleOther = async (requestOptions: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
-  const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handleOther.webViewRoot)
+  const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handlerOptions.webViewRoot)
   try {
     if (requestOptions.range) {
       return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
