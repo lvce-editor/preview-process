@@ -20,7 +20,7 @@ export const routes: RouteHandler[] = [
     pattern: /.*/,
     handler: async (request, options): Promise<Response> => {
       const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
-      return HandleOther.handleOther(filePath, request)
+      return HandleOther.handleOther(filePath, request, options)
     },
   },
 ]
