@@ -1,4 +1,4 @@
-import * as GetHeaders from '../GetHeaders/GetHeaders.js'
+import * as GetHeaders from '../GetHeaders/GetHeaders.ts'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
