@@ -22,7 +22,6 @@ export const sendResponse = async (response: ServerResponse, result: Response): 
     if (IsEnoentError.isEnoentError(error)) {
       if (!response.headersSent) {
         response.statusCode = HttpStatusCode.NotFound
-        console.log('send not found')
         response.end('Not Found')
       }
       return
