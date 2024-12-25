@@ -12,6 +12,7 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "@lvce-editor/verror": "^1.6.0",
     "chrome-remote-interface": "^0.33.2",
     "get-port": "^7.1.0",
     "ky": "^1.7.4",

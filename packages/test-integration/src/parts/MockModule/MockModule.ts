@@ -1,4 +1,5 @@
 import type CDP from 'chrome-remote-interface'
+import { VError } from '@lvce-editor/verror'
 
 interface MockOptions {
   readonly moduleName: string
@@ -10,8 +11,12 @@ interface MockOptions {
 }
 
 export const mockModule = async (runtime: CDP.Client['Runtime'], options: MockOptions): Promise<void> => {
-  await runtime.evaluate({
-    expression: `mockModule('${options.moduleName}', ${JSON.stringify(options)})`,
-    awaitPromise: true,
-  })
+  try {
+    await runtime.evaluate({
+      expression: `mockModule('${options.moduleName}', ${JSON.stringify(options)})`,
+      awaitPromise: true,
+    })
+  } catch (error) {
+    throw new VError(error, `Failed to mock module`)
+  }
 }
