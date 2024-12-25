@@ -140,6 +140,7 @@ test('should return 200 with etag when no if-none-match header', async () => {
 })
 
 test('should return 404 when getPathEtag returns null', async () => {
+  // @ts-ignore
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(null)
 
   const response = await HandleOther.handleOther('/test/file.txt', {
