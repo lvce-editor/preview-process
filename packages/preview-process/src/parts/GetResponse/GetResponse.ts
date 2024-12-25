@@ -15,7 +15,7 @@ export const getResponse = async (request: RequestOptions, options: HandlerOptio
   const isHtml = filePath.endsWith('index.html')
   let response
   if (isHtml) {
-    response = await HandleIndexHtml.handleIndexHtml(filePath, options.contentSecurityPolicy, options.iframeContent)
+    response = await HandleIndexHtml.handleIndexHtml(filePath, options)
   } else if (filePath.endsWith('preview-injected.js')) {
     response = await HandlePreviewInjected.handlePreviewInjected()
   } else {

@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.ts'
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
@@ -7,13 +8,9 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
-export const handleIndexHtml = async (
-  filePath: string,
-  contentSecurityPolicy: string,
-  iframeContent: string,
-): Promise<Response> => {
+export const handleIndexHtml = async (filePath: string, options: HandlerOptions): Promise<Response> => {
   try {
-    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(contentSecurityPolicy)
+    const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(options.contentSecurityPolicy)
     const contentType = GetContentType.getContentType(filePath)
     const headers = {
       [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.CrossOrigin,
@@ -21,8 +18,8 @@ export const handleIndexHtml = async (
       [HttpHeader.ContentSecurityPolicy]: csp,
       [HttpHeader.ContentType]: contentType,
     }
-    if (iframeContent) {
-      return new Response(iframeContent, {
+    if (options.iframeContent) {
+      return new Response(options.iframeContent, {
         headers,
       })
     }
