@@ -7,7 +7,10 @@ import { serializeResponse } from '../SerializeResponse/SerializeResponse.ts'
 
 export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
   const info = GetInfo.getInfo(url)
-  const pathName = GetPathName.getPathName2(url)
+  let pathName = GetPathName.getPathName2(url)
+  if (pathName === '/') {
+    pathName += 'index.html'
+  }
   const requestOptions = {
     method,
     path: pathName,
