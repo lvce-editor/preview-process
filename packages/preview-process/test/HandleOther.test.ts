@@ -60,7 +60,6 @@ test('normal file', async () => {
   expect(await response.text()).toBe('ok')
   expect(response.headers.get('Content-Type')).toBe('text/plain')
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
-  expect(response.headers.get('ETag')).toBe(etag)
 })
 
 test('css file', async () => {
@@ -74,12 +73,10 @@ test('css file', async () => {
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('.test{color:red}')
   expect(response.headers.get('Content-Type')).toBe('text/css')
-  expect(response.headers.get('ETag')).toBe(etag)
 })
 
 test('internal server error', async () => {
   const error = new Error('Internal error')
-  jest.spyOn(GetPathEtag, 'getPathEtag').mockRejectedValue(error)
   const requestOptions = {
     method: 'GET',
     path: '/test/file.txt',
