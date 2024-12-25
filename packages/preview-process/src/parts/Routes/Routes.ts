@@ -7,7 +7,7 @@ import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 export const routes: RouteHandler[] = [
   {
     pattern: /index\.html$/,
-    handler: async (request, options) => {
+    handler: async (request, options): Promise<Response> => {
       const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
       return HandleIndexHtml.handleIndexHtml(filePath, options)
     },
@@ -18,7 +18,7 @@ export const routes: RouteHandler[] = [
   },
   {
     pattern: /.*/,
-    handler: async (request, options) => {
+    handler: async (request, options): Promise<Response> => {
       const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
       return HandleOther.handleOther(filePath, request)
     },
