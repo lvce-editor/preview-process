@@ -1,3 +1,4 @@
+import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
@@ -5,10 +6,10 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 
-export const handleOther = async (filePath: string, range: any): Promise<Response> => {
+export const handleOther = async (filePath: string, requestOptions: RequestOptions): Promise<Response> => {
   try {
-    if (range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, range)
+    if (requestOptions.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
     }
     const contentType = GetContentType.getContentType(filePath)
     // TODO figure out which of these headers are actually needed

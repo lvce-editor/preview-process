@@ -24,8 +24,11 @@ class FileNotFoundError extends Error {
 
 test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
-  const range = ''
-  const response = await HandleOther.handleOther('/test/not-found.txt', range)
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/not-found.txt',
+  }
+  const response = await HandleOther.handleOther('/test/not-found.txt', requestOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
   expect(await response.text()).toBe('not found')
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
@@ -33,8 +36,11 @@ test('not found', async () => {
 
 test('normal file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
-  const range = ''
-  const response = await HandleOther.handleOther('/test/file.txt', range)
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/file.txt',
+  }
+  const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('ok')
   expect(response.headers.get('Content-Type')).toBe('text/plain')
@@ -43,8 +49,11 @@ test('normal file', async () => {
 
 test('css file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
-  const range = ''
-  const response = await HandleOther.handleOther('/test/styles.css', range)
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/styles.css',
+  }
+  const response = await HandleOther.handleOther('/test/styles.css', requestOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(await response.text()).toBe('.test{color:red}')
   expect(response.headers.get('Content-Type')).toBe('text/css')
@@ -53,17 +62,24 @@ test('css file', async () => {
 test('internal server error', async () => {
   const error = new Error('Internal error')
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
-  const range = ''
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/file.txt',
+  }
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  const response = await HandleOther.handleOther('/test/file.txt', range)
+  const response = await HandleOther.handleOther('/test/file.txt', requestOptions)
   expect(await response.text()).toBe('Internal Server Error')
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(`[preview-server] Error: Internal error`)
 })
 
 test('with range header', async () => {
-  const range = 'bytes=0-100'
-  const response = await HandleOther.handleOther('/test/video.mp4', range)
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/video.mp4',
+    range: 'bytes=0-100',
+  }
+  const response = await HandleOther.handleOther('/test/video.mp4', requestOptions)
   // TODO
   // expect(response.headers.get('Accept-Ranges')).toBe('bytes')
 })

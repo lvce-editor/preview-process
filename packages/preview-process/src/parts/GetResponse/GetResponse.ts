@@ -21,7 +21,7 @@ export const getResponse = async (request: RequestOptions, options: HandlerOptio
   } else if (filePath.endsWith('preview-injected.js')) {
     response = await HandlePreviewInjected.handlePreviewInjected()
   } else {
-    response = await HandleOther.handleOther(filePath, request.range)
+    response = await HandleOther.handleOther(filePath, request)
   }
   if (request.method === HttpMethod.Head) {
     return new Response(null, {
