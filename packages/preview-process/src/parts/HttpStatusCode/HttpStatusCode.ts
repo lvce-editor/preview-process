@@ -8,3 +8,4 @@ export const RangeNotSatisfiable = 416
 export const BadRequest = 400
 export const NotModified = 304
 export const ServerError = 500
+export const Forbidden = 403
