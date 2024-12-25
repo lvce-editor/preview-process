@@ -1,3 +1,4 @@
+import { VError } from '@lvce-editor/verror'
 import CDP from 'chrome-remote-interface'
 import waitPort from 'wait-port'
 
@@ -22,7 +23,11 @@ export const connectToCdp = async (debugPort: number): Promise<CdpConnection> =>
   return {
     Runtime: client.Runtime,
     async [Symbol.dispose](): Promise<void> {
-      await client.close()
+      try {
+        await client.close()
+      } catch (error) {
+        throw new VError(error, `Failed to close client`)
+      }
     },
   }
 }
