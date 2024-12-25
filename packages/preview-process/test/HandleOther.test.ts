@@ -227,7 +227,7 @@ test('with non-matching etag', async () => {
   expect(await response.text()).toBe('test content')
 })
 
-test.skip('streaming response', async () => {
+test('streaming response', async () => {
   const etag = '"123"'
   const mockStream = new Readable({
     read() {
@@ -249,5 +249,5 @@ test.skip('streaming response', async () => {
   expect(response.status).toBe(HttpStatusCode.Ok)
   expect(response.headers.get('Content-Type')).toBe('text/plain')
   expect(response.headers.get('ETag')).toBe(etag)
-  expect(response.body).toBe(mockStream)
+  expect(await response.text()).toBe('test content')
 })
