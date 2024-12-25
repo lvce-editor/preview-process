@@ -4,8 +4,8 @@ import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOr
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
+import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
 export const handleIndexHtml = async (
   filePath: string,
@@ -34,8 +34,6 @@ export const handleIndexHtml = async (
     })
   } catch (error) {
     console.error(`[preview-server] ${error}`)
-    return new Response('not found', {
-      status: HttpStatusCode.NotFound,
-    })
+    return new NotFoundResponse()
   }
 }
