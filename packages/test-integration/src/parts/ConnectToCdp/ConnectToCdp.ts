@@ -21,7 +21,7 @@ export const connectToCdp = async (debugPort: number): Promise<CdpConnection> =>
   await client.Runtime.enable()
   return {
     Runtime: client.Runtime,
-    async [Symbol.dispose]() {
+    async [Symbol.dispose](): Promise<void> {
       await client.close()
     },
   }
