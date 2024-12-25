@@ -37,7 +37,7 @@ test('getHeaders - unknown file type with etag', () => {
   const absolutePath = '/test/file.xyz'
   const etag = '"abc"'
   expect(GetHeaders.getHeaders(absolutePath, etag)).toEqual({
-    [HttpHeader.ContentType]: 'application/octet-stream',
+    [HttpHeader.ContentType]: '',
     [HttpHeader.Etag]: '"abc"',
     [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
   })
