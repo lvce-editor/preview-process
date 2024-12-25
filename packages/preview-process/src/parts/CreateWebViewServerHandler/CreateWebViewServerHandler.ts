@@ -22,6 +22,7 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
       method: request.method || 'GET',
       range: request.headers.range,
       path: pathName,
+      headers: request.headers,
     }
 
     const handlerOptions: HandlerOptions = {
