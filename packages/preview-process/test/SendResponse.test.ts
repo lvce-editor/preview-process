@@ -35,7 +35,6 @@ class MockServerResponse extends Writable {
 
   // @ts-ignore
   end(chunk?: Buffer) {
-    console.log('end', chunk)
     if (chunk) {
       this._write(Buffer.from(chunk), '', () => {})
     }
