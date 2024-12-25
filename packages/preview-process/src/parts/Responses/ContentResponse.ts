@@ -2,19 +2,13 @@ import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 
 export class ContentResponse extends Response {
-  constructor(content: Buffer | string, contentType: string, etag?: string) {
-    const headers: Record<string, string> = {
-      [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
-      [HttpHeader.ContentType]: contentType,
-    }
-
-    if (etag) {
-      headers[HttpHeader.Etag] = etag
-    }
-
+  constructor(content: Buffer | string, contentType: string) {
     super(content, {
       status: HttpStatusCode.Ok,
-      headers,
+      headers: {
+        [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+        [HttpHeader.ContentType]: contentType,
+      },
     })
   }
 }
