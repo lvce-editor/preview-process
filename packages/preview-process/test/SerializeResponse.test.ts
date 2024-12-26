@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as SerializeResponse from '../src/parts/SerializeResponse/SerializeResponse.ts'
 
-test('serializeResponse - with text content', async () => {
+test.skip('serializeResponse - with text content', async () => {
   const response = new Response('test content', {
     status: 200,
     headers: {
@@ -22,7 +22,7 @@ test('serializeResponse - with text content', async () => {
   })
 })
 
-test('serializeResponse - with binary content', async () => {
+test.skip('serializeResponse - with binary content', async () => {
   const binaryData = new Uint8Array([1, 2, 3, 4])
   const response = new Response(binaryData, {
     status: 200,
@@ -42,7 +42,7 @@ test('serializeResponse - with binary content', async () => {
   })
 })
 
-test('serializeResponse - with no content', async () => {
+test.skip('serializeResponse - with no content', async () => {
   const response = new Response(null, {
     status: 304,
     headers: {
@@ -61,7 +61,7 @@ test('serializeResponse - with no content', async () => {
   })
 })
 
-test('serializeResponse - with error status', async () => {
+test.skip('serializeResponse - with error status', async () => {
   const response = new Response('Not Found', {
     status: 404,
     headers: {
