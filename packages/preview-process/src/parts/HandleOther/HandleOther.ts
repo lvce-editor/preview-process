@@ -20,12 +20,12 @@ export const handleOther = async (requestOptions: RequestOptions, handlerOptions
       return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
     }
 
-    const etag = await GetPathEtag.getPathEtag(filePath)
-    if (!etag) {
+    const etag = handlerOptions.etag ? await GetPathEtag.getPathEtag(filePath) : undefined
+    if (etag === null) {
       return new NotFoundResponse()
     }
 
-    if (MatchesEtag.matchesEtag(requestOptions, etag)) {
+    if (etag && MatchesEtag.matchesEtag(requestOptions, etag)) {
       return new NotModifiedResponse(etag)
     }
 

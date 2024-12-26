@@ -50,6 +50,7 @@ const handlerOptions = {
   contentSecurityPolicy: '',
   iframeContent: '',
   stream: false,
+  etag: true,
 }
 
 test('not found', async () => {
@@ -246,4 +247,22 @@ test('streaming response', async () => {
   expect(response.headers.get('Content-Type')).toBe('text/plain')
   expect(response.headers.get('ETag')).toBe(etag)
   expect(await response.text()).toBe('test content')
+})
+
+test('should not include etag when etags are disabled', async () => {
+  const handlerOptionsWithoutEtag = {
+    ...handlerOptions,
+    etag: false,
+  }
+  jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
+
+  const requestOptions = {
+    method: 'GET',
+    path: '/test/file.txt',
+    headers: {},
+  }
+  const response = await HandleOther.handleOther(requestOptions, handlerOptionsWithoutEtag)
+  expect(response.status).toBe(HttpStatusCode.Ok)
+  expect(response.headers.get('ETag')).toBeNull()
+  expect(await response.text()).toBe('test')
 })
