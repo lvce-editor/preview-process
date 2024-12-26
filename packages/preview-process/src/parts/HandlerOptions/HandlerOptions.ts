@@ -3,4 +3,5 @@ export interface HandlerOptions {
   readonly contentSecurityPolicy: string
   readonly iframeContent: string
   readonly stream: boolean
+  readonly etag: boolean
 }
