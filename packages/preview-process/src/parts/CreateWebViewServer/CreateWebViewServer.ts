@@ -20,6 +20,12 @@ export const createWebViewServer = (id: number): void => {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.server.on('request', handleRequest)
       },
+      on(event: string, listener: any): void {
+        this.server.on(event, listener)
+      },
+      off(event: string, listener: any): void {
+        this.server.off(event, listener)
+      },
       listen(port, callback): void {
         this.server.listen(port, callback)
       },
