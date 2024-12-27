@@ -5,7 +5,7 @@ import * as WebViewServerState from '../WebViewServerState/WebViewServerState.ts
 export const startWebViewServer = async (id: number, port: string): Promise<void> => {
   try {
     const server = WebViewServerState.get(id)
-    if (server.server.listening) {
+    if (server.isListening()) {
       return
     }
     await WaitForServerToBeReady.waitForServerToBeReady(server, port)
