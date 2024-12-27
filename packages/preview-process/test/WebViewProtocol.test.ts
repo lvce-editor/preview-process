@@ -19,6 +19,14 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.ts', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ResolveFilePath/ResolveFilePath.ts', () => {
+  return {
+    resolveFilePath(path: string): string {
+      return path
+    },
+  }
+})
+
 const WebViewProtocol = await import('../src/parts/WebViewProtocol/WebViewProtocol.ts')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.ts')
 
