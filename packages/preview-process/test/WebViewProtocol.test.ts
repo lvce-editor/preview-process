@@ -25,48 +25,45 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.ts')
 test('method not allowed - post', async () => {
   const method = HttpMethod.Post
   const url = 'lvce-webview://test/media'
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: '405 - Method not allowed',
-    init: {
-      status: HttpStatusCode.MethodNotAllowed,
-      headers: {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-      },
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    status: HttpStatusCode.MethodNotAllowed,
+    headers: {
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   })
+  expect(response.body.toString()).toBe('405 - Method Not Allowed')
 })
 
 test('get - css file', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/media/index.css'
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('a'))
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: Buffer.from('a'),
-    init: {
-      status: HttpStatusCode.Ok,
-      headers: {
-        'Content-Type': 'text/css',
-        'Cross-Origin-Resource-Policy': 'same-origin',
-      },
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/css',
+      'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
+  expect(response.body.toString()).toBe('a')
 })
 
 test('get - javascript file', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/media/script.js'
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('console.log("test")'))
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: Buffer.from('console.log("test")'),
-    init: {
-      status: HttpStatusCode.Ok,
-      headers: {
-        'Content-Type': 'text/javascript',
-        'Cross-Origin-Resource-Policy': 'same-origin',
-      },
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/javascript',
+      'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
+  expect(response.body).toBe('console.log("test")')
 })
 
 test('get - file not found', async () => {
@@ -76,48 +73,45 @@ test('get - file not found', async () => {
   // @ts-ignore
   error.code = 'ENOENT'
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(error)
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: '404 - Not Found',
-    init: {
-      headers: {
-        'Content-Type': 'text/html',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-      },
-      status: HttpStatusCode.NotFound,
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    headers: {
+      'Content-Type': 'text/html',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
     },
+    status: HttpStatusCode.NotFound,
   })
+  expect(response.body.toString()).toBe('404 - Not Found')
 })
 
 test('get - preview injected', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/preview-injected.js'
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: expect.any(String),
-    init: {
-      status: HttpStatusCode.Ok,
-      headers: {
-        'Content-Type': 'text/javascript',
-        'Cross-Origin-Resource-Policy': 'same-origin',
-      },
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/javascript',
+      'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
+  expect(response.body).toBeDefined()
 })
 
 test('get - index.html', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/index.html'
-  expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: undefined,
-    init: {
-      status: HttpStatusCode.Ok,
-      headers: {
-        'Content-Type': 'text/html',
-        'Cross-Origin-Resource-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-      },
+  const response = await WebViewProtocol.getResponse(method, url)
+  expect(response.init).toEqual({
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/html',
+      'Cross-Origin-Resource-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   })
+  expect(response.body).toBeUndefined()
 })
 
 test('get - invalid protocol', async () => {
@@ -132,7 +126,7 @@ test('get - invalid url format', async () => {
   await expect(WebViewProtocol.getResponse(method, url)).rejects.toThrow('Failed to parse url')
 })
 
-test.only('method not allowed - put', async () => {
+test('method not allowed - put', async () => {
   const method = HttpMethod.Put
   const url = 'lvce-webview://test/media'
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
