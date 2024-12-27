@@ -1,39 +1,48 @@
 import { expect, jest, test } from '@jest/globals'
+import { EventEmitter } from 'node:events'
 import * as WaitForServerToBeReady from '../src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts'
+import { WebViewServer } from '../src/parts/WebViewServerTypes/WebViewServerTypes.ts'
+
+class MockServer extends EventEmitter implements WebViewServer {
+  // @ts-ignore
+  server = this
+  handler = undefined
+  listening = false
+
+  setHandler(handler: any): void {
+    this.handler = handler
+  }
+
+  listen(port: string, callback: () => void): void {
+    process.nextTick(() => {
+      this.listening = true
+      this.emit('listening')
+      callback()
+    })
+  }
+}
 
 test('waitForServerToBeReady - success', async () => {
-  const mockServer = {
-    server: {
-      once: jest.fn(),
-      listen: jest.fn((port, callback) => {
-        callback()
-      }),
-    },
-    listen: jest.fn((port, callback) => {
-      callback()
-    }),
-  }
+  const server = new MockServer()
   const port = '3000'
-  await WaitForServerToBeReady.waitForServerToBeReady(mockServer as any, port)
-  expect(mockServer.listen).toHaveBeenCalledTimes(1)
-  expect(mockServer.listen).toHaveBeenCalledWith(port, expect.any(Function))
-  expect(mockServer.server.once).toHaveBeenCalledWith('error', expect.any(Function))
+  await WaitForServerToBeReady.waitForServerToBeReady(server, port)
+  expect(server.listening).toBe(true)
 })
 
 test('waitForServerToBeReady - handles EADDRINUSE error', async () => {
-  const error = new Error('EADDRINUSE')
-  const mockServer = {
-    server: {
-      once: jest.fn((event, handler) => {
-        if (event === 'error') {
-          handler(error)
-        }
-      }),
-      listen: jest.fn(),
-    },
-    listen: jest.fn(),
-  }
+  const server = new MockServer()
   const port = '3000'
-  await expect(WaitForServerToBeReady.waitForServerToBeReady(mockServer as any, port)).rejects.toThrow('EADDRINUSE')
-  expect(mockServer.server.once).toHaveBeenCalledWith('error', expect.any(Function))
+  process.nextTick(() => {
+    server.emit('error', new Error('EADDRINUSE'))
+  })
+  await expect(WaitForServerToBeReady.waitForServerToBeReady(server, port)).rejects.toThrow('EADDRINUSE')
+})
+
+test('waitForServerToBeReady - handles other errors', async () => {
+  const server = new MockServer()
+  const port = '3000'
+  process.nextTick(() => {
+    server.emit('error', new Error('Some other error'))
+  })
+  await expect(WaitForServerToBeReady.waitForServerToBeReady(server, port)).rejects.toThrow('Some other error')
 })
