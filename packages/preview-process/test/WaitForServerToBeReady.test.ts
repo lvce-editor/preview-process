@@ -4,8 +4,6 @@ import * as WaitForServerToBeReady from '../src/parts/WaitForServerToBeReady/Wai
 import { WebViewServer } from '../src/parts/WebViewServerTypes/WebViewServerTypes.ts'
 
 class MockServer extends EventEmitter implements WebViewServer {
-  // @ts-ignore
-  server = this
   handler = undefined
   listening = false
 
@@ -19,6 +17,9 @@ class MockServer extends EventEmitter implements WebViewServer {
       this.emit('listening')
       callback()
     })
+  }
+  isListening() {
+    return this.listening
   }
 }
 
