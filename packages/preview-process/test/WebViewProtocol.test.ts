@@ -106,8 +106,9 @@ test('get - index.html', async () => {
   expect(response.init).toEqual({
     status: HttpStatusCode.Ok,
     headers: {
+      'Content-Security-Policy': '',
       'Content-Type': 'text/html',
-      'Cross-Origin-Resource-Policy': 'same-origin',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   })
