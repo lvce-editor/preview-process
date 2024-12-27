@@ -21,6 +21,7 @@ export const getResponse = async (method: string, url: string): Promise<Electron
     iframeContent: info.iframeContent,
     stream: false,
     webViewRoot: info.webViewRoot,
+    etag: false,
   }
   const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
   const serializedResponse = await serializeResponse(jsResponse)
