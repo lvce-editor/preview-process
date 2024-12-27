@@ -6,14 +6,14 @@ import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
-import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 import * as IsUriError from '../IsUriError/IsUriError.ts'
+import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
+import { BadRequestResponse } from '../Responses/BadRequestResponse.ts'
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
-import { BadRequestResponse } from '../Responses/BadRequestResponse.ts'
 
 export const handleOther = async (requestOptions: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
   try {
