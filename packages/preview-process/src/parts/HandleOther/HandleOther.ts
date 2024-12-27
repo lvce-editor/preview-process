@@ -7,15 +7,17 @@ import * as GetPathEtag from '../GetPathEtag/GetPathEtag.ts'
 import * as HandleRangeRequest from '../HandleRangeRequest/HandleRangeRequest.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import * as IsUriError from '../IsUriError/IsUriError.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
+import { BadRequestResponse } from '../Responses/BadRequestResponse.ts'
 
 export const handleOther = async (requestOptions: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
-  const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handlerOptions.webViewRoot)
   try {
+    const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handlerOptions.webViewRoot)
     if (requestOptions.headers && requestOptions.headers.range) {
       return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.headers.range)
     }
@@ -34,13 +36,15 @@ export const handleOther = async (requestOptions: RequestOptions, handlerOptions
     if (handlerOptions.stream) {
       const readStream = createReadStream(filePath)
       return new ContentResponse(readStream, contentType, etag)
-    } else {
-      const content = await FileSystem.readFile(filePath)
-      return new ContentResponse(content, contentType, etag)
     }
+    const content = await FileSystem.readFile(filePath)
+    return new ContentResponse(content, contentType, etag)
   } catch (error) {
     if (IsEnoentError.isEnoentError(error)) {
       return new NotFoundResponse()
+    }
+    if (IsUriError.isUriError(error)) {
+      return new BadRequestResponse()
     }
     console.error(`[preview-server] ${error}`)
     return new ServerErrorResponse()
