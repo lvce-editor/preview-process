@@ -54,6 +54,7 @@ test('get - css file', async () => {
     headers: {
       'Content-Type': 'text/css',
       'Cross-Origin-Resource-Policy': 'same-origin',
+      'Server-Timing': expect.any(String),
     },
   })
   expect(response.body.toString()).toBe('a')
@@ -69,6 +70,7 @@ test('get - javascript file', async () => {
     headers: {
       'Content-Type': 'text/javascript',
       'Cross-Origin-Resource-Policy': 'same-origin',
+      'Server-Timing': expect.any(String),
     },
   })
   expect(response.body.toString()).toBe('console.log("test")')
@@ -102,6 +104,7 @@ test('get - preview injected', async () => {
     headers: {
       'Content-Type': 'text/javascript',
       'Cross-Origin-Resource-Policy': 'same-origin',
+      'Server-Timing': expect.any(String),
     },
   })
   expect(response.body).toBeDefined()
@@ -118,6 +121,7 @@ test('get - index.html', async () => {
       'Content-Type': 'text/html',
       'Cross-Origin-Resource-Policy': 'cross-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Server-Timing': expect.any(String),
     },
   })
   expect(response.body.toString()).toBe('<h1>hello world</h1>')
@@ -162,6 +166,7 @@ test('get - png image file', async () => {
       headers: {
         'Content-Type': 'image/png',
         'Cross-Origin-Resource-Policy': 'same-origin',
+        'Server-Timing': expect.any(String),
       },
     },
   })
@@ -179,6 +184,7 @@ test('get - svg file', async () => {
       headers: {
         'Content-Type': 'image/svg+xml',
         'Cross-Origin-Resource-Policy': 'same-origin',
+        'Server-Timing': expect.any(String),
       },
     },
   })
@@ -196,6 +202,7 @@ test('get - json file', async () => {
       headers: {
         'Content-Type': 'application/json',
         'Cross-Origin-Resource-Policy': 'same-origin',
+        'Server-Timing': expect.any(String),
       },
     },
   })
@@ -213,6 +220,7 @@ test('get - unknown file type', async () => {
       headers: {
         'Content-Type': 'text/plain',
         'Cross-Origin-Resource-Policy': 'same-origin',
+        'Server-Timing': expect.any(String),
       },
     },
   })
