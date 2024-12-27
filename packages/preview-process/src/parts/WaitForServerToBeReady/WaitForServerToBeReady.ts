@@ -1,32 +1,14 @@
 import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
-
-interface FirstEvent {
-  readonly type: string
-  readonly event: any
-}
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.ts'
 
 export const waitForServerToBeReady = async (server: WebViewServer, port: string): Promise<void> => {
-  const { resolve, reject, promise } = Promise.withResolvers<FirstEvent>()
-  const handleError = (event: any) => {
-    cleanup({
-      type: 'error',
-      event,
-    })
-  }
-  const handleListening = (event: any): void => {
-    cleanup({
-      type: 'listening',
-      event,
-    })
-  }
-  const cleanup = (value: any): void => {
-    server.off('listening', handleListening)
-    server.off('error', handleError)
-    resolve(value)
-  }
+  const responsePromise = await GetFirstEvent.getFirstEvent(server, {
+    error: 1,
+    listening: 2,
+  })
   server.listen(port, () => {})
-  const { type, event } = await promise
-  if (type === 'error') {
-    throw new Error(`server: ${event}`)
+  const { type, event } = await responsePromise
+  if (type === 1) {
+    throw new Error(`Server error: ${event}`)
   }
 }
