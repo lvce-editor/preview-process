@@ -55,7 +55,7 @@ test('serializeResponse - with no content', async () => {
     init: {
       status: 304,
       headers: {
-        Etag: '"123"',
+        ETag: '"123"',
       },
     },
   })

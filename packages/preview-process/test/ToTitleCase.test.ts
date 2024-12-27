@@ -24,3 +24,13 @@ test('toTitleCase - mixed case', () => {
 test('toTitleCase - multiple hyphens', () => {
   expect(ToTitleCase.toTitleCase('cross-origin-resource-policy')).toBe('Cross-Origin-Resource-Policy')
 })
+
+test('toTitleCase - etag special case', () => {
+  expect(ToTitleCase.toTitleCase('etag')).toBe('ETag')
+})
+
+test('toTitleCase - etag special case with different casing', () => {
+  expect(ToTitleCase.toTitleCase('ETAG')).toBe('ETag')
+  expect(ToTitleCase.toTitleCase('ETag')).toBe('ETag')
+  expect(ToTitleCase.toTitleCase('etAG')).toBe('ETag')
+})
