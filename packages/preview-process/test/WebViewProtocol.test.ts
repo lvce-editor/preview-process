@@ -135,10 +135,8 @@ test('get - invalid url format', async () => {
 test.only('method not allowed - put', async () => {
   const method = HttpMethod.Put
   const url = 'lvce-webview://test/media'
-  const r = await await WebViewProtocol.getResponse(method, url)
-  console.log(await r.body.toString())
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: Buffer.from('405 - Method not allowed'),
+    body: Buffer.from('405 - Method Not Allowed'),
     init: {
       status: HttpStatusCode.MethodNotAllowed,
       headers: {
