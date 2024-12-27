@@ -16,8 +16,8 @@ import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 export const handleOther = async (requestOptions: RequestOptions, handlerOptions: HandlerOptions): Promise<Response> => {
   const filePath = ResolveFilePath.resolveFilePath(requestOptions.path, handlerOptions.webViewRoot)
   try {
-    if (requestOptions.range) {
-      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.range)
+    if (requestOptions.headers && requestOptions.headers.range) {
+      return await HandleRangeRequest.handleRangeRequest(filePath, requestOptions.headers.range)
     }
 
     const etag = handlerOptions.etag ? await GetPathEtag.getPathEtag(filePath) : undefined
