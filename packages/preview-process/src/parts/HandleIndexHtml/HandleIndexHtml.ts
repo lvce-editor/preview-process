@@ -1,4 +1,3 @@
-import { readFile } from 'node:fs/promises'
 import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
@@ -6,7 +5,6 @@ import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOr
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
-import * as InjectPreviewScript from '../InjectPreviewScript/InjectPreviewScript.ts'
 import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
@@ -22,15 +20,10 @@ export const handleIndexHtml = async (request: RequestOptions, options: HandlerO
       [HttpHeader.ContentSecurityPolicy]: csp,
       [HttpHeader.ContentType]: contentType,
     }
-    if (options.iframeContent) {
-      return new Response(options.iframeContent, {
-        headers,
-      })
+    if (!options.iframeContent) {
+      throw new Error(`iframe content is required`)
     }
-    // deprecated
-    const content = await readFile(filePath, 'utf8')
-    const newContent = InjectPreviewScript.injectPreviewScript(content)
-    return new Response(newContent, {
+    return new Response(options.iframeContent, {
       headers,
     })
   } catch (error) {
