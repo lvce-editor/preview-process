@@ -9,4 +9,6 @@ export interface WebViewServer {
   readonly setHandler: (handler: Handler) => void
   readonly server: Server
   readonly listen: (port: string, callback: () => void) => void
+  readonly on: (event: string, listener: any) => void
+  readonly off: (event: string, listener: any) => void
 }
