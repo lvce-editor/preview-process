@@ -6,7 +6,7 @@ test('serializeHeaders - empty headers', () => {
   expect(SerializeHeaders.serializeHeaders(headers)).toEqual({})
 })
 
-test.skip('serializeHeaders - single header', () => {
+test('serializeHeaders - single header', () => {
   const headers = new Headers()
   headers.set('Content-Type', 'text/plain')
   expect(SerializeHeaders.serializeHeaders(headers)).toEqual({
@@ -14,19 +14,19 @@ test.skip('serializeHeaders - single header', () => {
   })
 })
 
-test.skip('serializeHeaders - multiple headers', () => {
+test('serializeHeaders - multiple headers', () => {
   const headers = new Headers()
   headers.set('Content-Type', 'text/plain')
   headers.set('ETag', '"123"')
   headers.set('Cross-Origin-Resource-Policy', 'same-origin')
   expect(SerializeHeaders.serializeHeaders(headers)).toEqual({
     'Content-Type': 'text/plain',
-    ETag: '"123"',
+    Etag: '"123"',
     'Cross-Origin-Resource-Policy': 'same-origin',
   })
 })
 
-test.skip('serializeHeaders - case insensitive', () => {
+test('serializeHeaders - case insensitive', () => {
   const headers = new Headers()
   headers.set('content-type', 'text/plain')
   expect(SerializeHeaders.serializeHeaders(headers)).toEqual({
@@ -34,7 +34,7 @@ test.skip('serializeHeaders - case insensitive', () => {
   })
 })
 
-test.skip('serializeHeaders - multiple values for same header', () => {
+test('serializeHeaders - multiple values for same header', () => {
   const headers = new Headers()
   headers.append('X-Custom', 'value1')
   headers.append('X-Custom', 'value2')
