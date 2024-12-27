@@ -124,8 +124,8 @@ test('with range header', async () => {
     headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
-  // TODO
-  // expect(response.headers.get('Accept-Ranges')).toBe('bytes')
+  expect(response.status).toBe(200)
+  expect(await response.text()).toBe('')
 })
 
 test('should return 304 when etag matches', async () => {
