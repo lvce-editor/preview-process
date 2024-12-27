@@ -4,4 +4,5 @@ export interface HandlerOptions {
   readonly iframeContent: string
   readonly stream: boolean
   readonly etag: boolean
+  readonly remotePathPrefix: string
 }

@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import { Readable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
+import { HandlerOptions } from '../src/parts/HandlerOptions/HandlerOptions.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -45,12 +46,13 @@ class FileNotFoundError extends Error {
   }
 }
 
-const handlerOptions = {
+const handlerOptions: HandlerOptions = {
   webViewRoot: '',
   contentSecurityPolicy: '',
   iframeContent: '',
   stream: false,
   etag: true,
+  remotePathPrefix: '/remote',
 }
 
 test('not found', async () => {

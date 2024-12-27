@@ -22,6 +22,7 @@ export const getResponse = async (method: string, url: string, headers?: any): P
     stream: false,
     webViewRoot: info.webViewRoot,
     etag: false,
+    remotePathPrefix: '/remote',
   }
   const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
   const serializedResponse = await SerializeResponse.serializeResponse(jsResponse)

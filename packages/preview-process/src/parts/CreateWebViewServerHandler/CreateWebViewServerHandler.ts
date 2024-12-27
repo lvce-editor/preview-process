@@ -30,6 +30,7 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
       iframeContent,
       stream: false,
       etag: true,
+      remotePathPrefix: '/remote',
     }
 
     const result = await GetResponse.getResponse(requestOptions, handlerOptions)
