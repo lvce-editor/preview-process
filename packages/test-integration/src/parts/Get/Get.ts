@@ -1,6 +1,6 @@
 interface GetOptions {
-  readonly headers?: Record<string, string>
-  readonly signal?: AbortSignal
+  headers?: Record<string, string>
+  signal?: AbortSignal
 }
 
 export const get = async (url: string, options: GetOptions = {}) => {
