@@ -1,20 +1,14 @@
-import { createHash } from 'node:crypto'
 import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
 import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOriginResourcePolicy.ts'
+import * as GenerateEtag from '../GenerateEtag/GenerateEtag.ts'
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
-
-const generateEtag = (content: string): string => {
-  const hash = createHash('sha1')
-  hash.update(content)
-  return `W/"${hash.digest('hex')}"`
-}
 
 export const handleIndexHtml = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
   try {
@@ -32,7 +26,7 @@ export const handleIndexHtml = async (request: RequestOptions, options: HandlerO
     }
 
     if (options.etag) {
-      const etag = generateEtag(options.iframeContent)
+      const etag = GenerateEtag.generateEtag(options.iframeContent)
       if (MatchesEtag.matchesEtag(request, etag)) {
         return new NotModifiedResponse(etag, headers)
       }
