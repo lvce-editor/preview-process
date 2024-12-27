@@ -10,7 +10,6 @@ export const createWebViewServer = (id: number): void => {
     }
     const server = createServer()
     const webViewServer: WebViewServer = {
-      server,
       handler: undefined,
       setHandler(handleRequest): void {
         if (this.handler) {
@@ -18,16 +17,19 @@ export const createWebViewServer = (id: number): void => {
         }
         this.handler = handleRequest
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.server.on('request', handleRequest)
+        server.on('request', handleRequest)
       },
       on(event: string, listener: any): void {
-        this.server.on(event, listener)
+        server.on(event, listener)
       },
       off(event: string, listener: any): void {
-        this.server.off(event, listener)
+        server.off(event, listener)
       },
       listen(port, callback): void {
-        this.server.listen(port, callback)
+        server.listen(port, callback)
+      },
+      isListening(): boolean {
+        return server.listening
       },
     }
     WebViewServerState.set(id, webViewServer)
