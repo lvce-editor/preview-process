@@ -63,7 +63,7 @@ test('get - javascript file', async () => {
       'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
-  expect(response.body).toBe('console.log("test")')
+  expect(response.body.toString()).toBe('console.log("test")')
 })
 
 test('get - file not found', async () => {
