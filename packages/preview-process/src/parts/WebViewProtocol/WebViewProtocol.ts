@@ -14,7 +14,7 @@ export const getResponse = async (method: string, url: string): Promise<Electron
   const requestOptions = {
     method,
     path: pathName,
-    headers: {},
+    headers: {}, // TODO support headers and range requests
   }
   const handlerOptions: HandlerOptions = {
     contentSecurityPolicy: info.contentSecurityPolicy,
