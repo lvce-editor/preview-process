@@ -41,7 +41,7 @@ test('preview process - handles range request with stat ENOENT error', async () 
     },
   })
   expect(response.status).toBe(404)
-  expect(await response.text()).toBe('Not Found')
+  expect(await response.text()).toBe('not found')
 
   await client[Symbol.dispose]()
   previewProcess[Symbol.dispose]()
