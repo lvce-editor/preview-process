@@ -5,7 +5,7 @@ import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
 import * as SerializeResponse from '../SerializeResponse/SerializeResponse.ts'
 
-export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
+export const getResponse = async (method: string, url: string, headers?: any): Promise<ElectronResponse> => {
   const info = GetInfo.getInfo(url)
   let pathName = GetPathName.getPathName2(url)
   if (pathName === '/') {
@@ -14,7 +14,7 @@ export const getResponse = async (method: string, url: string): Promise<Electron
   const requestOptions = {
     method,
     path: pathName,
-    headers: {}, // TODO support headers and range requests
+    headers: headers || {},
   }
   const handlerOptions: HandlerOptions = {
     contentSecurityPolicy: info.contentSecurityPolicy,
