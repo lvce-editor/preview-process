@@ -19,7 +19,7 @@ export const getFirstEvent = (eventEmitter: EventEmitter, eventMap: any): Promis
     resolve(value)
   }
   for (const [event, type] of Object.entries(eventMap)) {
-    const listener = (event: any) => {
+    const listener = (event: any): void => {
       cleanup({
         type,
         event,
