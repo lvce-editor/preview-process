@@ -5,6 +5,7 @@ import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import { HeadResponse } from '../Responses/HeadResponse.ts'
 import { MethodNotAllowedResponse } from '../Responses/MethodNotAllowedResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
+import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
 import * as Routes from '../Routes/Routes.ts'
 
 export const getResponse = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
@@ -29,7 +30,7 @@ export const getResponse = async (request: RequestOptions, options: HandlerOptio
 
     return response
   } catch (error) {
-    const response = new NotFoundResponse()
-    return response
+    console.error(`[preview-process] ${error}`)
+    return new ServerErrorResponse()
   }
 }
