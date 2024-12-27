@@ -1,8 +1,8 @@
 import type { ElectronResponse } from '../ElectronResponse/ElectronResponse.ts'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as GetInfo from '../GetInfo/GetInfo.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
-import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as SerializeResponse from '../SerializeResponse/SerializeResponse.ts'
 
 export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
