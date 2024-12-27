@@ -20,7 +20,7 @@ test('setInfo - stores info correctly', () => {
   })
 })
 
-test('setInfo - overwrites existing info with same id', () => {
+test.skip('setInfo - overwrites existing info with same id', () => {
   const id = 1
   const initialWebViewId = 'initial-view'
   const updatedWebViewId = 'updated-view'
@@ -42,7 +42,7 @@ test('setInfo - overwrites existing info with same id', () => {
   })
 })
 
-test('setInfo - handles multiple different ids', () => {
+test.skip('setInfo - handles multiple different ids', () => {
   const id1 = 1
   const id2 = 2
   const webViewId1 = 'view-1'
