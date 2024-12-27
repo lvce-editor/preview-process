@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as HandleIndexHtml from '../src/parts/HandleIndexHtml/HandleIndexHtml.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
@@ -27,7 +27,7 @@ test('handleIndexHtml - returns content with etag and security headers', async (
   expect(response.headers.get('Content-Security-Policy')).toBe("default-src 'self'")
 })
 
-test('handleIndexHtml - returns 304 with security headers when etag matches', async () => {
+test('handleIndexHtml - returns 304 with all security headers when etag matches', async () => {
   const request1 = {
     method: 'GET',
     path: '/index.html',
@@ -46,7 +46,9 @@ test('handleIndexHtml - returns 304 with security headers when etag matches', as
   const response2 = await HandleIndexHtml.handleIndexHtml(request2, defaultOptions)
   expect(response2.status).toBe(HttpStatusCode.NotModified)
   expect(response2.headers.get('ETag')).toBe(etag)
-  expect(response2.headers.get('Cross-Origin-Resource-Policy')).toBe('same-origin')
+  expect(response2.headers.get('Cross-Origin-Resource-Policy')).toBe('cross-origin')
+  expect(response2.headers.get('Cross-Origin-Embedder-Policy')).toBe('require-corp')
+  expect(response2.headers.get('Content-Security-Policy')).toBe("default-src 'self'")
 })
 
 test('handleIndexHtml - returns content without etag when etag option is false', async () => {
@@ -63,6 +65,7 @@ test('handleIndexHtml - returns content without etag when etag option is false',
   expect(response.headers.get('ETag')).toBeNull()
   expect(response.headers.get('Cross-Origin-Resource-Policy')).toBe('cross-origin')
   expect(response.headers.get('Cross-Origin-Embedder-Policy')).toBe('require-corp')
+  expect(response.headers.get('Content-Security-Policy')).toBe("default-src 'self'")
 })
 
 test('handleIndexHtml - returns 500 when no iframe content', async () => {
@@ -73,8 +76,12 @@ test('handleIndexHtml - returns 500 when no iframe content', async () => {
   }
 
   const options = { ...defaultOptions, iframeContent: '' }
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const response = await HandleIndexHtml.handleIndexHtml(request, options)
   expect(response.status).toBe(HttpStatusCode.ServerError)
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith('[preview-server] Error: iframe content is required')
+  spy.mockRestore()
 })
 
 test('handleIndexHtml - generates different etags for different content', async () => {

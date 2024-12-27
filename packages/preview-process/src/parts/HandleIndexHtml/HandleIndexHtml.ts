@@ -34,7 +34,7 @@ export const handleIndexHtml = async (request: RequestOptions, options: HandlerO
     if (options.etag) {
       const etag = generateEtag(options.iframeContent)
       if (MatchesEtag.matchesEtag(request, etag)) {
-        return new NotModifiedResponse(etag)
+        return new NotModifiedResponse(etag, headers)
       }
       // @ts-ignore
       headers[HttpHeader.Etag] = etag
