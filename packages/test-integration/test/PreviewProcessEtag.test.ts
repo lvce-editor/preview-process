@@ -23,7 +23,7 @@ test('preview process - handles etag', async () => {
   // Second request with matching etag
   const secondResponse = await get(`http://localhost:${port}/package.json`, {
     headers: {
-      // @ts-ignore
+      // @ts-expect-error
       'If-None-Match': etag,
     },
   })
