@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto'
 import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
@@ -7,8 +6,10 @@ import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDo
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
+import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import { NotModifiedResponse } from '../Responses/NotModifiedResponse.ts'
 import { ServerErrorResponse } from '../Responses/ServerErrorResponse.ts'
+import { createHash } from 'node:crypto'
 
 const generateEtag = (content: string): string => {
   const hash = createHash('sha1')
@@ -34,7 +35,7 @@ export const handleIndexHtml = async (request: RequestOptions, options: HandlerO
     if (options.etag) {
       const etag = generateEtag(options.iframeContent)
       if (MatchesEtag.matchesEtag(request, etag)) {
-        return new NotModifiedResponse(etag)
+        return new NotModifiedResponse(etag, headers)
       }
       // @ts-ignore
       headers[HttpHeader.Etag] = etag
