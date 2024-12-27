@@ -1,10 +1,13 @@
-export interface GetOptions {
+interface GetOptions {
   headers?: Record<string, string>
+  signal?: AbortSignal
 }
 
-export const get = async (url: string, options: GetOptions = {}): Promise<any> => {
+export const get = async (url: string, options: GetOptions = {}): Promise<Response> => {
+  const { headers = {}, signal } = options
   const response = await fetch(url, {
-    headers: options.headers,
+    headers,
+    signal,
   })
   return response
 }
