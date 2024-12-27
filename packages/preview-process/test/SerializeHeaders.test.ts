@@ -21,7 +21,7 @@ test('serializeHeaders - multiple headers', () => {
   headers.set('Cross-Origin-Resource-Policy', 'same-origin')
   expect(SerializeHeaders.serializeHeaders(headers)).toEqual({
     'Content-Type': 'text/plain',
-    Etag: '"123"',
+    ETag: '"123"',
     'Cross-Origin-Resource-Policy': 'same-origin',
   })
 })
