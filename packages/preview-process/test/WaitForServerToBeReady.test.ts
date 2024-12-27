@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { EventEmitter } from 'node:events'
-import * as WaitForServerToBeReady from '../src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts'
 import type { WebViewServer } from '../src/parts/WebViewServerTypes/WebViewServerTypes.ts'
+import * as WaitForServerToBeReady from '../src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts'
 
 class MockServer extends EventEmitter implements WebViewServer {
   handler = undefined
@@ -18,7 +18,7 @@ class MockServer extends EventEmitter implements WebViewServer {
       callback()
     })
   }
-  isListening() {
+  isListening(): boolean {
     return this.listening
   }
 }
