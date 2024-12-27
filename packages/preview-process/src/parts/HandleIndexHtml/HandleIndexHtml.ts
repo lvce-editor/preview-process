@@ -5,15 +5,12 @@ import * as CrossOriginResourcePolicy from '../CrossOriginResourcePolicy/CrossOr
 import * as GetContentSecurityPolicyDocument from '../GetContentSecurityPolicyDocument/GetContentSecurityPolicyDocument.ts'
 import * as GetContentType from '../GetContentType/GetContentType.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
-import * as ResolveFilePath from '../ResolveFilePath/ResolveFilePath.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 
 export const handleIndexHtml = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
-  const filePath = ResolveFilePath.resolveFilePath(request.path, options.webViewRoot)
-
   try {
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(options.contentSecurityPolicy)
-    const contentType = GetContentType.getContentType(filePath)
+    const contentType = GetContentType.getContentType('/test/index.html')
     const headers = {
       [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.CrossOrigin,
       [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
