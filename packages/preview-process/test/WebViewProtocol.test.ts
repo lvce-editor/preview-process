@@ -29,8 +29,8 @@ test('method not allowed - post', async () => {
   expect(response.init).toEqual({
     status: HttpStatusCode.MethodNotAllowed,
     headers: {
-      'Cross-Origin-Resource-Policy': 'cross-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Content-Type': 'text/plain;charset=UTF-8',
+      'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
   expect(response.body.toString()).toBe('405 - Method Not Allowed')
