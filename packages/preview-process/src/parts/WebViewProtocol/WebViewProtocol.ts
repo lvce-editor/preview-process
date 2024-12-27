@@ -1,9 +1,9 @@
 import type { ElectronResponse } from '../ElectronResponse/ElectronResponse.ts'
-import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as GetInfo from '../GetInfo/GetInfo.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
-import { serializeResponse } from '../SerializeResponse/SerializeResponse.ts'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
+import * as SerializeResponse from '../SerializeResponse/SerializeResponse.ts'
 
 export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
   const info = GetInfo.getInfo(url)
@@ -24,6 +24,6 @@ export const getResponse = async (method: string, url: string): Promise<Electron
     etag: false,
   }
   const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
-  const serializedResponse = await serializeResponse(jsResponse)
+  const serializedResponse = await SerializeResponse.serializeResponse(jsResponse)
   return serializedResponse
 }
