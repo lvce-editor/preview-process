@@ -17,7 +17,7 @@ test('getEtag - handles different file stats', () => {
     size: 500,
     mtime: new Date('2024-02-01T12:30:45Z'),
   }
-  const expectedEtag = `W/"67890-500-1706789445000"`
+  const expectedEtag = `W/"67890-500-1706790645000"`
   expect(GetEtag.getEtag(mockStats)).toBe(expectedEtag)
 })
 
