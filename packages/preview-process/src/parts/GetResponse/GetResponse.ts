@@ -8,16 +8,28 @@ import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import * as Routes from '../Routes/Routes.ts'
 
 export const getResponse = async (request: RequestOptions, options: HandlerOptions): Promise<Response> => {
-  if (request.method !== HttpMethod.Get && request.method !== HttpMethod.Head) {
-    return new MethodNotAllowedResponse()
+  const start = performance.now()
+
+  try {
+    if (request.method !== HttpMethod.Get && request.method !== HttpMethod.Head) {
+      return new MethodNotAllowedResponse()
+    }
+    const matchedRoute = FindMatchingRoute.findMatchingRoute(request.path, Routes.routes)
+    if (!matchedRoute) {
+      return new NotFoundResponse()
+    }
+    const response = await matchedRoute.handler(request, options)
+    if (request.method === HttpMethod.Head) {
+      return new HeadResponse(response.status, response.headers)
+    }
+
+    // Add Server-Timing header
+    const duration = Math.round(performance.now() - start)
+    response.headers.set('Server-Timing', `total;dur=${duration}`)
+
+    return response
+  } catch (error) {
+    const response = new NotFoundResponse()
+    return response
   }
-  const matchedRoute = FindMatchingRoute.findMatchingRoute(request.path, Routes.routes)
-  if (!matchedRoute) {
-    return new NotFoundResponse()
-  }
-  const response = await matchedRoute.handler(request, options)
-  if (request.method === HttpMethod.Head) {
-    return new HeadResponse(response.status, response.headers)
-  }
-  return response
 }
