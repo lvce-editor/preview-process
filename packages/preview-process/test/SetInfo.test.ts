@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as SetInfo from '../src/parts/SetInfo/SetInfo.ts'
 import * as GetInfo from '../src/parts/GetInfo/GetInfo.ts'
+import * as SetInfo from '../src/parts/SetInfo/SetInfo.ts'
 
 test('setInfo - stores info correctly', () => {
   const id = 1
