@@ -1,6 +1,7 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as HandleIndexHtml from '../src/parts/HandleIndexHtml/HandleIndexHtml.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
+import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
 
 const defaultOptions = {
   webViewRoot: '/test',
@@ -73,8 +74,13 @@ test('handleIndexHtml - returns 500 when no iframe content', async () => {
   }
 
   const options = { ...defaultOptions, iframeContent: '' }
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const response = await HandleIndexHtml.handleIndexHtml(request, options)
+
   expect(response.status).toBe(HttpStatusCode.ServerError)
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith('[preview-server] Error: iframe content is required')
+  spy.mockRestore()
 })
 
 test('handleIndexHtml - generates different etags for different content', async () => {
