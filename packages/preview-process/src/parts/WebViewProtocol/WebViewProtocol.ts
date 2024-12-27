@@ -1,30 +1,29 @@
-import * as GetIndexResponse from '../GetIndexResponse/GetIndexResponse.ts'
+import type { ElectronResponse } from '../ElectronResponse/ElectronResponse.ts'
+import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import * as GetInfo from '../GetInfo/GetInfo.ts'
 import * as GetPathName from '../GetPathName/GetPathName.ts'
-import * as GetPreviewInjectedResponse from '../GetPreviewInjectedResponse/GetPreviewInjectedResponse.ts'
-import * as GetRemoteResponse from '../GetRemoteResponse/GetRemoteResponse.ts'
-import * as GetWebViewRootResponse from '../GetWebViewRootResponse/GetWebViewRootResponse.ts'
-import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
-import * as NotAllowedResponse from '../NotAllowedResponse/NotAllowedResponse.ts'
-import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode.ts'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
+import * as SerializeResponse from '../SerializeResponse/SerializeResponse.ts'
 
-export const getResponse = async (method: string, url: string): Promise<any> => {
-  // TODO allow head requests
-  if (method !== HttpMethod.Get) {
-    return NotAllowedResponse.create()
-  }
+export const getResponse = async (method: string, url: string): Promise<ElectronResponse> => {
   const info = GetInfo.getInfo(url)
-  const pathName = GetPathName.getPathName2(url)
+  let pathName = GetPathName.getPathName2(url)
   if (pathName === '/') {
-    return GetIndexResponse.getIndexResponse(info)
+    pathName += 'index.html'
   }
-  // TODO use pathname
-  if (url.endsWith('preview-injected.js')) {
-    return GetPreviewInjectedResponse.getPreviewInjectedResponse(PreviewInjectedCode.injectedCode)
+  const requestOptions = {
+    method,
+    path: pathName,
+    headers: {}, // TODO support headers and range requests
   }
-  // TODO maybe rename this route to /file when running in electron
-  if (pathName.startsWith('/remote')) {
-    return GetRemoteResponse.getRemoteResponse(pathName, info.webViewRoot)
+  const handlerOptions: HandlerOptions = {
+    contentSecurityPolicy: info.contentSecurityPolicy,
+    iframeContent: info.iframeContent,
+    stream: false,
+    webViewRoot: info.webViewRoot,
+    etag: false,
   }
-  return GetWebViewRootResponse.getWebViewRootResponse(info, pathName)
+  const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
+  const serializedResponse = await SerializeResponse.serializeResponse(jsResponse)
+  return serializedResponse
 }
