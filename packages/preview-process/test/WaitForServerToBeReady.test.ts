@@ -1,7 +1,7 @@
-import { expect, jest, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 import { EventEmitter } from 'node:events'
 import * as WaitForServerToBeReady from '../src/parts/WaitForServerToBeReady/WaitForServerToBeReady.ts'
-import { WebViewServer } from '../src/parts/WebViewServerTypes/WebViewServerTypes.ts'
+import type { WebViewServer } from '../src/parts/WebViewServerTypes/WebViewServerTypes.ts'
 
 class MockServer extends EventEmitter implements WebViewServer {
   handler = undefined
