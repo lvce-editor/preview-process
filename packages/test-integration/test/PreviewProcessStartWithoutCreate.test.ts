@@ -8,7 +8,7 @@ test('preview process - handles port already in use', async () => {
   const port = await getPort()
   // TODO improve error message
   await expect(previewProcess1.invoke('WebViewServer.start', id, port)).rejects.toThrow(
-    "Failed to start webview server: TypeError: Cannot read properties of undefined (reading 'server')",
+    'Failed to start webview server: Server with id 1 not found',
   )
   previewProcess1[Symbol.dispose]()
 })
