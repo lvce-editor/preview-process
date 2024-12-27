@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import { Readable } from 'node:stream'
+import type { HandlerOptions } from '../src/parts/HandlerOptions/HandlerOptions.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
-import { HandlerOptions } from '../src/parts/HandlerOptions/HandlerOptions.ts'
 
 beforeEach(() => {
   jest.resetAllMocks()
