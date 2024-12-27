@@ -112,7 +112,7 @@ test('get - index.html', async () => {
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   })
-  expect(response.body).toBeUndefined()
+  expect(response.body.toString()).toBe('<h1>hello world</h1>')
 })
 
 test('get - invalid protocol', async () => {
