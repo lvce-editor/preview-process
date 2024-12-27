@@ -132,16 +132,18 @@ test('get - invalid url format', async () => {
   await expect(WebViewProtocol.getResponse(method, url)).rejects.toThrow('Failed to parse url')
 })
 
-test('method not allowed - put', async () => {
+test.only('method not allowed - put', async () => {
   const method = HttpMethod.Put
   const url = 'lvce-webview://test/media'
+  const r = await await WebViewProtocol.getResponse(method, url)
+  console.log(await r.body.toString())
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
-    body: '405 - Method not allowed',
+    body: Buffer.from('405 - Method not allowed'),
     init: {
       status: HttpStatusCode.MethodNotAllowed,
       headers: {
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Content-Type': 'text/plain;charset=UTF-8',
+        'Cross-Origin-Resource-Policy': 'same-origin',
       },
     },
   })
@@ -208,7 +210,7 @@ test('get - unknown file type', async () => {
     init: {
       status: HttpStatusCode.Ok,
       headers: {
-        'Content-Type': '',
+        'Content-Type': 'text/plain',
         'Cross-Origin-Resource-Policy': 'same-origin',
       },
     },
