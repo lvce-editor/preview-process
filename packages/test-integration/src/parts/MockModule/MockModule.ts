@@ -14,7 +14,6 @@ export const mockModule = async (runtime: CDP.Client['Runtime'], options: MockOp
   try {
     await runtime.evaluate({
       expression: `mockModule('${options.moduleName}', ${JSON.stringify(options)})`,
-      awaitPromise: true,
     })
   } catch (error) {
     throw new VError(error, `Failed to mock module`)
