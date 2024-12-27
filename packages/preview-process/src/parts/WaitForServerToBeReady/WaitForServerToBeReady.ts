@@ -1,7 +1,14 @@
 import type { WebViewServer } from '../WebViewServerTypes/WebViewServerTypes.ts'
+import * as GetFirstEvent from '../GetFirstEvent/GetFirstEvent.ts'
 
 export const waitForServerToBeReady = async (server: WebViewServer, port: string): Promise<void> => {
-  const { resolve, promise } = Promise.withResolvers<void>()
-  server.listen(port, resolve)
-  await promise
+  const responsePromise = GetFirstEvent.getFirstEvent(server as any, {
+    error: 1,
+    listening: 2,
+  })
+  server.listen(port, () => {})
+  const { type, event } = await responsePromise
+  if (type === 1) {
+    throw new Error(`Server error: ${event}`)
+  }
 }
