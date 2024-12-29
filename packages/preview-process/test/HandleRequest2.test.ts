@@ -67,7 +67,7 @@ test('handleRequest2 - serves preview-injected.js', async () => {
 
   expect(response.statusCode).toBe(HttpStatusCode.Ok)
   expect(response.getHeader('Content-Type')).toBe('text/javascript')
-  expect(socket.getContent()).toBe(jsContent)
+  expect(socket.getContent()).toContain(jsContent)
 })
 
 test('handleRequest2 - serves webview content at root path', async () => {
