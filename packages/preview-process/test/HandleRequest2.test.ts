@@ -17,10 +17,6 @@ const HandleRequest2 = await import('../src/parts/HandleRequest2/HandleRequest2.
 class MockSocket extends Writable {
   chunks: Buffer[] = []
 
-  constructor() {
-    super()
-  }
-
   _write(chunk: any, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
     this.chunks.push(Buffer.from(chunk))
     callback()
