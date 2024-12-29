@@ -1,5 +1,6 @@
-import type { IncomingMessage, ServerResponse } from 'node:http'
+import type { Socket } from 'node:net'
 import { expect, jest, test } from '@jest/globals'
+import { IncomingMessage, ServerResponse } from 'node:http'
 import { Writable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
@@ -13,41 +14,12 @@ jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.ts', () => {
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.ts')
 const HandleRequest2 = await import('../src/parts/HandleRequest2/HandleRequest2.ts')
 
-class MockServerResponse extends Writable {
-  statusCode = 200
-  headersSent = false
-  #headers = new Map()
+class MockSocket extends Writable {
   chunks: Buffer[] = []
 
-  constructor() {
-    super()
-    this.on('finish', () => {
-      this.emit('end')
-    })
-  }
-
-  getHeader(name: string): string {
-    if (name === 'Content-Type') {
-      return this.#headers.get('content-type')
-    }
-    return this.#headers.get(name)
-  }
-
-  setHeader(name: string, value: string): void {
-    this.#headers.set(name, value)
-  }
-
-  _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void): void {
-    this.chunks.push(chunk)
+  _write(chunk: any, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
+    this.chunks.push(Buffer.from(chunk))
     callback()
-  }
-
-  // @ts-ignore
-  end(chunk?: Buffer): void {
-    if (chunk) {
-      this._write(Buffer.from(chunk), '', () => {})
-    }
-    super.end()
   }
 
   getContent(): string {
@@ -55,8 +27,21 @@ class MockServerResponse extends Writable {
   }
 }
 
-const createMockResponse = (): ServerResponse => {
-  return new MockServerResponse() as unknown as ServerResponse
+const createRequest = (url: string): any => {
+  const socket = new MockSocket()
+  const request = new IncomingMessage(socket as unknown as Socket)
+  request.url = url
+  request.method = 'GET'
+  request.headers = {
+    host: 'localhost:3000',
+  }
+  return { request, socket }
+}
+
+const createResponse = (request: IncomingMessage, socket: MockSocket): ServerResponse => {
+  const response = new ServerResponse(request)
+  response.assignSocket(socket as unknown as Socket)
+  return response
 }
 
 test('handleRequest2 - serves webview content at root path', async () => {
@@ -75,20 +60,13 @@ test('handleRequest2 - serves webview content at root path', async () => {
   })
   jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 
-  const request = {
-    url: '/xyz',
-    method: 'GET',
-    headers: {
-      host: 'localhost:3000',
-    },
-  } as unknown as IncomingMessage
-  const response = createMockResponse()
+  const { request, socket } = createRequest('/xyz')
+  const response = createResponse(request, socket)
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockServerResponse = response as unknown as MockServerResponse
-  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
-  expect(mockServerResponse.getHeader('Content-Type')).toBe('text/html')
-  expect(mockServerResponse.getContent()).toBe(info.iframeContent)
+  expect(response.statusCode).toBe(HttpStatusCode.Ok)
+  expect(response.getHeader('Content-Type')).toBe('text/html')
+  expect(socket.getContent()).toContain(info.iframeContent)
 })
 
 test('handleRequest2 - serves static files from webview root', async () => {
@@ -99,41 +77,29 @@ test('handleRequest2 - serves static files from webview root', async () => {
     iframeContent: '<h1>test content</h1>',
   }
   SetInfo2.setInfo2(info)
-  const mockResponse = new Response('console.log("test")', {
+  const jsContent = 'console.log("test")'
+  const mockResponse = new Response(jsContent, {
     status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/javascript',
+      'Cross-Origin-Resource-Policy': 'same-origin',
     },
   })
   jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 
-  const request = {
-    url: '/xyz/media/test.js',
-    method: 'GET',
-    headers: {
-      host: 'localhost:3000',
-    },
-  } as unknown as IncomingMessage
-  const response = createMockResponse()
+  const { request, socket } = createRequest('/xyz/test.js')
+  const response = createResponse(request, socket)
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockServerResponse = response as unknown as MockServerResponse
-  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
-  expect(mockServerResponse.getHeader('Content-Type')).toBe('text/javascript')
-  expect(mockServerResponse.getContent()).toBe('console.log("test")')
+  expect(response.statusCode).toBe(HttpStatusCode.Ok)
+  expect(response.getHeader('Content-Type')).toBe('text/javascript')
+  expect(socket.getContent()).toContain(jsContent)
 })
 
 test('handleRequest2 - returns 404 for unknown webview', async () => {
-  const request = {
-    url: '/unknown/test.js',
-    method: 'GET',
-    headers: {
-      host: 'localhost:3000',
-    },
-  } as unknown as IncomingMessage
-  const response = createMockResponse()
+  const { request, socket } = createRequest('/unknown/test.js')
+  const response = createResponse(request, socket)
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockServerResponse = response as unknown as MockServerResponse
-  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.NotFound)
+  expect(response.statusCode).toBe(HttpStatusCode.NotFound)
 })
