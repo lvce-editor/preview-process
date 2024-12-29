@@ -118,8 +118,8 @@ test('handleRequest2 - serves static files from webview root', async () => {
   await HandleRequest2.handleRequest2(request, response)
 
   const mockServerResponse = response as unknown as MockServerResponse
-  // expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
-  // expect(mockServerResponse.getHeader('Content-Type')).toBe('text/javascript')
+  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
+  expect(mockServerResponse.getHeader('Content-Type')).toBe('text/javascript')
   expect(mockServerResponse.getContent()).toBe('console.log("test")')
 })
 
