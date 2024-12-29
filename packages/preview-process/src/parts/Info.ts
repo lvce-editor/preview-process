@@ -3,4 +3,5 @@ export interface Info {
   readonly webViewId: string
   readonly contentSecurityPolicy: string
   readonly iframeContent: string
+  readonly remotePathPrefix?: string
 }
