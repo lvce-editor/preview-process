@@ -14,7 +14,7 @@ test('getInfoAndPath - root path', () => {
   const result = GetInfoAndPath.getInfoAndPath('http://localhost:3000/xyz')
   expect(result).toEqual({
     info,
-    pathname: '/index.html',
+    pathName: '/index.html',
   })
 })
 
@@ -30,7 +30,7 @@ test('getInfoAndPath - root path with trailing slash', () => {
   const result = GetInfoAndPath.getInfoAndPath('http://localhost:3000/xyz/')
   expect(result).toEqual({
     info,
-    pathname: '/index.html',
+    pathName: '/index.html',
   })
 })
 
@@ -46,7 +46,7 @@ test('getInfoAndPath - subpath', () => {
   const result = GetInfoAndPath.getInfoAndPath('http://localhost:3000/xyz/media/index.js')
   expect(result).toEqual({
     info,
-    pathname: '/media/index.js',
+    pathName: '/media/index.js',
   })
 })
 

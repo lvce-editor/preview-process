@@ -17,7 +17,7 @@ export const handleRequest2 = async (request: IncomingMessage, response: ServerR
 
   const requestOptions: RequestOptions = {
     method: request.method || 'GET',
-    path: infoAndPath.pathname,
+    path: infoAndPath.pathName,
     headers: request.headers,
   }
 
