@@ -31,7 +31,7 @@ class MockSocket extends Writable {
   }
 }
 
-const createRequest = (url: string) => {
+const createRequest = (url: string): any => {
   const socket = new MockSocket()
   const request = new IncomingMessage(socket as unknown as Socket)
   request.url = url
@@ -42,7 +42,7 @@ const createRequest = (url: string) => {
   return { request, socket }
 }
 
-const createResponse = (request: IncomingMessage, socket: MockSocket) => {
+const createResponse = (request: IncomingMessage, socket: MockSocket): ServerResponse => {
   const response = new ServerResponse(request)
   response.assignSocket(socket as unknown as Socket)
   return response
