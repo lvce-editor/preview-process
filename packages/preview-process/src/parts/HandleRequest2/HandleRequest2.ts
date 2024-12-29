@@ -3,10 +3,17 @@ import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as GetInfoAndPath from '../GetInfoAndPath/GetInfoAndPath.ts'
 import * as GetResponse from '../GetResponse/GetResponse.ts'
+import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewInjected.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
 
 export const handleRequest2 = async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
+  if (request.url === '/js/preview-injected.js') {
+    const result = await HandlePreviewInjected.handlePreviewInjected()
+    await SendResponse.sendResponse(response, result)
+    return
+  }
+
   const infoAndPath = GetInfoAndPath.getInfoAndPath(request.url || '')
 
   if (!infoAndPath) {
@@ -27,8 +34,6 @@ export const handleRequest2 = async (request: IncomingMessage, response: ServerR
     iframeContent: infoAndPath.info.iframeContent,
     stream: false,
     etag: true,
-
-    // TODO remote path prefix needs to be registered independently of webViewInfo, since it applies to all webviews
     remotePathPrefix: '/remote',
   }
 

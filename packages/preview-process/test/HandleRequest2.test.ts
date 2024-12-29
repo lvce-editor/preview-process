@@ -11,8 +11,15 @@ jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.ts', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/HandlePreviewInjected/HandlePreviewInjected.ts', () => {
+  return {
+    handlePreviewInjected: jest.fn(),
+  }
+})
+
 const GetResponse = await import('../src/parts/GetResponse/GetResponse.ts')
 const HandleRequest2 = await import('../src/parts/HandleRequest2/HandleRequest2.ts')
+const HandlePreviewInjected = await import('../src/parts/HandlePreviewInjected/HandlePreviewInjected.ts')
 
 class MockSocket extends Writable {
   chunks: Buffer[] = []
@@ -27,7 +34,7 @@ class MockSocket extends Writable {
   }
 }
 
-const createRequest = (url: string): any => {
+const createRequest = (url: string) => {
   const socket = new MockSocket()
   const request = new IncomingMessage(socket as unknown as Socket)
   request.url = url
@@ -38,11 +45,30 @@ const createRequest = (url: string): any => {
   return { request, socket }
 }
 
-const createResponse = (request: IncomingMessage, socket: MockSocket): ServerResponse => {
+const createResponse = (request: IncomingMessage, socket: MockSocket) => {
   const response = new ServerResponse(request)
   response.assignSocket(socket as unknown as Socket)
   return response
 }
+
+test('handleRequest2 - serves preview-injected.js', async () => {
+  const jsContent = 'console.log("preview-injected")'
+  const mockResponse = new Response(jsContent, {
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/javascript',
+    },
+  })
+  jest.spyOn(HandlePreviewInjected, 'handlePreviewInjected').mockResolvedValue(mockResponse)
+
+  const { request, socket } = createRequest('/js/preview-injected.js')
+  const response = createResponse(request, socket)
+  await HandleRequest2.handleRequest2(request, response)
+
+  expect(response.statusCode).toBe(HttpStatusCode.Ok)
+  expect(response.getHeader('Content-Type')).toBe('text/javascript')
+  expect(socket.getContent()).toBe(jsContent)
+})
 
 test('handleRequest2 - serves webview content at root path', async () => {
   const info = {
