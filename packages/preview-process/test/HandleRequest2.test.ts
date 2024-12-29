@@ -1,5 +1,5 @@
-import { expect, jest, test } from '@jest/globals'
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { expect, jest, test } from '@jest/globals'
 import { Writable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
@@ -55,7 +55,7 @@ class MockServerResponse extends Writable {
   }
 }
 
-const createMockResponse = () => {
+const createMockResponse = (): ServerResponse => {
   return new MockServerResponse() as unknown as ServerResponse
 }
 
