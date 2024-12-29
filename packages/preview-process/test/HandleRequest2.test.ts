@@ -1,9 +1,9 @@
-import { IncomingMessage, ServerResponse } from 'node:http'
+import type { Socket } from 'node:net'
 import { expect, jest, test } from '@jest/globals'
+import { IncomingMessage, ServerResponse } from 'node:http'
 import { Writable } from 'node:stream'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
-import { Socket } from 'node:net'
 
 jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.ts', () => {
   return {
