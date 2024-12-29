@@ -1,6 +1,7 @@
 import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
 import * as FindMatchingRoute from '../FindMatchingRoute/FindMatchingRoute.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpMethod from '../HttpMethod/HttpMethod.ts'
 import { HeadResponse } from '../Responses/HeadResponse.ts'
 import { MethodNotAllowedResponse } from '../Responses/MethodNotAllowedResponse.ts'
@@ -26,7 +27,7 @@ export const getResponse = async (request: RequestOptions, options: HandlerOptio
 
     // Add Server-Timing header
     const duration = Math.round(performance.now() - start)
-    response.headers.set('Server-Timing', `total;dur=${duration}`)
+    response.headers.set(HttpHeader.ServerTiming, `total;dur=${duration}`)
 
     return response
   } catch (error) {
