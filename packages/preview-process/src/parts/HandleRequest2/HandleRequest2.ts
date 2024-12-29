@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import * as GetInfoAndPath from '../GetInfoAndPath/GetInfoAndPath.ts'
-import * as GetResponse from '../GetResponse/GetResponse.ts'
 import type { HandlerOptions } from '../HandlerOptions/HandlerOptions.ts'
 import type { RequestOptions } from '../RequestOptions/RequestOptions.ts'
+import * as GetInfoAndPath from '../GetInfoAndPath/GetInfoAndPath.ts'
+import * as GetResponse from '../GetResponse/GetResponse.ts'
 import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
 
