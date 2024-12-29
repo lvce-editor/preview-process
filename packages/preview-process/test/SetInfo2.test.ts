@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
+import type { Info } from '../src/parts/Info.ts'
 import * as GetInfo from '../src/parts/GetInfo/GetInfo.ts'
 import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
-import { Info } from '../src/parts/Info.ts'
 
 test('setInfo2 - stores info correctly', () => {
   const options: Info = {
