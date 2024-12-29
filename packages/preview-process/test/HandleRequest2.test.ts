@@ -1,9 +1,17 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { Writable } from 'node:stream'
 import * as HandleRequest2 from '../src/parts/HandleRequest2/HandleRequest2.ts'
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
+
+jest.unstable_mockModule('../src/parts/GetResponse/GetResponse.ts', () => {
+  return {
+    getResponse: jest.fn(),
+  }
+})
+
+const GetResponse = await import('../src/parts/GetResponse/GetResponse.ts')
 
 class MockServerResponse extends Writable {
   statusCode = 200
@@ -59,6 +67,13 @@ test('handleRequest2 - serves webview content at root path', async () => {
     iframeContent: '<h1>test content</h1>',
   }
   SetInfo2.setInfo2(info)
+  const mockResponse = new Response(info.iframeContent, {
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/html',
+    },
+  })
+  jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 
   const request = {
     url: '/xyz',
@@ -70,13 +85,13 @@ test('handleRequest2 - serves webview content at root path', async () => {
   const response = createMockResponse()
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockResponse = response as unknown as MockServerResponse
-  expect(mockResponse.statusCode).toBe(HttpStatusCode.Ok)
-  expect(mockResponse.getHeader('Content-Type')).toBe('text/html')
-  expect(mockResponse.getContent()).toBe(info.iframeContent)
+  const mockServerResponse = response as unknown as MockServerResponse
+  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
+  expect(mockServerResponse.getHeader('Content-Type')).toBe('text/html')
+  expect(mockServerResponse.getContent()).toBe(info.iframeContent)
 })
 
-test.skip('handleRequest2 - serves static files from webview root', async () => {
+test('handleRequest2 - serves static files from webview root', async () => {
   const info = {
     webViewId: 'xyz',
     webViewRoot: '/test/root',
@@ -84,6 +99,13 @@ test.skip('handleRequest2 - serves static files from webview root', async () => 
     iframeContent: '<h1>test content</h1>',
   }
   SetInfo2.setInfo2(info)
+  const mockResponse = new Response('console.log("test")', {
+    status: HttpStatusCode.Ok,
+    headers: {
+      'Content-Type': 'text/javascript',
+    },
+  })
+  jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 
   const request = {
     url: '/xyz/media/test.js',
@@ -95,9 +117,10 @@ test.skip('handleRequest2 - serves static files from webview root', async () => 
   const response = createMockResponse()
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockResponse = response as unknown as MockServerResponse
-  expect(mockResponse.statusCode).toBe(HttpStatusCode.Ok)
-  expect(mockResponse.getHeader('Content-Type')).toBe('text/javascript')
+  const mockServerResponse = response as unknown as MockServerResponse
+  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.Ok)
+  expect(mockServerResponse.getHeader('Content-Type')).toBe('text/javascript')
+  expect(mockServerResponse.getContent()).toBe('console.log("test")')
 })
 
 test('handleRequest2 - returns 404 for unknown webview', async () => {
@@ -111,6 +134,6 @@ test('handleRequest2 - returns 404 for unknown webview', async () => {
   const response = createMockResponse()
   await HandleRequest2.handleRequest2(request, response)
 
-  const mockResponse = response as unknown as MockServerResponse
-  expect(mockResponse.statusCode).toBe(HttpStatusCode.NotFound)
+  const mockServerResponse = response as unknown as MockServerResponse
+  expect(mockServerResponse.statusCode).toBe(HttpStatusCode.NotFound)
 })

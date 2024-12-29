@@ -7,9 +7,9 @@ import { NotFoundResponse } from '../Responses/NotFoundResponse.ts'
 import * as SendResponse from '../SendResponse/SendResponse.ts'
 
 export const handleRequest2 = async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
-  const InfoAndPath = GetInfoAndPath.getInfoAndPath(request.url || '')
+  const infoAndPath = GetInfoAndPath.getInfoAndPath(request.url || '')
 
-  if (!InfoAndPath) {
+  if (!infoAndPath) {
     const result = new NotFoundResponse()
     await SendResponse.sendResponse(response, result)
     return
@@ -17,14 +17,14 @@ export const handleRequest2 = async (request: IncomingMessage, response: ServerR
 
   const requestOptions: RequestOptions = {
     method: request.method || 'GET',
-    path: InfoAndPath.pathname,
+    path: infoAndPath.pathname,
     headers: request.headers,
   }
 
   const handlerOptions: HandlerOptions = {
-    webViewRoot: InfoAndPath.info.webViewRoot,
-    contentSecurityPolicy: InfoAndPath.info.contentSecurityPolicy,
-    iframeContent: InfoAndPath.info.iframeContent,
+    webViewRoot: infoAndPath.info.webViewRoot,
+    contentSecurityPolicy: infoAndPath.info.contentSecurityPolicy,
+    iframeContent: infoAndPath.info.iframeContent,
     stream: false,
     etag: true,
 
