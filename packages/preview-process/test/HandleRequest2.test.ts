@@ -45,7 +45,7 @@ const createRequest = (url: string): any => {
   return { request, socket }
 }
 
-const createResponse = (request: IncomingMessage, socket: MockSocket) => {
+const createResponse = (request: IncomingMessage, socket: MockSocket): ServerResponse => {
   const response = new ServerResponse(request)
   response.assignSocket(socket as unknown as Socket)
   return response
