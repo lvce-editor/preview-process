@@ -3,7 +3,7 @@ import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
 
 interface InfoAndPath {
   readonly info: Info
-  readonly pathname: string
+  readonly pathName: string
 }
 
 export const getInfoAndPath = (requestUrl: string): InfoAndPath | undefined => {
@@ -21,12 +21,12 @@ export const getInfoAndPath = (requestUrl: string): InfoAndPath | undefined => {
   if (pathname === `/${webViewId}` || pathname === `/${webViewId}/`) {
     return {
       info,
-      pathname: '/index.html',
+      pathName: '/index.html',
     }
   }
 
   return {
     info,
-    pathname: '/' + parts.slice(2).join('/'),
+    pathName: '/' + parts.slice(2).join('/'),
   }
 }
