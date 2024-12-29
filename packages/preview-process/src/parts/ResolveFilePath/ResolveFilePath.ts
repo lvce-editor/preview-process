@@ -11,6 +11,9 @@ export const resolveFilePath = (pathName: string, webViewRoot: string, remotePat
     const filePath = pathName.slice('/remote'.length)
     return fileURLToPath(`file://${filePath}`)
   }
+  if (webViewRoot.startsWith('file://')) {
+    return fileURLToPath(`${webViewRoot}${pathName}`)
+  }
   const filePath = fileURLToPath(`file://${webViewRoot}${pathName}`)
   return filePath
 }
