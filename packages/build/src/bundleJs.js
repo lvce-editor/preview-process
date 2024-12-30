@@ -23,7 +23,7 @@ const options = {
       objectShorthand: true,
     },
   },
-  external: ['electron', 'ws'],
+  external: ['electron', 'ws', '@lvce-editor/rpc', '@lvce-editor/verror'],
   plugins: [
     babel({
       babelHelpers: 'bundled',
