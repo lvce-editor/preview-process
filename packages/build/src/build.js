@@ -85,6 +85,10 @@ import '../dist/index.js'
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+await cp(join(root, 'packages', 'preview-process', 'node_modules'), join(root, '.tmp', 'node_modules'), {
+  recursive: true,
+  force: true,
+})
 
 const indexJsPath = join(root, '.tmp', 'dist', 'dist', 'index.js')
 const oldContent = await readFile(indexJsPath, 'utf8')
