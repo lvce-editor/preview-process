@@ -85,6 +85,7 @@ import '../dist/index.js'
 
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
+await rm(join(root, '.tmp', 'node_modules'), { recursive: true, force: true })
 await cp(join(root, 'packages', 'preview-process', 'node_modules'), join(root, '.tmp', 'node_modules'), {
   recursive: true,
   force: true,
