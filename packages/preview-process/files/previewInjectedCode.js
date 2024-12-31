@@ -101,7 +101,7 @@ globalThis.lvceRpc = (value) => {
         params,
       })
       const response = await promise
-      if ('error' in response) {
+      if (response && 'error' in response) {
         throw new Error(response.error.message)
       }
       // TODO unwrap jsonrpc result
