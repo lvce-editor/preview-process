@@ -16,7 +16,13 @@ const emptyInfo: Info = {
 
 export const getInfoAndPath = (requestUrl: string): InfoAndPath | undefined => {
   const { pathname } = new URL(requestUrl, 'http://localhost')
-  if (pathname.startsWith('/remote') || pathname.startsWith('/js')) {
+  if (pathname.startsWith('/remote')) {
+    return {
+      pathName: pathname,
+      info: emptyInfo,
+    }
+  }
+  if (pathname.endsWith('/preview-injected.js')) {
     return {
       pathName: pathname,
       info: emptyInfo,
