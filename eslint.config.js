@@ -37,6 +37,7 @@ export default tseslint.config(
       '.tmp',
       'dist',
       '**/coverage/**',
+      '**/preview-injected-code/**',
       'scripts',
       '**/mockCdpImport.js',
       'rollup.config.js',

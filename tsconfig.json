@@ -6,6 +6,9 @@
       "path": "./packages/preview-process"
     },
     {
+      "path": "./packages/preview-injected-code"
+    },
+    {
       "path": "./packages/build"
     },
     {
