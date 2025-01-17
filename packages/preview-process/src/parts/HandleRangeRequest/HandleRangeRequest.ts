@@ -7,9 +7,9 @@ import { RangeResponse } from '../Responses/RangeResponse.ts'
 export const handleRangeRequest = async (filePath: string, range: string): Promise<Response> => {
   const stats = await stat(filePath)
   const [x, y] = range.replace('bytes=', '').split('-')
-  const start = parseInt(x, 10)
+  const start = Number.parseInt(x, 10)
 
-  if (isNaN(start)) {
+  if (Number.isNaN(start)) {
     return new BadRequestResponse('Invalid Range')
   }
 
@@ -17,7 +17,7 @@ export const handleRangeRequest = async (filePath: string, range: string): Promi
     return new RangeNotSatisfiableResponse(stats.size)
   }
 
-  const end = y ? parseInt(y, 10) : stats.size - 1
+  const end = y ? Number.parseInt(y, 10) : stats.size - 1
   const finalEnd = end >= stats.size ? stats.size - 1 : end
 
   const readStream = createReadStream(filePath, {
