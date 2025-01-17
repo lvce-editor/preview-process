@@ -1,10 +1,10 @@
 {
   "name": "preview-injected-code",
   "version": "0.0.0-dev",
-  "main": "index.js",
-  "scripts": {},
+  "description": "",
   "keywords": [],
-  "author": "",
   "license": "MIT",
-  "description": ""
+  "author": "",
+  "main": "index.js",
+  "scripts": {}
 }
