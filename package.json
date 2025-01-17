@@ -2,41 +2,41 @@
   "name": "@lvce-editor/preview-process-monorepo",
   "version": "0.0.0-dev",
   "description": "Preview Process Monorepo",
-  "main": "",
-  "type": "module",
-  "scripts": {
-    "postinstall": "lerna bootstrap --ci",
-    "lint": "eslint .",
-    "test": "lerna run test",
-    "test-integration": "lerna run test-integration",
-    "type-check": "tsc -b",
-    "build": "node packages/build/src/build.js",
-    "format": "prettier --write ."
-  },
   "keywords": [
     "Lvce Editor",
     "Preview"
   ],
-  "author": "Lvce Editor",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lvce-editor/preview-process.git"
   },
-  "engines": {
-    "node": ">=22"
-  },
-  "devDependencies": {
-    "@lerna/legacy-package-management": "^8.1.9",
-    "@lvce-editor/eslint-config": "^1.9.0",
-    "eslint": "^9.18.0",
-    "lerna": "^8.1.9",
-    "prettier": "^3.4.2",
-    "typescript": "^5.7.3"
+  "license": "MIT",
+  "author": "Lvce Editor",
+  "type": "module",
+  "main": "",
+  "scripts": {
+    "build": "node packages/build/src/build.js",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "postinstall": "lerna bootstrap --ci",
+    "test": "lerna run test",
+    "test-integration": "lerna run test-integration",
+    "type-check": "tsc -b"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "printWidth": 130
+  },
+  "devDependencies": {
+    "@lerna/legacy-package-management": "^8.1.9",
+    "@lvce-editor/eslint-config": "^1.13.0",
+    "eslint": "^9.18.0",
+    "lerna": "^8.1.9",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
