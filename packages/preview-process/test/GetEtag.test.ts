@@ -3,7 +3,7 @@ import * as GetEtag from '../src/parts/GetEtag/GetEtag.ts'
 
 test('getEtag - generates correct etag from file stats', () => {
   const mockStats = {
-    ino: 12345,
+    ino: 12_345,
     size: 1000,
     mtime: new Date('2024-01-01T00:00:00Z'),
   }
@@ -13,7 +13,7 @@ test('getEtag - generates correct etag from file stats', () => {
 
 test('getEtag - handles different file stats', () => {
   const mockStats = {
-    ino: 67890,
+    ino: 67_890,
     size: 500,
     mtime: new Date('2024-02-01T12:30:45Z'),
   }
@@ -39,7 +39,7 @@ test('getEtag - generates different etags for different files', () => {
 
 test('getEtag - includes W/ prefix for weak validation', () => {
   const mockStats = {
-    ino: 12345,
+    ino: 12_345,
     size: 1000,
     mtime: new Date('2024-01-01T00:00:00Z'),
   }

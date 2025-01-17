@@ -7,9 +7,9 @@ import * as IsStreamPrematureCloseError from '../IsStreamPrematureCloseError/IsS
 export const sendResponse = async (response: ServerResponse, result: Response): Promise<void> => {
   try {
     response.statusCode = result.status
-    result.headers.forEach((value, key) => {
+    for (const [key, value] of result.headers.entries()) {
       response.setHeader(key, value)
-    })
+    }
     if (!result.body) {
       response.end()
       return
