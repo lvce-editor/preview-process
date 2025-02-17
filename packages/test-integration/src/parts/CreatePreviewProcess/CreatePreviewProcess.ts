@@ -28,12 +28,7 @@ export const createPreviewProcess = (options: { execArgv?: string[] } = {}): Pre
         }
       }
       childProcess.on('message', listener)
-      childProcess.send({
-        jsonrpc: '2.0',
-        id: messageId,
-        method,
-        params,
-      })
+      childProcess.send({ jsonrpc: '2.0', id: messageId, method, params })
       const response = await promise
       if (response.error) {
         throw new Error(response.error.message)
