@@ -14,7 +14,7 @@ export interface PreviewProcess {
 export const createPreviewProcess = (options: { execArgv?: string[] } = {}): PreviewProcess => {
   const childProcess = fork(PREVIEW_PROCESS_PATH, ['--ipc-type=node-forked-process'], {
     execArgv: options.execArgv || ['--experimental-strip-types'],
-    stdio: 'inherit',
+    stdio: 'pipe',
   })
   return {
     childProcess,
