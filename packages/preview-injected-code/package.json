@@ -2,9 +2,7 @@
   "name": "preview-injected-code",
   "version": "0.0.0-dev",
   "description": "",
-  "keywords": [],
   "license": "MIT",
   "author": "",
-  "main": "index.js",
-  "scripts": {}
+  "main": "index.js"
 }
