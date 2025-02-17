@@ -2,17 +2,8 @@
   "files": [],
   "include": [],
   "references": [
-    {
-      "path": "./packages/preview-process"
-    },
-    {
-      "path": "./packages/preview-injected-code"
-    },
-    {
-      "path": "./packages/build"
-    },
-    {
-      "path": "./packages/test-integration"
-    }
+    { "path": "./packages/preview-process" },
+    { "path": "./packages/build" },
+    { "path": "./packages/test-integration" }
   ]
 }
