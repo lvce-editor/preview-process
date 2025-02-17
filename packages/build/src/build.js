@@ -16,9 +16,7 @@ const writeJson = async (path, json) => {
 }
 
 const getGitTagFromGit = async () => {
-  const { stdout, stderr, exitCode } = await execa('git', ['describe', '--exact-match', '--tags'], {
-    reject: false,
-  })
+  const { stdout, stderr, exitCode } = await execa('git', ['describe', '--exact-match', '--tags'], { reject: false })
   if (exitCode) {
     if (exitCode === 128 && stderr.startsWith('fatal: no tag exactly matches')) {
       return '0.0.0-dev'
@@ -54,9 +52,19 @@ await mkdir(dist, { recursive: true })
 
 await bundleJs()
 
-await cp(join(root, 'packages', 'preview-process', 'files'), join(root, '.tmp', 'dist', 'files'), {
-  recursive: true,
-})
+await cp(
+  join(
+    root,
+    'packages',
+    'preview-process',
+    'node_modules',
+    '@lvce-editor',
+    'preview-injected-code',
+    'dist',
+    'previewInjectedCodeMain.js',
+  ),
+  join(root, '.tmp', 'dist', 'files', 'previewInjectedCode.js'),
+)
 
 const version = await getVersion()
 
@@ -93,8 +101,12 @@ await cp(join(root, 'packages', 'preview-process', 'node_modules'), join(root, '
 
 const indexJsPath = join(root, '.tmp', 'dist', 'dist', 'index.js')
 const oldContent = await readFile(indexJsPath, 'utf8')
-const newContent = oldContent.replace(
+let newContent = oldContent.replace(
   `const root = path.join(__dirname, '..', '..', '..');`,
   `const root = path.join(__dirname, '..');`,
+)
+newContent = newContent.replace(
+  `const injectedCodePath = join(root, 'node_modules', '@lvce-editor', 'preview-injected-code', 'dist', 'previewInjectedCodeMain.js')`,
+  `const injectedCodePath = join(root, 'files', 'previewInjectedCode.js')`,
 )
 await writeFile(indexJsPath, newContent)
