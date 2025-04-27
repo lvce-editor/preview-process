@@ -60,6 +60,9 @@ jobs:
       - run: npm run test-integration
       - run: npm run type-check
       - run: npm run lint
+      - name: measure
+        working-directory: ./packages/memory
+        run: npm run measure
       - run: node scripts/build.js
       - run: npm publish --access public
         if: matrix.os == 'ubuntu-24.04'
