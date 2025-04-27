@@ -2,6 +2,7 @@
   "files": [],
   "include": [],
   "references": [
+    { "path": "./packages/memory" },
     { "path": "./packages/preview-process" },
     { "path": "./packages/build" },
     { "path": "./packages/test-integration" }
