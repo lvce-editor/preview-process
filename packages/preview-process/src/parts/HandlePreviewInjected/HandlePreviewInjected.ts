@@ -3,7 +3,7 @@ import * as PreviewInjectedCode from '../PreviewInjectedCode/PreviewInjectedCode
 import { ContentResponse } from '../Responses/ContentResponse.ts'
 
 export const handlePreviewInjected = async (): Promise<Response> => {
-  const { injectedCode } = PreviewInjectedCode
+  const injectedCode = PreviewInjectedCode.getPreviewInjectedCode()
   const contentType = GetContentType.getContentType('/test/file.js')
   return new ContentResponse(injectedCode, contentType)
 }

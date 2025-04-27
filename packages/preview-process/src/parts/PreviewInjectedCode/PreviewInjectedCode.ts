@@ -11,4 +11,7 @@ const injectedCodePath = join(
   'previewInjectedCodeMain.js',
 )
 
-export const injectedCode = fs.readFileSync(injectedCodePath, 'utf8')
+export const getPreviewInjectedCode = (): string => {
+  const injectedCode = fs.readFileSync(injectedCodePath, 'utf8')
+  return injectedCode
+}
