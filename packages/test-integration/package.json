@@ -29,6 +29,7 @@
     "node": ">=22"
   },
   "jest": {
+    "testTimeout": 15000,
     "injectGlobals": false,
     "extensionsToTreatAsEsm": [
       ".ts"
