@@ -22,8 +22,9 @@ const options = {
       constBindings: true,
       objectShorthand: true,
     },
+    inlineDynamicImports: true,
   },
-  external: ['electron', 'ws', '@lvce-editor/rpc', '@lvce-editor/verror'],
+  external: ['electron', 'ws'],
   plugins: [
     babel({
       babelHelpers: 'bundled',
