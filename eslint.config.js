@@ -23,6 +23,7 @@ export default [
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/only-throw-error': 'off',
     },
   },
 ]
