@@ -4,10 +4,10 @@ import * as SetInfo2 from '../src/parts/SetInfo2/SetInfo2.ts'
 
 test('getInfoAndPath - root path', () => {
   const info = {
-    webViewId: 'xyz',
-    webViewRoot: '/test/root',
     contentSecurityPolicy: '',
     iframeContent: '<h1>test</h1>',
+    webViewId: 'xyz',
+    webViewRoot: '/test/root',
   }
   SetInfo2.setInfo2(info)
 
@@ -20,10 +20,10 @@ test('getInfoAndPath - root path', () => {
 
 test('getInfoAndPath - root path with trailing slash', () => {
   const info = {
-    webViewId: 'xyz',
-    webViewRoot: '/test/root',
     contentSecurityPolicy: '',
     iframeContent: '<h1>test</h1>',
+    webViewId: 'xyz',
+    webViewRoot: '/test/root',
   }
   SetInfo2.setInfo2(info)
 
@@ -36,10 +36,10 @@ test('getInfoAndPath - root path with trailing slash', () => {
 
 test('getInfoAndPath - subpath', () => {
   const info = {
-    webViewId: 'xyz',
-    webViewRoot: '/test/root',
     contentSecurityPolicy: '',
     iframeContent: '<h1>test</h1>',
+    webViewId: 'xyz',
+    webViewRoot: '/test/root',
   }
   SetInfo2.setInfo2(info)
 

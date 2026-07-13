@@ -11,7 +11,6 @@ export const getIndexResponse = async (info: Info): Promise<any> => {
   return {
     body: info.iframeContent,
     init: {
-      status: HttpStatusCode.Ok,
       headers: {
         ...headers,
         [HttpHeader.ContentSecurityPolicy]: info.contentSecurityPolicy,
@@ -19,6 +18,7 @@ export const getIndexResponse = async (info: Info): Promise<any> => {
         [HttpHeader.CrossOriginOpenerPolicy]: CrossOriginOpenerPolicy.value,
         [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.SameOrigin, // TODO find out why in browser it works differently than in electron
       },
+      status: HttpStatusCode.Ok,
     },
   }
 }

@@ -54,10 +54,10 @@ const createResponse = (request: IncomingMessage, socket: MockSocket): ServerRes
 test.skip('handleRequest2 - serves preview-injected.js', async () => {
   const jsContent = 'console.log("preview-injected")'
   const mockResponse = new Response(jsContent, {
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/javascript',
     },
+    status: HttpStatusCode.Ok,
   })
   jest.spyOn(HandlePreviewInjected, 'handlePreviewInjected').mockResolvedValue(mockResponse)
 
@@ -72,17 +72,17 @@ test.skip('handleRequest2 - serves preview-injected.js', async () => {
 
 test('handleRequest2 - serves webview content at root path', async () => {
   const info = {
-    webViewId: 'xyz',
-    webViewRoot: '/test/root',
     contentSecurityPolicy: "default-src 'self'",
     iframeContent: '<h1>test content</h1>',
+    webViewId: 'xyz',
+    webViewRoot: '/test/root',
   }
   SetInfo2.setInfo2(info)
   const mockResponse = new Response(info.iframeContent, {
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/html',
     },
+    status: HttpStatusCode.Ok,
   })
   jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 
@@ -97,19 +97,19 @@ test('handleRequest2 - serves webview content at root path', async () => {
 
 test('handleRequest2 - serves static files from webview root', async () => {
   const info = {
-    webViewId: 'xyz',
-    webViewRoot: '/test/root',
     contentSecurityPolicy: "default-src 'self'",
     iframeContent: '<h1>test content</h1>',
+    webViewId: 'xyz',
+    webViewRoot: '/test/root',
   }
   SetInfo2.setInfo2(info)
   const jsContent = 'console.log("test")'
   const mockResponse = new Response(jsContent, {
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/javascript',
       'Cross-Origin-Resource-Policy': 'same-origin',
     },
+    status: HttpStatusCode.Ok,
   })
   jest.spyOn(GetResponse, 'getResponse').mockResolvedValue(mockResponse)
 

@@ -5,8 +5,8 @@ import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
 
 test('getIndexResponse', async () => {
   const info: Info = {
-    iframeContent: '<h1>Hello World</h1>',
     contentSecurityPolicy: "default-src 'self'",
+    iframeContent: '<h1>Hello World</h1>',
     webViewId: 'test',
     webViewRoot: '/test',
   }
@@ -16,14 +16,14 @@ test('getIndexResponse', async () => {
   expect(response).toEqual({
     body: '<h1>Hello World</h1>',
     init: {
-      status: 200,
       headers: {
         'Content-Security-Policy': "default-src 'self'",
         'Content-Type': 'text/html',
-        'Cross-Origin-Resource-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Resource-Policy': 'same-origin',
       },
+      status: 200,
     },
   })
 })

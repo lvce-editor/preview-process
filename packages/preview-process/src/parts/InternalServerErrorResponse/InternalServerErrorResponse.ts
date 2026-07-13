@@ -5,8 +5,8 @@ export const create = (): any => {
   return {
     body: `500 - Internal Server Error`,
     init: {
-      status: HttpStatusCode.ServerError,
       headers: DefaultHeaders.defaultHeaders,
+      status: HttpStatusCode.ServerError,
     },
   }
 }

@@ -7,9 +7,9 @@ test('getHeaders - html file with etag', () => {
   const etag = '"123"'
   expect(GetHeaders.getHeaders(absolutePath, etag)).toEqual({
     [HttpHeader.ContentType]: 'text/html',
-    [HttpHeader.Etag]: '"123"',
-    [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
     [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
+    [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+    [HttpHeader.Etag]: '"123"',
   })
 })
 
@@ -18,8 +18,8 @@ test('getHeaders - css file with etag', () => {
   const etag = '"456"'
   expect(GetHeaders.getHeaders(absolutePath, etag)).toEqual({
     [HttpHeader.ContentType]: 'text/css',
-    [HttpHeader.Etag]: '"456"',
     [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+    [HttpHeader.Etag]: '"456"',
   })
 })
 
@@ -28,8 +28,8 @@ test('getHeaders - javascript file with etag', () => {
   const etag = '"789"'
   expect(GetHeaders.getHeaders(absolutePath, etag)).toEqual({
     [HttpHeader.ContentType]: 'text/javascript',
-    [HttpHeader.Etag]: '"789"',
     [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+    [HttpHeader.Etag]: '"789"',
   })
 })
 
@@ -38,8 +38,8 @@ test('getHeaders - unknown file type with etag', () => {
   const etag = '"abc"'
   expect(GetHeaders.getHeaders(absolutePath, etag)).toEqual({
     [HttpHeader.ContentType]: '',
-    [HttpHeader.Etag]: '"abc"',
     [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
+    [HttpHeader.Etag]: '"abc"',
   })
 })
 
@@ -47,7 +47,7 @@ test('getHeaders - html file without etag', () => {
   const absolutePath = '/test/index.html'
   expect(GetHeaders.getHeaders(absolutePath)).toEqual({
     [HttpHeader.ContentType]: 'text/html',
-    [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
     [HttpHeader.CrossOriginEmbedderPolicy]: 'require-corp',
+    [HttpHeader.CrossOriginResourcePolicy]: 'same-origin',
   })
 })

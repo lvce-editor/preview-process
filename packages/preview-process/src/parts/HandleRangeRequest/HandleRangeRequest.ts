@@ -21,8 +21,8 @@ export const handleRangeRequest = async (filePath: string, range: string): Promi
   const finalEnd = end >= stats.size ? stats.size - 1 : end
 
   const readStream = createReadStream(filePath, {
-    start,
     end: finalEnd,
+    start,
   })
   return new RangeResponse(readStream, start, finalEnd, stats.size)
 }

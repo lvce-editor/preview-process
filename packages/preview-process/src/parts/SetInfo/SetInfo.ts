@@ -14,9 +14,9 @@ export const setInfo = (
     webViewRoot = fileURLToPath(webViewRoot).toString()
   }
   InfoRegistry.set(webViewId, {
-    webViewId,
-    webViewRoot,
     contentSecurityPolicy,
     iframeContent,
+    webViewId,
+    webViewRoot,
   })
 }

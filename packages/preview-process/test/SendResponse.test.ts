@@ -62,10 +62,10 @@ test('sendResponse - handles successful response with body', async () => {
   const mockResponse = createMockResponse()
   const mockStream = createMockReadableStream('test content')
   const result = new Response(mockStream, {
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/plain',
     },
+    status: HttpStatusCode.Ok,
   })
 
   await SendResponse.sendResponse(mockResponse, result)
@@ -77,10 +77,10 @@ test('sendResponse - handles successful response with body', async () => {
 test.skip('sendResponse - handles response without body', async () => {
   const mockResponse = createMockResponse()
   const result = new Response(null, {
-    status: HttpStatusCode.NotModified,
     headers: {
       ETag: '"123"',
     },
+    status: HttpStatusCode.NotModified,
   })
   await SendResponse.sendResponse(mockResponse, result)
   expect(mockResponse.statusCode).toBe(HttpStatusCode.NotModified)

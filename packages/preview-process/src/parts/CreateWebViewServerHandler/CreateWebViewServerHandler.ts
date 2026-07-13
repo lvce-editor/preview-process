@@ -19,18 +19,18 @@ export const createHandler = (webViewRoot: string, contentSecurityPolicy: string
     }
 
     const requestOptions: RequestOptions = {
+      headers: request.headers,
       method: request.method || 'GET',
       path: pathName,
-      headers: request.headers,
     }
 
     const handlerOptions: HandlerOptions = {
-      webViewRoot,
       contentSecurityPolicy,
-      iframeContent,
-      stream: false,
       etag: true,
+      iframeContent,
       remotePathPrefix: '/remote',
+      stream: false,
+      webViewRoot,
     }
 
     const result = await GetResponse.getResponse(requestOptions, handlerOptions)

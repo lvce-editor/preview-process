@@ -13,10 +13,10 @@ test('getInfo - returns correct info', () => {
 
   const info = GetInfo.getInfo('lvce-webview://test')
   expect(info).toEqual({
-    webViewId,
-    webViewRoot,
     contentSecurityPolicy,
     iframeContent,
+    webViewId,
+    webViewRoot,
   })
 })
 

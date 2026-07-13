@@ -3,19 +3,19 @@ import * as HandleIndexHtml from '../src/parts/HandleIndexHtml/HandleIndexHtml.t
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
 const defaultOptions = {
-  webViewRoot: '/test',
   contentSecurityPolicy: "default-src 'self'",
-  iframeContent: '<h1>Test Content</h1>',
-  stream: false,
   etag: true,
+  iframeContent: '<h1>Test Content</h1>',
   remotePathPrefix: '/remote',
+  stream: false,
+  webViewRoot: '/test',
 }
 
 test('handleIndexHtml - returns content with etag and security headers', async () => {
   const request = {
+    headers: {},
     method: 'GET',
     path: '/index.html',
-    headers: {},
   }
 
   const response = await HandleIndexHtml.handleIndexHtml(request, defaultOptions)
@@ -29,19 +29,19 @@ test('handleIndexHtml - returns content with etag and security headers', async (
 
 test('handleIndexHtml - returns 304 with all security headers when etag matches', async () => {
   const request1 = {
+    headers: {},
     method: 'GET',
     path: '/index.html',
-    headers: {},
   }
   const response1 = await HandleIndexHtml.handleIndexHtml(request1, defaultOptions)
   const etag = response1.headers.get('ETag')
 
   const request2 = {
-    method: 'GET',
-    path: '/index.html',
     headers: {
       'if-none-match': etag,
     },
+    method: 'GET',
+    path: '/index.html',
   }
   const response2 = await HandleIndexHtml.handleIndexHtml(request2, defaultOptions)
   expect(response2.status).toBe(HttpStatusCode.NotModified)
@@ -53,9 +53,9 @@ test('handleIndexHtml - returns 304 with all security headers when etag matches'
 
 test('handleIndexHtml - returns content without etag when etag option is false', async () => {
   const request = {
+    headers: {},
     method: 'GET',
     path: '/index.html',
-    headers: {},
   }
 
   const options = { ...defaultOptions, etag: false }
@@ -70,9 +70,9 @@ test('handleIndexHtml - returns content without etag when etag option is false',
 
 test('handleIndexHtml - returns 500 when no iframe content', async () => {
   const request = {
+    headers: {},
     method: 'GET',
     path: '/index.html',
-    headers: {},
   }
 
   const options = { ...defaultOptions, iframeContent: '' }
@@ -86,9 +86,9 @@ test('handleIndexHtml - returns 500 when no iframe content', async () => {
 
 test('handleIndexHtml - generates different etags for different content', async () => {
   const request = {
+    headers: {},
     method: 'GET',
     path: '/index.html',
-    headers: {},
   }
 
   const options1 = { ...defaultOptions, iframeContent: '<h1>Content 1</h1>' }
