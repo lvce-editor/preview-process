@@ -19,10 +19,10 @@ export const handleIndexHtml = async (request: RequestOptions, options: HandlerO
     const contentType = GetContentType.getContentType('/test/index.html')
     const csp = GetContentSecurityPolicyDocument.getContentSecurityPolicyDocument(options.contentSecurityPolicy)
     const headers = {
-      [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.CrossOrigin,
-      [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
       [HttpHeader.ContentSecurityPolicy]: csp,
       [HttpHeader.ContentType]: contentType,
+      [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+      [HttpHeader.CrossOriginResourcePolicy]: CrossOriginResourcePolicy.CrossOrigin,
     }
 
     if (options.etag) {

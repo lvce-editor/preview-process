@@ -14,17 +14,17 @@ export const handleRequest2 = async (request: IncomingMessage, response: ServerR
     return
   }
   const requestOptions: RequestOptions = {
+    headers: request.headers,
     method: request.method || 'GET',
     path: infoAndPath.pathName,
-    headers: request.headers,
   }
   const handlerOptions: HandlerOptions = {
-    webViewRoot: infoAndPath.info.webViewRoot,
     contentSecurityPolicy: infoAndPath.info.contentSecurityPolicy,
-    iframeContent: infoAndPath.info.iframeContent,
-    stream: false,
     etag: true,
+    iframeContent: infoAndPath.info.iframeContent,
     remotePathPrefix: '/remote',
+    stream: false,
+    webViewRoot: infoAndPath.info.webViewRoot,
   }
   const result = await GetResponse.getResponse(requestOptions, handlerOptions)
   await SendResponse.sendResponse(response, result)

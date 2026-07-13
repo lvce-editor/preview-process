@@ -13,12 +13,11 @@
   "license": "MIT",
   "author": "Lvce Editor",
   "type": "module",
-  "main": "",
   "scripts": {
     "build": "node packages/build/src/build.js",
     "format": "prettier --write .",
-    "lint": "eslint .",
     "postinstall": "lerna bootstrap --ci",
+    "lint": "eslint .",
     "test": "lerna run test",
     "test-integration": "lerna run test-integration",
     "type-check": "tsc -b"
@@ -30,8 +29,8 @@
   },
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.2.2",
-    "@lvce-editor/eslint-config": "^1.50.0",
-    "eslint": "^9.29.0",
+    "@lvce-editor/eslint-config": "^16.3.0",
+    "eslint": "^10.7.0",
     "lerna": "^8.2.2",
     "prettier": "^3.5.3",
     "typescript": "^6.0.0"

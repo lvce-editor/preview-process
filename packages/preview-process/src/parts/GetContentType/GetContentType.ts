@@ -1,22 +1,22 @@
 import { extname } from 'node:path'
 
 const textMimeType: Record<string, string> = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.ts': 'text/javascript',
-  '.mjs': 'text/javascript',
-  '.json': 'application/json',
-  '.css': 'text/css',
-  '.svg': 'image/svg+xml',
   '.avif': 'image/avif',
-  '.woff': 'application/font-woff',
-  '.ttf': 'font/ttf',
-  '.png': 'image/png',
-  '.jpe': 'image/jpg',
+  '.css': 'text/css',
+  '.html': 'text/html',
   '.ico': 'image/x-icon',
+  '.jpe': 'image/jpg',
   '.jpeg': 'image/jpg',
   '.jpg': 'image/jpg',
+  '.js': 'text/javascript',
+  '.json': 'application/json',
+  '.mjs': 'text/javascript',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.ts': 'text/javascript',
+  '.ttf': 'font/ttf',
   '.webp': 'image/webp',
+  '.woff': 'application/font-woff',
 }
 
 export const getContentType = (filePath: string): string => {

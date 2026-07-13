@@ -3,21 +3,21 @@ import * as SerializeResponse from '../src/parts/SerializeResponse/SerializeResp
 
 test('serializeResponse - with text content', async () => {
   const response = new Response('test content', {
-    status: 200,
     headers: {
       'Content-Type': 'text/plain',
       'Cross-Origin-Resource-Policy': 'same-origin',
     },
+    status: 200,
   })
   const serialized = await SerializeResponse.serializeResponse(response)
   expect(serialized).toEqual({
     body: Buffer.from('test content'),
     init: {
-      status: 200,
       headers: {
         'Content-Type': 'text/plain',
         'Cross-Origin-Resource-Policy': 'same-origin',
       },
+      status: 200,
     },
   })
 })
@@ -25,57 +25,57 @@ test('serializeResponse - with text content', async () => {
 test('serializeResponse - with binary content', async () => {
   const binaryData = new Uint8Array([1, 2, 3, 4])
   const response = new Response(binaryData, {
-    status: 200,
     headers: {
       'Content-Type': 'application/octet-stream',
     },
+    status: 200,
   })
   const serialized = await SerializeResponse.serializeResponse(response)
   expect(serialized).toEqual({
     body: Buffer.from([1, 2, 3, 4]),
     init: {
-      status: 200,
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      status: 200,
     },
   })
 })
 
 test('serializeResponse - with no content', async () => {
   const response = new Response(null, {
-    status: 304,
     headers: {
       ETag: '"123"',
     },
+    status: 304,
   })
   const serialized = await SerializeResponse.serializeResponse(response)
   expect(serialized).toEqual({
     body: Buffer.from([]),
     init: {
-      status: 304,
       headers: {
         ETag: '"123"',
       },
+      status: 304,
     },
   })
 })
 
 test('serializeResponse - with error status', async () => {
   const response = new Response('Not Found', {
-    status: 404,
     headers: {
       'Content-Type': 'text/plain',
     },
+    status: 404,
   })
   const serialized = await SerializeResponse.serializeResponse(response)
   expect(serialized).toEqual({
     body: Buffer.from('Not Found'),
     init: {
-      status: 404,
       headers: {
         'Content-Type': 'text/plain',
       },
+      status: 404,
     },
   })
 })

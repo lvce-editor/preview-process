@@ -3,22 +3,22 @@ import * as GetProtocolMatch from '../src/parts/GetProtocolMatch/GetProtocolMatc
 
 test('getProtocolMatch - valid url', () => {
   expect(GetProtocolMatch.getProtocolMatch('lvce-webview://test-domain')).toEqual({
-    protocol: 'lvce-webview',
     domain: 'test-domain',
+    protocol: 'lvce-webview',
   })
 })
 
 test('getProtocolMatch - valid url with dashes', () => {
   expect(GetProtocolMatch.getProtocolMatch('lvce-oss-webview://test-domain')).toEqual({
-    protocol: 'lvce-oss-webview',
     domain: 'test-domain',
+    protocol: 'lvce-oss-webview',
   })
 })
 
 test('getProtocolMatch - valid url with dots', () => {
   expect(GetProtocolMatch.getProtocolMatch('lvce-webview://test.domain.com')).toEqual({
-    protocol: 'lvce-webview',
     domain: 'test.domain.com',
+    protocol: 'lvce-webview',
   })
 })
 

@@ -18,8 +18,8 @@ test('handleElectronMessagePort', async () => {
   await HandleElectronMessagePort.handleElectronMessagePort(port1)
 
   expect(RpcModule.ElectronMessagePortRpcClient.create).toHaveBeenCalledWith({
-    messagePort: port1,
     commandMap: expect.any(Object),
+    messagePort: port1,
   })
 
   port1.close()

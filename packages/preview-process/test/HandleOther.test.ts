@@ -47,20 +47,20 @@ class FileNotFoundError extends Error {
 }
 
 const handlerOptions: HandlerOptions = {
-  webViewRoot: '',
   contentSecurityPolicy: '',
-  iframeContent: '',
-  stream: false,
   etag: true,
+  iframeContent: '',
   remotePathPrefix: '/remote',
+  stream: false,
+  webViewRoot: '',
 }
 
 test('not found', async () => {
   jest.spyOn(FileSystem, 'readFile').mockRejectedValue(new FileNotFoundError())
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/not-found.txt',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
@@ -73,9 +73,9 @@ test('normal file', async () => {
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('ok'))
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -90,9 +90,9 @@ test('css file', async () => {
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('.test{color:red}'))
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/styles.css',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -105,9 +105,9 @@ test('internal server error', async () => {
   const error = new Error('Internal error')
   jest.spyOn(GetPathEtag, 'getPathEtag').mockRejectedValue(error)
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
@@ -118,10 +118,10 @@ test('internal server error', async () => {
 
 test('with range header', async () => {
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/video.mp4',
     range: 'bytes=0-100',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(200)
@@ -134,11 +134,11 @@ test('should return 304 when etag matches', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
 
   const requestOptions = {
-    method: 'GET',
-    path: '/test/file.txt',
     headers: {
       'if-none-match': mockEtag,
     },
+    method: 'GET',
+    path: '/test/file.txt',
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotModified)
@@ -152,11 +152,11 @@ test('should return 200 with etag when etag does not match', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
 
   const requestOptions = {
-    method: 'GET',
-    path: '/test/file.txt',
     headers: {
       'if-none-match': '"456"',
     },
+    method: 'GET',
+    path: '/test/file.txt',
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -170,9 +170,9 @@ test('should return 200 with etag when no if-none-match header', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
 
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -185,9 +185,9 @@ test('should return 404 when getPathEtag returns null', async () => {
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(null)
 
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotFound)
@@ -198,11 +198,11 @@ test('with matching etag', async () => {
   const etag = '"123"'
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   const requestOptions = {
-    method: 'GET',
-    path: '/test/file.txt',
     headers: {
       'if-none-match': etag,
     },
+    method: 'GET',
+    path: '/test/file.txt',
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.NotModified)
@@ -214,11 +214,11 @@ test('with non-matching etag', async () => {
   jest.spyOn(GetPathEtag, 'getPathEtag').mockResolvedValue(etag)
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test content'))
   const requestOptions = {
-    method: 'GET',
-    path: '/test/file.txt',
     headers: {
       'if-none-match': '"456"',
     },
+    method: 'GET',
+    path: '/test/file.txt',
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptions)
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -239,9 +239,9 @@ test('streaming response', async () => {
 
   const streamingOptions = { ...handlerOptions, stream: true }
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
 
   const response = await HandleOther.handleOther(requestOptions, streamingOptions)
@@ -259,9 +259,9 @@ test('should not include etag when etags are disabled', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('test'))
 
   const requestOptions = {
+    headers: {},
     method: 'GET',
     path: '/test/file.txt',
-    headers: {},
   }
   const response = await HandleOther.handleOther(requestOptions, handlerOptionsWithoutEtag)
   expect(response.status).toBe(HttpStatusCode.Ok)

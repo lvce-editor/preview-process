@@ -1,4 +1,4 @@
 export interface ProtocolMatch {
-  readonly protocol: string
   readonly domain: string
+  readonly protocol: string
 }

@@ -35,11 +35,11 @@ test('method not allowed - post', async () => {
   const url = 'lvce-webview://test/media'
   const response = await WebViewProtocol.getResponse(method, url)
   expect(response.init).toEqual({
-    status: HttpStatusCode.MethodNotAllowed,
     headers: {
       'Content-Type': 'text/plain;charset=UTF-8',
       'Cross-Origin-Resource-Policy': 'same-origin',
     },
+    status: HttpStatusCode.MethodNotAllowed,
   })
   expect(response.body.toString()).toBe('405 - Method Not Allowed')
 })
@@ -50,12 +50,12 @@ test('get - css file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('a'))
   const response = await WebViewProtocol.getResponse(method, url)
   expect(response.init).toEqual({
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/css',
       'Cross-Origin-Resource-Policy': 'same-origin',
       'Server-Timing': expect.any(String),
     },
+    status: HttpStatusCode.Ok,
   })
   expect(response.body.toString()).toBe('a')
 })
@@ -66,12 +66,12 @@ test('get - javascript file', async () => {
   jest.spyOn(FileSystem, 'readFile').mockResolvedValue(Buffer.from('console.log("test")'))
   const response = await WebViewProtocol.getResponse(method, url)
   expect(response.init).toEqual({
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/javascript',
       'Cross-Origin-Resource-Policy': 'same-origin',
       'Server-Timing': expect.any(String),
     },
+    status: HttpStatusCode.Ok,
   })
   expect(response.body.toString()).toBe('console.log("test")')
 })
@@ -100,12 +100,12 @@ test('get - preview injected', async () => {
   const url = 'lvce-webview://test/preview-injected.js'
   const response = await WebViewProtocol.getResponse(method, url)
   expect(response.init).toEqual({
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Type': 'text/javascript',
       'Cross-Origin-Resource-Policy': 'same-origin',
       'Server-Timing': expect.any(String),
     },
+    status: HttpStatusCode.Ok,
   })
   expect(response.body).toBeDefined()
 })
@@ -115,14 +115,14 @@ test('get - index.html', async () => {
   const url = 'lvce-webview://test/index.html'
   const response = await WebViewProtocol.getResponse(method, url)
   expect(response.init).toEqual({
-    status: HttpStatusCode.Ok,
     headers: {
       'Content-Security-Policy': '',
       'Content-Type': 'text/html',
-      'Cross-Origin-Resource-Policy': 'cross-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
       'Server-Timing': expect.any(String),
     },
+    status: HttpStatusCode.Ok,
   })
   expect(response.body.toString()).toBe('<h1>hello world</h1>')
 })
@@ -145,11 +145,11 @@ test('method not allowed - put', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: Buffer.from('405 - Method Not Allowed'),
     init: {
-      status: HttpStatusCode.MethodNotAllowed,
       headers: {
         'Content-Type': 'text/plain;charset=UTF-8',
         'Cross-Origin-Resource-Policy': 'same-origin',
       },
+      status: HttpStatusCode.MethodNotAllowed,
     },
   })
 })
@@ -162,12 +162,12 @@ test('get - png image file', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: imageBuffer,
     init: {
-      status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'image/png',
         'Cross-Origin-Resource-Policy': 'same-origin',
         'Server-Timing': expect.any(String),
       },
+      status: HttpStatusCode.Ok,
     },
   })
 })
@@ -180,12 +180,12 @@ test('get - svg file', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: svgContent,
     init: {
-      status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'image/svg+xml',
         'Cross-Origin-Resource-Policy': 'same-origin',
         'Server-Timing': expect.any(String),
       },
+      status: HttpStatusCode.Ok,
     },
   })
 })
@@ -198,12 +198,12 @@ test('get - json file', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: jsonContent,
     init: {
-      status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'application/json',
         'Cross-Origin-Resource-Policy': 'same-origin',
         'Server-Timing': expect.any(String),
       },
+      status: HttpStatusCode.Ok,
     },
   })
 })
@@ -216,12 +216,12 @@ test('get - unknown file type', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: content,
     init: {
-      status: HttpStatusCode.Ok,
       headers: {
         'Content-Type': 'text/plain',
         'Cross-Origin-Resource-Policy': 'same-origin',
         'Server-Timing': expect.any(String),
       },
+      status: HttpStatusCode.Ok,
     },
   })
 })
@@ -236,12 +236,12 @@ test.skip('get - permission error', async () => {
   expect(await WebViewProtocol.getResponse(method, url)).toEqual({
     body: '403 - Forbidden',
     init: {
-      status: HttpStatusCode.Forbidden,
       headers: {
         'Content-Type': 'text/html',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Resource-Policy': 'cross-origin',
       },
+      status: HttpStatusCode.Forbidden,
     },
   })
 })

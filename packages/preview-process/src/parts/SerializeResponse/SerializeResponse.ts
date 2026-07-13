@@ -5,8 +5,8 @@ export const serializeResponse = async (response: Response): Promise<any> => {
   return {
     body: Buffer.from(body),
     init: {
-      status: response.status,
       headers: SerializeHeaders.serializeHeaders(response.headers),
+      status: response.status,
     },
   }
 }

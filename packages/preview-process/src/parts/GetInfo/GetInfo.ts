@@ -6,7 +6,7 @@ import * as InfoRegistry from '../InfoRegistry/InfoRegistry.ts'
 const allowedProtocols = ['lvce-webview', 'lvce-oss-webview']
 
 export const getInfo = (url: string): Info => {
-  const { protocol, domain } = GetProtocolMatch.getProtocolMatch(url)
+  const { domain, protocol } = GetProtocolMatch.getProtocolMatch(url)
   if (!allowedProtocols.includes(protocol)) {
     throw new Error(`unsupported protocol`)
   }

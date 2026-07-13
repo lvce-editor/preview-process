@@ -16,6 +16,18 @@ export const createWebViewServer = (id: number, useNewHandler?: boolean): void =
     }
     const webViewServer: WebViewServer = {
       handler: undefined,
+      isListening(): boolean {
+        return server.listening
+      },
+      listen(port, callback): void {
+        server.listen(port, callback)
+      },
+      off(event: string, listener: any): void {
+        server.off(event, listener)
+      },
+      on(event: string, listener: any): void {
+        server.on(event, listener)
+      },
       setHandler(handleRequest): void {
         if (this.handler) {
           return
@@ -23,18 +35,6 @@ export const createWebViewServer = (id: number, useNewHandler?: boolean): void =
         this.handler = handleRequest
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         server.on('request', handleRequest)
-      },
-      on(event: string, listener: any): void {
-        server.on(event, listener)
-      },
-      off(event: string, listener: any): void {
-        server.off(event, listener)
-      },
-      listen(port, callback): void {
-        server.listen(port, callback)
-      },
-      isListening(): boolean {
-        return server.listening
       },
     }
     WebViewServerState.set(id, webViewServer)

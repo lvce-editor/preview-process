@@ -5,15 +5,15 @@ import * as HandlePreviewInjected from '../HandlePreviewInjected/HandlePreviewIn
 
 export const routes: RouteHandler[] = [
   {
-    pattern: /index\.html$/,
     handler: HandleIndexHtml.handleIndexHtml,
+    pattern: /index\.html$/,
   },
   {
-    pattern: /preview-injected\.js$/,
     handler: HandlePreviewInjected.handlePreviewInjected,
+    pattern: /preview-injected\.js$/,
   },
   {
-    pattern: /.*/,
     handler: HandleOther.handleOther,
+    pattern: /.*/,
   },
 ]

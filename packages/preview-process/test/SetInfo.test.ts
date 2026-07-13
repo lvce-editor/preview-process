@@ -13,10 +13,10 @@ test('setInfo - stores info correctly', () => {
 
   const info = GetInfo.getInfo('lvce-webview://test-view')
   expect(info).toEqual({
-    webViewId,
-    webViewRoot,
     contentSecurityPolicy,
     iframeContent,
+    webViewId,
+    webViewRoot,
   })
 })
 
@@ -35,10 +35,10 @@ test.skip('setInfo - overwrites existing info with same id', () => {
 
   const updatedInfo = GetInfo.getInfo('lvce-webview://updated-view')
   expect(updatedInfo).toEqual({
-    webViewId: updatedWebViewId,
-    webViewRoot,
     contentSecurityPolicy,
     iframeContent,
+    webViewId: updatedWebViewId,
+    webViewRoot,
   })
 })
 

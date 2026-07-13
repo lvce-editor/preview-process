@@ -12,17 +12,17 @@ export const getResponse = async (method: string, url: string, headers?: any): P
     pathName += 'index.html'
   }
   const requestOptions = {
+    headers: headers || {},
     method,
     path: pathName,
-    headers: headers || {},
   }
   const handlerOptions: HandlerOptions = {
     contentSecurityPolicy: info.contentSecurityPolicy,
+    etag: false,
     iframeContent: info.iframeContent,
+    remotePathPrefix: '/remote',
     stream: false,
     webViewRoot: info.webViewRoot,
-    etag: false,
-    remotePathPrefix: '/remote',
   }
   const jsResponse = await GetResponse.getResponse(requestOptions, handlerOptions)
   const serializedResponse = await SerializeResponse.serializeResponse(jsResponse)

@@ -9,7 +9,7 @@ export const getProtocolMatch = (url: string): ProtocolMatch => {
     throw new Error(`Failed to parse url`)
   }
   return {
-    protocol: match[1],
     domain: match[2],
+    protocol: match[1],
   }
 }

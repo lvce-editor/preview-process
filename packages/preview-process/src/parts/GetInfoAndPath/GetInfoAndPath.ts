@@ -9,23 +9,23 @@ interface InfoAndPath {
 const emptyInfo: Info = {
   contentSecurityPolicy: '',
   iframeContent: '',
+  remotePathPrefix: '/remote',
   webViewId: '',
   webViewRoot: '',
-  remotePathPrefix: '/remote',
 }
 
 export const getInfoAndPath = (requestUrl: string): InfoAndPath | undefined => {
   const { pathname } = new URL(requestUrl, 'http://localhost')
   if (pathname.startsWith('/remote')) {
     return {
-      pathName: pathname,
       info: emptyInfo,
+      pathName: pathname,
     }
   }
   if (pathname.endsWith('/preview-injected.js')) {
     return {
-      pathName: pathname,
       info: emptyInfo,
+      pathName: pathname,
     }
   }
   const parts = pathname.split('/')

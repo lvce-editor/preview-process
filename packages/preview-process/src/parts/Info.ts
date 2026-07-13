@@ -1,7 +1,7 @@
 export interface Info {
-  readonly webViewRoot: string
-  readonly webViewId: string
   readonly contentSecurityPolicy: string
   readonly iframeContent: string
   readonly remotePathPrefix?: string
+  readonly webViewId: string
+  readonly webViewRoot: string
 }
