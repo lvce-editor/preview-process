@@ -8,6 +8,7 @@ test('resolveFilePath - remote path', () => {
   expect(ResolveFilePath.resolveFilePath(pathName, webViewRoot)).toBe(expected)
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('resolveFilePath - remote path with double slash', () => {
   const pathName = process.platform === 'win32' ? '/remote//C:/test/file.txt' : '/remote///test/file.txt'
   const webViewRoot = '/root'

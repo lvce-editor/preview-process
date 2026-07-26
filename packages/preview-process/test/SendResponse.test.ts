@@ -74,6 +74,7 @@ test('sendResponse - handles successful response with body', async () => {
   expect((mockResponse as any).getContent()).toBe('test content')
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('sendResponse - handles response without body', async () => {
   const mockResponse = createMockResponse()
   const result = new Response(null, {

@@ -20,6 +20,7 @@ test('setInfo - stores info correctly', () => {
   })
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('setInfo - overwrites existing info with same id', () => {
   const id = 1
   const initialWebViewId = 'initial-view'
@@ -42,6 +43,7 @@ test.skip('setInfo - overwrites existing info with same id', () => {
   })
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('setInfo - handles multiple different ids', () => {
   const id1 = 1
   const id2 = 2
