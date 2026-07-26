@@ -76,6 +76,7 @@ test('get - javascript file', async () => {
   expect(response.body.toString()).toBe('console.log("test")')
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('get - file not found', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/not-found.txt'
@@ -226,6 +227,7 @@ test('get - unknown file type', async () => {
   })
 })
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('get - permission error', async () => {
   const method = HttpMethod.Get
   const url = 'lvce-webview://test/protected/file.txt'

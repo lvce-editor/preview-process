@@ -51,6 +51,7 @@ const createResponse = (request: IncomingMessage, socket: MockSocket): ServerRes
   return response
 }
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('handleRequest2 - serves preview-injected.js', async () => {
   const jsContent = 'console.log("preview-injected")'
   const mockResponse = new Response(jsContent, {
